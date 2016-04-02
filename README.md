@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/tumugi/tumugi.svg)](https://travis-ci.org/tumugi/tumugi) [![Code Climate](https://codeclimate.com/github/tumugi/tumugi/badges/gpa.svg)](https://codeclimate.com/github/tumugi/tumugi) [![Coverage Status](https://coveralls.io/repos/tumugi/tumugi/badge.svg?branch=master&service=github)](https://coveralls.io/github/tumugi/tumugi?branch=master)
+
 # Tumugi
 
 Tumugi is a ruby library to build, run and manage complex workflows. Tumugi enables you to define workflows as a ruby code.
