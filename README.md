@@ -39,23 +39,27 @@ $ gem install tumugi
 You can define workflow above as ruby code:
 
 ```rb
-task :task1 do
-  requires [:task2, :task3]
-  run ->{ puts "task_1#run" }
+task :task1 do |t|
+  t.requires [:task2, :task3]
+  t.run { puts 'task1#run' }
 end
 
-task :task2 do
-  requires [:task4]
-  run ->{ puts "task2#run" }
+task :task2 do |t|
+  t.requires [:task4]
+  t.run { puts 'task2#run' }
 end
 
-task :task3 do
-  requires [:task4]
-  run ->{ puts "task3#run" }
+task :task3 do |t|
+  t.requires [:task4]
+  t.run { puts 'task3#run' }
 end
 
-task :task4 do
-  run ->{ puts "task4#run" }
+task :task4 do |t|
+  # You can use do ... end style
+  t.run do
+    puts 'task4#run'
+    sleep 3
+  end
 end
 ```
 
