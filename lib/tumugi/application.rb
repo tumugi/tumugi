@@ -64,10 +64,10 @@ module Tumugi
       puts "args: #{args}"
 
       tumugifile = args[0]
-      top_level_task = args[1]
+      task_id = args[1]
 
-      load tumugifile
-      run_task top_level_task
+      load(tumugifile, true)
+      run_task(task_id)
     end
 
     def add_task(id, task)
@@ -82,9 +82,15 @@ module Tumugi
 
     def run_task(id)
       dag = Tumugi::DAG.new
-      t = @tasks[id.to_sym]
-      dag.add_task(t)
-      dag.tsort.each(&:run)
+      task = @tasks[id.to_sym]
+      dag.add_task(task)
+      dag.tsort.each do |t|
+        unless t.completed?
+          t.run
+        else
+          puts "skip: #{t.id} is already completed"
+        end
+      end
     end
   end
 end

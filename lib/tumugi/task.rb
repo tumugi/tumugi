@@ -19,16 +19,36 @@ module Tumugi
       self.id.hash
     end
 
-    def create_task
+    def instance
       self
     end
 
+    # If you need to define task dependencies, override in subclass
     def requires
-      [] # If you need to define task dependencies, override in subclass
+      []
+    end
+
+    # If you need to define output of task to skip alredy done task,
+    # override in subclass. If not, a task run always.
+    def output
+      []
     end
 
     def run
       raise NotImplementedError, "You must implement #{self.class}##{__method__}"
+    end
+
+    def completed?
+      outputs = list(output)
+      !outputs.empty? && outputs.all?(&:exist?)
+    end
+
+    private
+
+    def list(obj)
+      return [] if obj.nil?
+      return obj if obj.is_a?(Array) || obj.is_a?(Hash)
+      return [obj]
     end
   end
 end
