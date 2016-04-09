@@ -2,14 +2,14 @@ require 'tumugi/task'
 
 module Tumugi
   class TaskDefinition
+    include Tumugi::Helper
+
     def self.define_task(id, opts={}, &block)
       td = Tumugi::TaskDefinition.new(id, opts)
       td.instance_eval(&block)
       Tumugi.application.add_task(id, td)
       td
     end
-
-    attr_reader :required_tasks, :run_block
 
     def initialize(id, opts={})
       @id = id
@@ -24,8 +24,15 @@ module Tumugi
       td = self
       (class << @task; self; end).class_eval do
         define_method(:requires) do
-          (td.required_tasks || []).map do |t|
-            Tumugi.application.find_task(t)
+          reqs = td.required_tasks
+          if reqs.nil?
+            []
+          elsif reqs.is_a?(Array)
+            reqs.map { |t| Tumugi.application.find_task(t) }
+          elsif reqs.is_a?(Hash)
+            Hash[reqs.map { |k, t| [k, Tumugi.application.find_task(t)] }]
+          else
+            Tumugi.application.find_task(reqs)
           end
         end
 
@@ -34,7 +41,7 @@ module Tumugi
         end
 
         define_method(:run) do
-          td.run_block.call(self)
+          td.run_block(self)
         end
       end
       @task
@@ -53,7 +60,7 @@ module Tumugi
     end
 
     def run(&block)
-      @run_block = block
+      @run = block
     end
 
     def output_eval(task)
@@ -65,6 +72,14 @@ module Tumugi
         @out = @outputs
       end
       @out
+    end
+
+    def required_tasks
+      @required_tasks
+    end
+
+    def run_block(task)
+      @run.call(task)
     end
   end
 end

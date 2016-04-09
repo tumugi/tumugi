@@ -1,8 +1,10 @@
 require 'tsort'
+require 'tumugi/helper'
 
 module Tumugi
   class DAG
     include TSort
+    include Tumugi::Helper
 
     def initialize
       @tasks = {}
@@ -19,7 +21,7 @@ module Tumugi
     def add_task(task)
       t = task.instance
       unless @tasks[t]
-        reqs = t.requires.map {|r| r.instance }
+        reqs = list(t.requires).map {|r| r.instance }
         @tasks[t] = reqs
         reqs.each do |r|
           add_task(r)
