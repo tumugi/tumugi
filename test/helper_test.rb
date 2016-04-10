@@ -9,7 +9,7 @@ class Tumugi::HelperTest < Test::Unit::TestCase
     'hash'   => [['val1', 'val2'], {key1: 'val1', key2: 'val2'}],
     'object' => [['test'], 'test'],
   )
-  test '#list' do |(expected, obj)|
-    assert_equal(expected, list(obj))
+  test '#list' do |(expected, target)|
+    assert_equal(expected, list(target))
   end
 end

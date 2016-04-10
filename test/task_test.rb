@@ -121,10 +121,6 @@ class Tumugi::TaskTest < Test::Unit::TestCase
   end
 
   sub_test_case '#completed?' do
-    setup do
-
-    end
-
     test 'false as default value' do
       assert_false(@task.completed?)
     end
