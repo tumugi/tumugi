@@ -112,6 +112,12 @@ class Tumugi::TaskTest < Test::Unit::TestCase
       assert_equal(ExistOutput, result[:task1].class)
       assert_equal(NotExistOutput, result[:task2].class)
     end
+
+    test 'returns task#output when task#requires is single task' do
+      task = TestTask.new(output: ExistOutput.new)
+      result = TestTask.new(requires: task).input
+      assert_equal(ExistOutput, result.class)
+    end
   end
 
   sub_test_case '#completed?' do
