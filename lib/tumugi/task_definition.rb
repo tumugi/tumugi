@@ -19,10 +19,9 @@ module Tumugi
     def instance
       return @task if @task
 
-      @task = @opts[:type].new
-      @task.id = @id
       td = self
-      (class << @task; self; end).class_eval do
+      base_class = @opts[:type]
+      task_class = Class.new(base_class) do
         define_method(:requires) do
           reqs = td.required_tasks
           if reqs.nil?
@@ -44,6 +43,9 @@ module Tumugi
           td.run_block(self)
         end
       end
+
+      @task = task_class.new
+      @task.id = @id
       @task
     end
 
