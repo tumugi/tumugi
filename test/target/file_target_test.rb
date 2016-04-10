@@ -3,7 +3,7 @@ require 'test_helper'
 class Tumugi::Target::FileTargetTest < Test::Unit::TestCase
   sub_test_case '#exist?' do
     setup do
-      @file = Tempfile.new
+      @file = Tempfile.open('file_target_test')
     end
 
     teardown do
