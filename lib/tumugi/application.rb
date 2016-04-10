@@ -83,9 +83,12 @@ module Tumugi
     def run_task(id)
       dag = Tumugi::DAG.new
       task = @tasks[id.to_sym]
+      raise "Task not found: #{id}" if task.nil?
+
       dag.add_task(task)
       dag.tsort.each do |t|
         unless t.completed?
+          puts "run: #{t.id}"
           t.run
         else
           puts "skip: #{t.id} is already completed"
