@@ -6,6 +6,8 @@ Tumugi is a ruby library to build, run and manage complex workflows. Tumugi enab
 
 ## Installation
 
+**Tumugi only support Ruby 2.0+**
+
 Add this line to your application's Gemfile:
 
 ```ruby
