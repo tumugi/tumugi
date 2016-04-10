@@ -5,7 +5,7 @@ require 'tumugi/helper'
 require 'tumugi/application'
 require 'tumugi/task'
 
-require 'tumugi/target/file'
+require 'tumugi/target/file_target'
 
 require 'tumugi/dsl'
 

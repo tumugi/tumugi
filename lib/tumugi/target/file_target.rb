@@ -1,4 +1,4 @@
-require 'tumugi/target/target'
+require 'tumugi/target/base'
 
 module Tumugi
   module Target
