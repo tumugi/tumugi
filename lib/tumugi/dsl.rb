@@ -9,12 +9,6 @@ module Tumugi
     def task(*args, &block)
       Tumugi::TaskDefinition.define_task(*args, &block)
     end
-
-    def requires(*args, &block)
-    end
-
-    def run(*args, &block)
-    end
   end
 end
 
