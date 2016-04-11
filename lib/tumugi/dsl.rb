@@ -4,10 +4,8 @@ require 'tumugi/task_definition'
 
 module Tumugi
   module DSL
-    private
-
     def task(*args, &block)
-      Tumugi::TaskDefinition.define_task(*args, &block)
+      Tumugi::TaskDefinition.define(*args, &block)
     end
   end
 end

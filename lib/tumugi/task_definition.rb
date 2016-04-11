@@ -4,12 +4,14 @@ module Tumugi
   class TaskDefinition
     include Tumugi::Helper
 
-    def self.define_task(id, opts={}, &block)
+    def self.define(id, opts={}, &block)
       td = Tumugi::TaskDefinition.new(id, opts)
       td.instance_eval(&block)
       Tumugi.application.add_task(id, td)
       td
     end
+
+    attr_reader :id, :opts
 
     def initialize(id, opts={})
       @id = id
