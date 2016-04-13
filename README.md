@@ -6,6 +6,8 @@ Tumugi is a ruby library to build, run and manage complex workflows. Tumugi enab
 
 ## Installation
 
+**Tumugi only support Ruby 2.0+**
+
 Add this line to your application's Gemfile:
 
 ```ruby
@@ -41,21 +43,25 @@ You can define workflow above as ruby code:
 ```rb
 task :task1 do
   requires [:task2, :task3]
-  run ->{ puts "task_1#run" }
+  run { puts 'task1#run' }
 end
 
 task :task2 do
   requires [:task4]
-  run ->{ puts "task2#run" }
+  run { puts 'task2#run' }
 end
 
 task :task3 do
   requires [:task4]
-  run ->{ puts "task3#run" }
+  run { puts 'task3#run' }
 end
 
 task :task4 do
-  run ->{ puts "task4#run" }
+  # You can use do ... end style
+  run do
+    puts 'task4#run'
+    sleep 3
+  end
 end
 ```
 
