@@ -19,41 +19,7 @@ module Tumugi
     end
 
     def instance
-      return @task if @task
-
-      td = self
-      base_class = @opts[:type]
-      task_class = Class.new(base_class)
-      task_class.class_eval do
-        define_method(:requires) do
-          reqs = td.required_tasks
-          if reqs.nil?
-            []
-          elsif reqs.is_a?(Array)
-            reqs.map { |t| Tumugi.application.find_task(t) }
-          elsif reqs.is_a?(Hash)
-            Hash[reqs.map { |k, t| [k, Tumugi.application.find_task(t)] }]
-          else
-            Tumugi.application.find_task(reqs)
-          end
-        end
-      end
-
-      task_class.class_eval do
-        define_method(:output) do
-          td.output_eval(self)
-        end
-      end unless @outputs.nil?
-
-      task_class.class_eval do
-        define_method(:run) do
-          td.run_block(self)
-        end
-      end unless @run.nil?
-
-      @task = task_class.new
-      @task.id = @id
-      @task
+      @task ||= create_task
     end
 
     def requires(tasks)
@@ -78,6 +44,58 @@ module Tumugi
 
     def run_block(task)
       @run.call(task)
+    end
+
+    private
+
+    def create_task
+      task = define_task.new
+      task.id = @id
+      task
+    end
+
+    def define_task
+      task_class = Class.new(@opts[:type])
+      define_requires_method(task_class)
+      define_output_method(task_class)
+      define_run_method(task_class)
+      task_class
+    end
+
+    def define_requires_method(task_class)
+      td = self
+      task_class.class_eval do
+        define_method(:requires) do
+          reqs = td.required_tasks
+          if reqs.nil?
+            []
+          elsif reqs.is_a?(Array)
+            reqs.map { |t| Tumugi.application.find_task(t) }
+          elsif reqs.is_a?(Hash)
+            Hash[reqs.map { |k, t| [k, Tumugi.application.find_task(t)] }]
+          else
+            Tumugi.application.find_task(reqs)
+          end
+        end
+      end
+    end
+
+    def define_output_method(task_class)
+      td = self
+      task_class.class_eval do
+        define_method(:output) do
+          td.output_eval(self)
+        end
+      end unless @outputs.nil?
+    end
+
+    def define_run_method(task_class)
+      td = self
+      task_class.class_eval do
+        define_method(:run) do
+          td.run_block(self)
+        end
+      end unless @run.nil?
     end
   end
 end
