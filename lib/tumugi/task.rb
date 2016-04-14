@@ -28,15 +28,7 @@ module Tumugi
     end
 
     def input
-      if requires.nil?
-        []
-      elsif requires.is_a?(Array)
-        requires.map { |t| t.instance.output }
-      elsif requires.is_a?(Hash)
-        Hash[requires.map { |k, t| [k, t.instance.output] }]
-      else
-        requires.instance.output
-      end
+      @input ||= _input
     end
 
     # If you need to define output of task to skip alredy done task,
@@ -52,6 +44,30 @@ module Tumugi
     def completed?
       outputs = list(output)
       !outputs.empty? && outputs.all?(&:exist?)
+    end
+
+    # Following methods are internal use only
+
+    def _requires
+      @_requires ||= requires
+    end
+
+    def _output
+      @_output ||= output
+    end
+
+    private
+
+    def _input
+      if _requires.nil?
+        []
+      elsif _requires.is_a?(Array)
+        _requires.map { |t| t.instance._output }
+      elsif _requires.is_a?(Hash)
+        Hash[_requires.map { |k, t| [k, t.instance._output] }]
+      else
+        _requires.instance._output
+      end
     end
   end
 end

@@ -19,11 +19,52 @@ module Tumugi
     end
 
     def instance
-      return @task if @task
+      @task ||= create_task
+    end
 
+    def requires(tasks)
+      @required_tasks = tasks
+    end
+
+    def output(outputs=[], &block)
+      @outputs ||= (block || outputs)
+    end
+
+    def run(&block)
+      @run = block
+    end
+
+    def output_eval(task)
+      @out ||= @outputs.is_a?(Proc) ? @outputs.call(task) : @outputs
+    end
+
+    def required_tasks
+      @required_tasks
+    end
+
+    def run_block(task)
+      @run.call(task)
+    end
+
+    private
+
+    def create_task
+      task = define_task.new
+      task.id = @id
+      task
+    end
+
+    def define_task
+      task_class = Class.new(@opts[:type])
+      define_requires_method(task_class)
+      define_output_method(task_class)
+      define_run_method(task_class)
+      task_class
+    end
+
+    def define_requires_method(task_class)
       td = self
-      base_class = @opts[:type]
-      task_class = Class.new(base_class) do
+      task_class.class_eval do
         define_method(:requires) do
           reqs = td.required_tasks
           if reqs.nil?
@@ -36,54 +77,25 @@ module Tumugi
             Tumugi.application.find_task(reqs)
           end
         end
+      end
+    end
 
+    def define_output_method(task_class)
+      td = self
+      task_class.class_eval do
         define_method(:output) do
           td.output_eval(self)
         end
+      end unless @outputs.nil?
+    end
 
+    def define_run_method(task_class)
+      td = self
+      task_class.class_eval do
         define_method(:run) do
           td.run_block(self)
         end
-      end
-
-      @task = task_class.new
-      @task.id = @id
-      @task
-    end
-
-    def requires(tasks)
-      @required_tasks = tasks
-    end
-
-    def output(outputs=[], &block)
-      if block_given?
-        @outputs = block
-      else
-        @outputs = outputs
-      end
-    end
-
-    def run(&block)
-      @run = block
-    end
-
-    def output_eval(task)
-      return @out if @out
-
-      if @outputs.is_a?(Proc)
-        @out = @outputs.call(task)
-      else
-        @out = @outputs
-      end
-      @out
-    end
-
-    def required_tasks
-      @required_tasks
-    end
-
-    def run_block(task)
-      @run.call(task)
+      end unless @run.nil?
     end
   end
 end
