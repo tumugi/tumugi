@@ -24,6 +24,14 @@ class Tumugi::TaskDefinitionTest < Test::Unit::TestCase
       assert_true(task.is_a?(Tumugi::Task))
     end
 
+    test 'returns instance of specified class' do
+      class Task1 < Tumugi::Task; end
+      @task_def = Tumugi::TaskDefinition.new(:test, type: Task1)
+      task = @task_def.instance
+      assert_equal(:test, task.id)
+      assert_true(task.is_a?(Task1))
+    end
+
     test 'returns same instance after first call' do
       task = @task_def.instance
       assert_same(task, @task_def.instance)
@@ -65,18 +73,34 @@ class Tumugi::TaskDefinitionTest < Test::Unit::TestCase
       end
     end
 
-    test 'task#output' do
-      task = @task_def.instance
-      stub(@task_def).output_eval(task) { [:a, :b] }
-      assert_equal([:a, :b], task.output)
-      assert_received(@task_def) {|t| t.output_eval(task)}
+    sub_test_case 'task#output' do
+      test 'eval provided value' do
+        @task_def.output([:a, :b])
+        task = @task_def.instance
+        assert_equal([:a, :b], task.output)
+      end
+
+      test 'call method of superclass when block is not provided' do
+        task = @task_def.instance
+        assert_equal([], task.output)
+      end
     end
 
-    test 'task#run' do
-      task = @task_def.instance
-      stub(@task_def).run_block(task) { }
-      task.run
-      assert_received(@task_def) {|t| t.run_block(task)}
+    sub_test_case 'task#run' do
+      test 'call provided block' do
+        @task_def.run {|t| t.id}
+        task = @task_def.instance
+        stub(@task_def).run_block(task) { }
+        task.run
+        assert_received(@task_def) {|t| t.run_block(task)}
+      end
+
+      test 'call method of superclass when block is not provided' do
+        task = @task_def.instance
+        assert_raise(NotImplementedError) do
+          task.run
+        end
+      end
     end
   end
 

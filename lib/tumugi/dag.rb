@@ -21,7 +21,7 @@ module Tumugi
     def add_task(task)
       t = task.instance
       unless @tasks[t]
-        reqs = list(t.requires).map {|r| r.instance }
+        reqs = list(t._requires).map {|r| r.instance }
         @tasks[t] = reqs
         reqs.each do |r|
           add_task(r)

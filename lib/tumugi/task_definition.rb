@@ -23,7 +23,8 @@ module Tumugi
 
       td = self
       base_class = @opts[:type]
-      task_class = Class.new(base_class) do
+      task_class = Class.new(base_class)
+      task_class.class_eval do
         define_method(:requires) do
           reqs = td.required_tasks
           if reqs.nil?
@@ -36,15 +37,19 @@ module Tumugi
             Tumugi.application.find_task(reqs)
           end
         end
+      end
 
+      task_class.class_eval do
         define_method(:output) do
           td.output_eval(self)
         end
+      end unless @outputs.nil?
 
+      task_class.class_eval do
         define_method(:run) do
           td.run_block(self)
         end
-      end
+      end unless @run.nil?
 
       @task = task_class.new
       @task.id = @id
@@ -56,11 +61,7 @@ module Tumugi
     end
 
     def output(outputs=[], &block)
-      if block_given?
-        @outputs = block
-      else
-        @outputs = outputs
-      end
+      @outputs ||= (block || outputs)
     end
 
     def run(&block)
@@ -68,14 +69,7 @@ module Tumugi
     end
 
     def output_eval(task)
-      return @out if @out
-
-      if @outputs.is_a?(Proc)
-        @out = @outputs.call(task)
-      else
-        @out = @outputs
-      end
-      @out
+      @out ||= @outputs.is_a?(Proc) ? @outputs.call(task) : @outputs
     end
 
     def required_tasks
