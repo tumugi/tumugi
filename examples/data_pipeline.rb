@@ -1,3 +1,5 @@
+require 'tumugi/target/file_target'
+
 task :generate_data do
   output do
     Tumugi::Target::FileTarget.new("/tmp/data_#{Time.now.strftime('%Y-%m-%d')}.txt")

@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'tumugi/helper'
 
 class Tumugi::HelperTest < Test::Unit::TestCase
   include Tumugi::Helper

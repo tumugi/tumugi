@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'tumugi/task'
 
 class Tumugi::TaskTest < Test::Unit::TestCase
   class ExistOutput < Tumugi::Target::Base

@@ -1,3 +1,5 @@
+require 'tumugi/target/file_target'
+
 task :task1 do
   requires [:task2, :task3]
 

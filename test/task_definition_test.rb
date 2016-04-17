@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'tumugi/task_definition'
 
 class Tumugi::TaskDefinitionTest < Test::Unit::TestCase
   setup do

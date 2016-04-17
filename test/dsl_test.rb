@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'tumugi/dsl'
 
 class Tumugi::DSLTest < Test::Unit::TestCase
   include Tumugi::DSL

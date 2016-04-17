@@ -1,3 +1,5 @@
+require 'tumugi/target/file_target'
+
 class FileTask < Tumugi::Task
   def output
     Tumugi::Target::FileTarget.new("/tmp/#{self.id}.txt")

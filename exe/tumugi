@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-
-require 'tumugi'
-
-Tumugi.application.run
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+require 'tumugi/cli'
+Tumugi::CLI.start(ARGV)
