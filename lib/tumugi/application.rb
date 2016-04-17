@@ -3,6 +3,7 @@ require "active_support/all"
 require 'tumugi/dag'
 require 'tumugi/dsl'
 require 'tumugi/command/run'
+require 'tumugi/command/show'
 
 module Tumugi
   class Application
