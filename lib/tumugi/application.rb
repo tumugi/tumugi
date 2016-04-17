@@ -11,8 +11,8 @@ module Tumugi
       @tasks = {}
     end
 
-    def execute(command, tumugifile, root_task_id, options)
-      load(tumugifile, true)
+    def execute(command, root_task_id, options)
+      load(options[:file], true)
       dag = create_dag(root_task_id)
       cmd = "Tumugi::Command::#{command.to_s.classify}".constantize.new
       cmd.execute(dag, options)
