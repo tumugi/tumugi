@@ -27,7 +27,7 @@ module Tumugi
     desc "show", "Show DAG of workflow"
     common_options
     option :out,  aliases: '-o', desc: 'Output file name. If not specified, output result to STDOUT'
-    option :type, aliases: '-t', desc: 'Output file type. Only affected --out option is specified.', enum: ['dot', 'png', 'svg'], default: 'dot'
+    option :format, aliases: '-t', desc: 'Output file format. Only affected --out option is specified.', enum: ['dot', 'png', 'svg']
     def show(task)
       Tumugi.application.execute(:show, task, options)
     end

@@ -1,11 +1,21 @@
-require "gviz"
+require 'gviz'
+require 'tmpdir'
+require 'fileutils'
 
 module Tumugi
   module Command
     class Show
+      @@supported_formats = ['dot', 'png', 'svg']
+
       def execute(dag, options)
-        type = options[:type]
         out = options[:out]
+        if out
+          ext = File.extname(options[:out])
+          format = ext[1..-1] if ext.start_with?('.')
+          raise "#{format} is not supported format" unless @@supported_formats.include?(format)
+        else
+          format = options[:format]
+        end
 
         graph = Graph do
           dag.tsort.each do |task|
@@ -14,8 +24,11 @@ module Tumugi
         end
 
         if out.present?
-          file_base_path = "#{File.dirname(out)}/#{File.basename(out, '.*')}"
-          graph.save(file_base_path, type == 'dot' ? nil : type)
+          Dir.mktmpdir do |dir|
+            file_base_path = "#{File.dirname(dir)}/#{File.basename(out, '.*')}"
+            graph.save(file_base_path, format == 'dot' ? nil : format)
+            FileUtils.copy("#{file_base_path}.#{format}", out)
+          end
         else
           print graph
         end
