@@ -4,4 +4,9 @@ rvm:
   - 2.1.8
   - 2.2.4
   - 2.3.0
-before_install: gem install bundler -v 1.11.2
+env:
+  global:
+  - TMPDIR=$TRAVIS_BUILD_DIR/tmpdir
+before_install:
+  - mkdir -p $TMPDIR
+  - gem install bundler -v 1.11.2

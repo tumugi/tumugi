@@ -5,9 +5,9 @@ require 'fileutils'
 module Tumugi
   module Command
     class Show
-      @@supported_formats = ['dot', 'png', 'svg']
+      @@supported_formats = ['dot', 'png', 'jpg', 'svg', 'pdf']
 
-      def execute(dag, options)
+      def execute(dag, options={})
         out = options[:out]
         if out
           ext = File.extname(options[:out])
@@ -19,6 +19,7 @@ module Tumugi
 
         graph = Graph do
           dag.tsort.each do |task|
+            node task.id
             route task.id => task._requires.map {|t| t.id}
           end
         end
@@ -27,6 +28,7 @@ module Tumugi
           Dir.mktmpdir do |dir|
             file_base_path = "#{File.dirname(dir)}/#{File.basename(out, '.*')}"
             graph.save(file_base_path, format == 'dot' ? nil : format)
+            FileUtils.mkdir_p(File.dirname(out))
             FileUtils.copy("#{file_base_path}.#{format}", out)
           end
         else
