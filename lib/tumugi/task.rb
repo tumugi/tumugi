@@ -1,3 +1,5 @@
+require 'tumugi/helper'
+
 module Tumugi
   class Task
     include Tumugi::Helper

@@ -1,4 +1,6 @@
 require 'test_helper'
+require 'tumugi/dag'
+require 'tumugi/task'
 
 class Tumugi::DAGTest < Test::Unit::TestCase
   setup do

@@ -6,6 +6,8 @@ module Tumugi
     include TSort
     include Tumugi::Helper
 
+    attr_reader :tasks
+
     def initialize
       @tasks = {}
     end

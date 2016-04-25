@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'tumugi/tumugi_module'
 
 class Tumugi::TumugiModuleTest < Test::Unit::TestCase
   sub_test_case '#application' do
@@ -7,7 +8,7 @@ class Tumugi::TumugiModuleTest < Test::Unit::TestCase
     end
 
     test 'returns same instance when called multiple' do
-      assert_same(Tumugi.application, Tumugi.application)    
+      assert_same(Tumugi.application, Tumugi.application)
     end
   end
 end
