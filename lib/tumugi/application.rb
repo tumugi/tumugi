@@ -19,19 +19,20 @@ module Tumugi
     end
 
     def add_task(id, task)
-      @tasks[id] = task
+      @tasks[id.to_s] = task
     end
 
     def find_task(id)
-      @tasks[id]
+      task = @tasks[id.to_s]
+      raise "Task not found: #{id}" if task.nil?
+      task
     end
 
     private
 
     def create_dag(id)
       dag = Tumugi::DAG.new
-      task = @tasks[id.to_sym]
-      raise "Task not found: #{id}" if task.nil?
+      task = find_task(id)
       dag.add_task(task)
       dag
     end

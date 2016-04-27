@@ -19,6 +19,9 @@ module Tumugi
 
     desc "run", "Run workflow"
     map "run" => "run_" # run is thor's reserved word, so this trick is needed
+    option :workers, aliases: '-w', type: :numeric, desc: 'Number of workers to run task concurrently', default: 1
+    option :quiet, type: :boolean, desc: 'Suppress log', default: false
+    option :verbose, type: :boolean, desc: 'Show verbose log', default: false
     common_options
     def run_(task)
       Tumugi.application.execute(:run, task, options)
@@ -26,7 +29,7 @@ module Tumugi
 
     desc "show", "Show DAG of workflow"
     common_options
-    option :out,  aliases: '-o', desc: 'Output file name. If not specified, output result to STDOUT'
+    option :out, aliases: '-o', desc: 'Output file name. If not specified, output result to STDOUT'
     option :format, aliases: '-t', desc: 'Output file format. Only affected --out option is specified.', enum: ['dot', 'png', 'svg']
     def show(task)
       Tumugi.application.execute(:show, task, options)

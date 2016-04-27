@@ -4,6 +4,13 @@ module Tumugi
   class Task
     include Tumugi::Helper
 
+    attr_accessor :state # :pending, :running, :completed, :skipped
+
+    def initialize
+      @logger = Tumugi.logger
+      @state = :pending
+    end
+
     def id
       @id ||= self.class.name
     end
@@ -41,6 +48,10 @@ module Tumugi
 
     def run
       raise NotImplementedError, "You must implement #{self.class}##{__method__}"
+    end
+
+    def ready?
+      list(_requires).all? { |t| t.instance.completed? }
     end
 
     def completed?

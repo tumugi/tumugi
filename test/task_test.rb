@@ -121,12 +121,24 @@ class Tumugi::TaskTest < Test::Unit::TestCase
     end
   end
 
+  sub_test_case '#ready?' do
+    test 'return true when all required tasks are completed' do
+      task = TestTask.new(requires: TestTask.new(output: ExistOutput.new))
+      assert_true(task.ready?)
+    end
+
+    test 'return false when required tasks are not completed' do
+      task = TestTask.new(requires: TestTask.new(output: NotExistOutput.new))
+      assert_false(task.ready?)
+    end
+  end
+
   sub_test_case '#completed?' do
-    test 'false as default value' do
+    test 'return false as default value' do
       assert_false(@task.completed?)
     end
 
-    test 'true when all outputs are exists' do
+    test 'return true when all outputs are exists' do
       assert_true(TestTask.new(output: ExistOutput.new).completed?)
     end
   end
