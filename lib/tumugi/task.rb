@@ -4,11 +4,10 @@ module Tumugi
   class Task
     include Tumugi::Helper
 
-    attr_accessor :logger
     attr_accessor :state # :pending, :running, :completed, :skipped
 
     def initialize
-      @logger = Logger.new(STDOUT)
+      @logger = Tumugi.logger
       @state = :pending
     end
 

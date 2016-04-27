@@ -20,7 +20,6 @@ module Tumugi
     desc "run", "Run workflow"
     map "run" => "run_" # run is thor's reserved word, so this trick is needed
     option :workers, aliases: '-w', type: :numeric, desc: 'Number of workers to run task concurrently', default: 1
-    option :worker_type, aliases: '-t', desc: 'Worker type', enum: ['process', 'thread'], default: ['process']
     option :quiet, type: :boolean, desc: 'Suppress log', default: false
     option :verbose, type: :boolean, desc: 'Show verbose log', default: false
     common_options
