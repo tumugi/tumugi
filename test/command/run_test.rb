@@ -15,18 +15,31 @@ class Tumugi::Command::RunTest < Test::Unit::TestCase
   end
 
   sub_test_case '#execute' do
-    test 'should call Task#run method if task does not completed' do
+    test 'completed' do
       @cmd.execute(@dag)
       assert_equal(:completed, @task.state)
     end
 
-    test 'should not call Task#run method if task completed' do
+    test 'skipped' do
       def @task.completed?
         true
       end
 
-      @cmd.execute(@dag, worker_type: 'thread')
+      @cmd.execute(@dag)
       assert_equal(:skipped, @task.state)
+    end
+
+    test 'faild' do
+      def @task.run
+        raise 'always failed'
+      end
+      Tumugi.config do |c|
+        c.max_retry = 2
+        c.retry_interval = 1
+      end
+
+      @cmd.execute(@dag)
+      assert_equal(:failed, @task.state)
     end
 
     sub_test_case 'logging' do

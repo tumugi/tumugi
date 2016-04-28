@@ -27,4 +27,26 @@ class Tumugi::TumugiModuleTest < Test::Unit::TestCase
       end
     end
   end
+
+  sub_test_case '#config' do
+    test 'returns Tumugi::Logger instance' do
+      assert_equal(Tumugi::Config, Tumugi.config.class)
+    end
+
+    test 'returns same instance when called multiple' do
+      assert_same(Tumugi.config, Tumugi.config)
+    end
+
+    test 'can change config values by block' do
+      Tumugi.config do |c|
+        c.workers = 2
+        c.max_retry = 4
+        c.retry_interval = 600
+      end
+
+      assert_equal(2, Tumugi.config.workers)
+      assert_equal(4, Tumugi.config.max_retry)
+      assert_equal(600, Tumugi.config.retry_interval)
+    end
+  end
 end
