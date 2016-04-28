@@ -1,25 +1,8 @@
-require 'forwardable'
 require 'tumugi/application'
+require 'tumugi/config'
+require 'tumugi/logger'
 
 module Tumugi
-  class Logger
-    extend Forwardable
-    def_delegators :@logger, :debug, :error, :fatal, :info, :warn, :level
-
-    def initialize
-      @logger = ::Logger.new(STDOUT)
-      @logger.level = ::Logger::INFO
-    end
-
-    def verbose!
-      @logger.level = ::Logger::DEBUG
-    end
-
-    def quiet!
-      @logger = ::Logger.new(nil)
-    end
-  end
-
   class << self
     def application
       @application ||= Tumugi::Application.new
@@ -27,6 +10,14 @@ module Tumugi
 
     def logger
       @logger ||= Tumugi::Logger.new
+    end
+
+    def config
+      @config ||= Tumugi::Config.new
+      if block_given?
+        yield @config
+      end
+      @config
     end
   end
 end
