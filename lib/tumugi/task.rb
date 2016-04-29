@@ -7,7 +7,6 @@ module Tumugi
     attr_accessor :state # :pending, :running, :completed, :skipped
 
     def initialize
-      @logger = Tumugi.logger
       @state = :pending
     end
 
@@ -29,6 +28,14 @@ module Tumugi
 
     def instance
       self
+    end
+
+    def logger
+      @logger ||= Tumugi.logger
+    end
+
+    def log(msg)
+      logger.info(msg)
     end
 
     # If you need to define task dependencies, override in subclass
