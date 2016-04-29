@@ -29,4 +29,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'test-unit', '~> 3.1'
   spec.add_development_dependency 'test-unit-rr'
   spec.add_development_dependency 'coveralls'
+  spec.add_development_dependency 'github_changelog_generator'
 end
