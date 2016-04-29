@@ -2,11 +2,11 @@ require 'tumugi/target/file_target'
 
 class FileTask < Tumugi::Task
   def output
-    Tumugi::Target::FileTarget.new("/tmp/#{self.id}.txt")
+    Tumugi::Target::FileTarget.new("/tmp/#{id}.txt")
   end
 
   def run
-    puts "#{self.id}#run"
+    log "#{id}#run"
     File.write(output.path, 'done')
   end
 end

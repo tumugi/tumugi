@@ -2,11 +2,11 @@ require 'tumugi/target/file_target'
 
 task :generate_data do
   output do
-    Tumugi::Target::FileTarget.new("/tmp/data_#{Time.now.strftime('%Y-%m-%d')}.txt")
+    Tumugi::Target::FileTarget.new("/tmp/tumugi_data_#{Time.now.strftime('%Y-%m-%d')}.txt")
   end
 
-  run do |task|
-    File.open(task.output.path, "w") do |f|
+  run do
+    File.open(output.path, "w") do |f|
       (1..10).each do |i|
         f.puts i
       end
@@ -18,14 +18,14 @@ task :sum do
   requires :generate_data
 
   output do
-    Tumugi::Target::FileTarget.new("/tmp/output_#{Time.now.strftime('%Y-%m-%d')}.txt")
+    Tumugi::Target::FileTarget.new("/tmp/tumugi_output_#{Time.now.strftime('%Y-%m-%d')}.txt")
   end
 
-  run do |task|
+  run do
     sum = 0
-    File.foreach(task.input.path) do |line|
+    File.foreach(input.path) do |line|
       sum += line.to_i
     end
-    File.write(task.output.path, sum)
+    File.write(output.path, sum)
   end
 end
