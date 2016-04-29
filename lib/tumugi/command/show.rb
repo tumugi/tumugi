@@ -1,10 +1,12 @@
-require 'gviz'
+require 'graphviz'
 require 'tmpdir'
 require 'fileutils'
 
 module Tumugi
   module Command
     class Show
+      include Tumugi::Helper
+
       @@supported_formats = ['dot', 'png', 'jpg', 'svg', 'pdf']
 
       def execute(dag, options={})
@@ -17,22 +19,26 @@ module Tumugi
           format = options[:format]
         end
 
-        graph = Graph do
-          dag.tsort.each do |task|
-            node task.id
-            route task.id => task._requires.map {|t| t.id}
+        g = GraphViz.new(:G, type: :digraph, rankdir: "RL")
+        tasks = dag.tsort
+        tasks.each do |task|
+          g.add_nodes(task.id.to_s)
+        end
+        tasks.each do |task|
+          list(task._requires).each do |req|
+            g.add_edge(g.get_node(req.id.to_s), g.get_node(task.id.to_s))
           end
         end
 
         if out.present?
-          Dir.mktmpdir do |dir|
-            file_base_path = "#{File.dirname(dir)}/#{File.basename(out, '.*')}"
-            graph.save(file_base_path, format == 'dot' ? nil : format)
-            FileUtils.mkdir_p(File.dirname(out))
-            FileUtils.copy("#{file_base_path}.#{format}", out)
+          FileUtils.mkdir_p(File.dirname(out))
+          if format == 'dot'
+            File.write(out, g.to_s)
+          else
+            g.output(format => out)
           end
         else
-          print graph
+          print g
         end
       end
     end
