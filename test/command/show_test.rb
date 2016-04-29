@@ -13,7 +13,7 @@ class Tumugi::Command::ShowTest < Test::Unit::TestCase
   sub_test_case '#execute' do
     test 'without output param, dot notation is output to STDOUT' do
       result = capture_stdout { @cmd.execute(@dag) }
-      assert_equal("digraph G {\n  task1;\n}\n", result)
+      assert_equal("digraph G {\nrankdir = \"RL\";\ntask1 [label = \"task1\"];\n}\n", result)
     end
 
     data(
