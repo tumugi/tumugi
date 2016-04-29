@@ -6,10 +6,9 @@ class FileTask < Tumugi::Task
   end
 
   def run
-    @logger.info "#{self.id}#run"
+    log 'sleep 5 seconds'
     sleep 5
     File.write(output.path, 'done')
-    @logger.info "#{self.id}#done"
   end
 end
 
