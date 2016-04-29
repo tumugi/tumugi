@@ -6,7 +6,7 @@ module Tumugi
 
     def self.define(id, opts={}, &block)
       td = Tumugi::TaskDefinition.new(id, opts)
-      td.instance_eval(&block)
+      td.instance_eval(&block) if block_given?
       Tumugi.application.add_task(id, td)
       td
     end
@@ -35,7 +35,7 @@ module Tumugi
     end
 
     def output_eval(task)
-      @out ||= @outputs.is_a?(Proc) ? @outputs.call(task) : @outputs
+      @out ||= @outputs.is_a?(Proc) ? task.instance_eval(&@outputs) : @outputs
     end
 
     def required_tasks
@@ -43,7 +43,7 @@ module Tumugi
     end
 
     def run_block(task)
-      @run.call(task)
+      task.instance_eval(&@run)
     end
 
     private

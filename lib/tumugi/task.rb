@@ -63,7 +63,11 @@ module Tumugi
 
     def completed?
       outputs = list(output)
-      !outputs.empty? && outputs.all?(&:exist?)
+      if outputs.empty?
+        @state == :completed || @state == :skipped
+      else
+        outputs.all?(&:exist?)
+      end
     end
 
     # Following methods are internal use only
