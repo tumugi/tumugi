@@ -1,4 +1,5 @@
 require 'tumugi/task'
+require 'tumugi/plugin'
 
 module Tumugi
   class TaskDefinition
@@ -16,6 +17,10 @@ module Tumugi
     def initialize(id, opts={})
       @id = id
       @opts = { type: Tumugi::Task }.merge(opts)
+
+      unless @opts[:type].is_a?(Class)
+        @opts[:type] = Tumugi::Plugin.lookup_task(@opts[:type])
+      end
     end
 
     def instance
@@ -50,6 +55,7 @@ module Tumugi
 
     def create_task
       task = define_task.new
+      raise "Invalid type: '#{@opts[:type]}'" unless task.is_a?(Tumugi::Task)
       task.id = @id
       task
     end

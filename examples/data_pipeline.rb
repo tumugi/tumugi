@@ -1,8 +1,6 @@
-require 'tumugi/plugin/file_target'
-
 task :generate_data do
   output do
-    Tumugi::FileTarget.new("/tmp/tumugi_data_#{Time.now.strftime('%Y-%m-%d')}.txt")
+    target(:file, "/tmp/tumugi_data_#{Time.now.strftime('%Y-%m-%d')}.txt")
   end
 
   run do
@@ -18,7 +16,7 @@ task :sum do
   requires :generate_data
 
   output do
-    Tumugi::FileTarget.new("/tmp/tumugi_output_#{Time.now.strftime('%Y-%m-%d')}.txt")
+    target(:file, "/tmp/tumugi_output_#{Time.now.strftime('%Y-%m-%d')}.txt")
   end
 
   run do

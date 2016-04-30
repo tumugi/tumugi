@@ -1,8 +1,8 @@
-require 'tumugi/plugin/file_target'
-
 class FileTask < Tumugi::Task
+  Tumugi::Plugin.register_task(:file, self)
+
   def output
-    Tumugi::FileTarget.new("/tmp/tumugi_#{self.id}.txt")
+    target(:file, "/tmp/tumugi_#{self.id}.txt")
   end
 
   def run
@@ -12,15 +12,15 @@ class FileTask < Tumugi::Task
   end
 end
 
-task :task1, type: FileTask do
+task :task1, type: :file do
   requires (1..10).map {|i| :"task2_#{i}"}
 end
 
 (1..10).each do |i|
-  task :"task2_#{i}", type: FileTask do
+  task :"task2_#{i}", type: :file do
     requires [:task3]
   end
 end
 
-task :task3, type: FileTask do
+task :task3, type: :file do
 end

@@ -2,11 +2,13 @@ require 'tumugi/target'
 
 module Tumugi
   class FileTarget < Target
-    attr_reader :path
+    Tumugi::Plugin.register_target(:file, self)
 
     def initialize(path)
       @path = path
     end
+
+    attr_reader :path
 
     def exist?
       ::File.exist?(path)

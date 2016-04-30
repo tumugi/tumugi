@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'tumugi/tumugi_module'
 
 class Tumugi::TumugiModuleTest < Test::Unit::TestCase
   sub_test_case '#application' do
