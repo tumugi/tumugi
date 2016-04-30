@@ -5,6 +5,7 @@ rvm:
   - 2.2.4
   - 2.3.0
   - jruby-9.0.5.0
+cache: bundler
 sudo: required
 before_install:
   - sudo apt-get install graphviz
