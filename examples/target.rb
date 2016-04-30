@@ -1,10 +1,10 @@
-require 'tumugi/target/file_target'
+require 'tumugi/plugin/file_target'
 
 task :task1 do
   requires [:task2, :task3]
 
   output do
-    Tumugi::Target::FileTarget.new("/tmp/tumugi_#{id}.txt")
+    Tumugi::FileTarget.new("/tmp/tumugi_#{id}.txt")
   end
 
   run do
@@ -17,7 +17,7 @@ task :task2 do
   requires [:task4]
 
   output do
-    Tumugi::Target::FileTarget.new("/tmp/tumugi_#{id}.txt")
+    Tumugi::FileTarget.new("/tmp/tumugi_#{id}.txt")
   end
 
   run do
@@ -30,7 +30,7 @@ task :task3 do
   requires [:task4]
 
   output do
-    Tumugi::Target::FileTarget.new("/tmp/tumugi_#{id}.txt")
+    Tumugi::FileTarget.new("/tmp/tumugi_#{id}.txt")
   end
 
   run do
@@ -41,7 +41,7 @@ end
 
 task :task4 do
   output do
-    Tumugi::Target::FileTarget.new("/tmp/tumugi_#{id}.txt")
+    Tumugi::FileTarget.new("/tmp/tumugi_#{id}.txt")
   end
 
   run do

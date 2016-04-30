@@ -1,8 +1,8 @@
-require 'tumugi/target/file_target'
+require 'tumugi/plugin/file_target'
 
 class FileTask < Tumugi::Task
   def output
-    Tumugi::Target::FileTarget.new("/tmp/tumugi_#{self.id}.txt")
+    Tumugi::FileTarget.new("/tmp/tumugi_#{self.id}.txt")
   end
 
   def run

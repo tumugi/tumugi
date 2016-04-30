@@ -1,10 +1,10 @@
 require 'test_helper'
-require 'tumugi/target/base'
+require 'tumugi/target'
 
-class Tumugi::Target::BaseTest < Test::Unit::TestCase
+class Tumugi::TargetTest < Test::Unit::TestCase
   test '#exist? should raise NotImplementedError' do
     assert_raise(NotImplementedError) do
-      Tumugi::Target::Base.new.exist?
+      Tumugi::Target.new.exist?
     end
   end
 end

@@ -1,12 +1,13 @@
 require 'test_helper'
 require 'tumugi/task'
+require 'tumugi/target'
 
 class Tumugi::TaskTest < Test::Unit::TestCase
-  class ExistOutput < Tumugi::Target::Base
+  class ExistOutput < Tumugi::Target
     def exist?; true end
   end
 
-  class NotExistOutput < Tumugi::Target::Base
+  class NotExistOutput < Tumugi::Target
     def exist?; false end
   end
 

@@ -1,7 +1,7 @@
 require 'test_helper'
-require 'tumugi/target/file_target'
+require 'tumugi/plugin/file_target'
 
-class Tumugi::Target::FileTargetTest < Test::Unit::TestCase
+class Tumugi::FileTargetTest < Test::Unit::TestCase
   sub_test_case '#exist?' do
     setup do
       @file = Tempfile.open('file_target_test')
@@ -12,12 +12,12 @@ class Tumugi::Target::FileTargetTest < Test::Unit::TestCase
     end
 
     test 'returns true when file exists' do
-      target = Tumugi::Target::FileTarget.new(@file.path)
+      target = Tumugi::FileTarget.new(@file.path)
       assert_true(target.exist?)
     end
 
     test 'returns false when file not exists' do
-      target = Tumugi::Target::FileTarget.new('not_exist_file')
+      target = Tumugi::FileTarget.new('not_exist_file')
       assert_false(target.exist?)
     end
   end
