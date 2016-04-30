@@ -3,8 +3,8 @@ require 'tumugi/registry'
 
 module Tumugi
   module Plugin
-    TARGET_REGISTRY = Registry.new(:target, 'tumugi/plugin/target_')
-    TASK_REGISTRY   = Registry.new(:task,   'tumugi/plugin/task_')
+    TARGET_REGISTRY = Registry.new(:target, 'tumugi/plugin/target/')
+    TASK_REGISTRY   = Registry.new(:task,   'tumugi/plugin/task/')
 
     def self.register_target(type, klass)
       register_impl('target', TARGET_REGISTRY, type, klass)

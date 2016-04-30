@@ -1,5 +1,5 @@
 require 'test_helper'
-require 'tumugi/plugin/target_file'
+require 'tumugi/plugin/target/file'
 
 class Tumugi::FileTargetTest < Test::Unit::TestCase
   sub_test_case '#exist?' do

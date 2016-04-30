@@ -1,4 +1,4 @@
-require 'tumugi/plugin/target_file'
+require 'tumugi/plugin/target/file'
 
 task :task1 do
   requires [:task2, :task3]
@@ -14,7 +14,7 @@ task :task2 do
   output [target(:file, "/tmp/tumugi_#{id}.txt")]
   run do
     log 'task2#run'
-    File.write(output.path, 'done')
+    File.write(output[0].path, 'done')
   end
 end
 

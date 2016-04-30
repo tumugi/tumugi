@@ -9,7 +9,7 @@ module Tumugi
       @paths = [DEFAULT_PLUGIN_PATH]
     end
 
-    attr_reader :kind, :path
+    attr_reader :kind, :paths
 
     def register(type, value)
       type = type.to_sym

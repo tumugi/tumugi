@@ -9,9 +9,13 @@ class Tumugi::CLITest < Test::Unit::TestCase
     'task_inheritance' => ['task_inheritance.rb', 'task1'],
   }
 
+  setup do
+    system('rm -rf /tmp/tumugi_*')
+  end
+
   data(examples)
   test 'run' do |(file, task)|
-    assert_true(system("bundle exec ./exe/tumugi run -f ./examples/#{file} --quiet #{task}"))
+    assert_true(system("bundle exec ./exe/tumugi run -f ./examples/#{file} -w 4 --quiet #{task}"))
   end
 
   sub_test_case 'show' do

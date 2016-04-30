@@ -6,8 +6,8 @@ class FileTask < Tumugi::Task
   end
 
   def run
-    log 'sleep 5 seconds'
-    sleep 5
+    log 'sleep 2 seconds'
+    sleep 2
     File.write(output.path, 'done')
   end
 end
