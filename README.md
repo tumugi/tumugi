@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/tumugi/tumugi.svg)](https://travis-ci.org/tumugi/tumugi) [![Code Climate](https://codeclimate.com/github/tumugi/tumugi/badges/gpa.svg)](https://codeclimate.com/github/tumugi/tumugi) [![Coverage Status](https://coveralls.io/repos/tumugi/tumugi/badge.svg?branch=master&service=github)](https://coveralls.io/github/tumugi/tumugi?branch=master)
+[![Build Status](https://travis-ci.org/tumugi/tumugi.svg)](https://travis-ci.org/tumugi/tumugi) [![Code Climate](https://codeclimate.com/github/tumugi/tumugi/badges/gpa.svg)](https://codeclimate.com/github/tumugi/tumugi) [![Coverage Status](https://coveralls.io/repos/tumugi/tumugi/badge.svg?branch=master&service=github)](https://coveralls.io/github/tumugi/tumugi?branch=master) [![Gem Version](https://badge.fury.io/rb/tumugi.svg)](https://badge.fury.io/rb/tumugi)
 
 # Tumugi
 
