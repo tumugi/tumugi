@@ -1,11 +1,12 @@
 require 'tumugi/task'
 require 'tumugi/plugin'
-require 'tumugi/mixin/task_mixin'
+require 'tumugi/mixin/listable'
+require 'tumugi/mixin/task_helper'
 
 module Tumugi
   class TaskDefinition
-    include Tumugi::Helper
-    include Tumugi::TaskMixin
+    include Tumugi::Mixin::Listable
+    include Tumugi::Mixin::TaskHelper
 
     def self.define(id, opts={}, &block)
       td = Tumugi::TaskDefinition.new(id, opts)
