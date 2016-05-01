@@ -11,7 +11,7 @@ class Tumugi::PluginTest < Test::Unit::TestCase
 
     test 'can lookup default plugin' do
       klass = Tumugi::Plugin.lookup_target(:file)
-      assert_equal(klass, Tumugi::FileTarget)
+      assert_equal(klass, Tumugi::Plugin::FileTarget)
     end
 
     test 'can lookup registered plugin' do

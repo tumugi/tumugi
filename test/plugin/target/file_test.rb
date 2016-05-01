@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative '../../test_helper'
 require 'tumugi/plugin/target/file'
 
 class Tumugi::FileTargetTest < Test::Unit::TestCase
@@ -12,12 +12,12 @@ class Tumugi::FileTargetTest < Test::Unit::TestCase
     end
 
     test 'returns true when file exists' do
-      target = Tumugi::FileTarget.new(@file.path)
+      target = Tumugi::Plugin::FileTarget.new(@file.path)
       assert_true(target.exist?)
     end
 
     test 'returns false when file not exists' do
-      target = Tumugi::FileTarget.new('not_exist_file')
+      target = Tumugi::Plugin::FileTarget.new('not_exist_file')
       assert_false(target.exist?)
     end
   end

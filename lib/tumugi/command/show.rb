@@ -2,6 +2,8 @@ require 'graphviz'
 require 'tmpdir'
 require 'fileutils'
 
+require 'tumugi/helper'
+
 module Tumugi
   module Command
     class Show
@@ -30,7 +32,7 @@ module Tumugi
           end
         end
 
-        if out.present?
+        if out
           FileUtils.mkdir_p(File.dirname(out))
           if format == 'dot'
             File.write(out, g.to_s)

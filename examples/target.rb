@@ -28,7 +28,7 @@ task :task3 do
 end
 
 task :task4 do
-  output Tumugi::FileTarget.new("/tmp/tumugi_#{id}.txt")
+  output Tumugi::Plugin::FileTarget.new("/tmp/tumugi_#{id}.txt")
   run do
     log 'task4#run'
     File.write(output.path, 'done')

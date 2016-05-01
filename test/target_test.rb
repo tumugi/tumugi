@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative './test_helper'
 require 'tumugi/target'
 
 class Tumugi::TargetTest < Test::Unit::TestCase
