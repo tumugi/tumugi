@@ -24,13 +24,6 @@ module Tumugi
       raise "Unknown #{@kind} plugin '#{type}'"
     end
 
-    def reverse_lookup(value)
-      @map.each do |k, v|
-        return k if v == value
-      end
-      nil
-    end
-
     def search(type)
       path = "#{@search_prefix}#{type}"
 
