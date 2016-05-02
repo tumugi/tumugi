@@ -1,10 +1,33 @@
 # Change Log
 
+## [v0.2.0](https://github.com/tumugi/tumugi/tree/v0.2.0) (2016-05-02)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.1.0...v0.2.0)
+
+**Implemented enhancements:**
+
+- Implement plugin architecture [\#18](https://github.com/tumugi/tumugi/pull/18) ([hakobera](https://github.com/hakobera))
+- \[Breaking change\] Change eval scope of output, run method [\#14](https://github.com/tumugi/tumugi/pull/14) ([hakobera](https://github.com/hakobera))
+- \[Breaking Change\] Add Task\#logger and Task\#log method  [\#12](https://github.com/tumugi/tumugi/pull/12) ([hakobera](https://github.com/hakobera))
+- Update command description / Set file options mandatory [\#11](https://github.com/tumugi/tumugi/pull/11) ([hakobera](https://github.com/hakobera))
+
+**Fixed bugs:**
+
+- Fix show command cannot handle task which id include underscore [\#13](https://github.com/tumugi/tumugi/pull/13) ([hakobera](https://github.com/hakobera))
+
+**Merged pull requests:**
+
+- Use bundler cache on travis [\#17](https://github.com/tumugi/tumugi/pull/17) ([hakobera](https://github.com/hakobera))
+- Add gem version badge to README [\#16](https://github.com/tumugi/tumugi/pull/16) ([hakobera](https://github.com/hakobera))
+- Add changelog of v0.1.0 [\#10](https://github.com/tumugi/tumugi/pull/10) ([hakobera](https://github.com/hakobera))
+
 ## [v0.1.0](https://github.com/tumugi/tumugi/tree/v0.1.0) (2016-04-28)
 **Implemented enhancements:**
 
+- Retry when task failed [\#8](https://github.com/tumugi/tumugi/pull/8) ([hakobera](https://github.com/hakobera))
 - Support run tasks concurrently [\#7](https://github.com/tumugi/tumugi/pull/7) ([hakobera](https://github.com/hakobera))
 - Visualize [\#6](https://github.com/tumugi/tumugi/pull/6) ([hakobera](https://github.com/hakobera))
+- Support task inheritance [\#5](https://github.com/tumugi/tumugi/pull/5) ([hakobera](https://github.com/hakobera))
+- First DSL implementation [\#3](https://github.com/tumugi/tumugi/pull/3) ([hakobera](https://github.com/hakobera))
 
 **Closed issues:**
 
@@ -13,9 +36,6 @@
 **Merged pull requests:**
 
 - Create gem [\#2](https://github.com/tumugi/tumugi/pull/2) ([hakobera](https://github.com/hakobera))
-- Retry when task failed [\#8](https://github.com/tumugi/tumugi/pull/8) ([hakobera](https://github.com/hakobera))
-- Support task inheritance [\#5](https://github.com/tumugi/tumugi/pull/5) ([hakobera](https://github.com/hakobera))
-- First DSL implementation [\#3](https://github.com/tumugi/tumugi/pull/3) ([hakobera](https://github.com/hakobera))
 - Add initial spec [\#1](https://github.com/tumugi/tumugi/pull/1) ([hakobera](https://github.com/hakobera))
 
 
