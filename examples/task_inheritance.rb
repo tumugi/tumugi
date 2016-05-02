@@ -2,12 +2,14 @@ class FileTask < Tumugi::Task
   Tumugi::Plugin.register_task(:file, self)
 
   def output
-    target(:file, "/tmp/#{id}.txt")
+    target(:local_file, "/tmp/#{id}.txt")
   end
 
   def run
     log "#{id}#run"
-    File.write(output.path, 'done')
+    output.open('w') do |f|
+      f.puts('done')
+    end
   end
 end
 

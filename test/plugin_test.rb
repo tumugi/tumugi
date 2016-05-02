@@ -10,8 +10,8 @@ class Tumugi::PluginTest < Test::Unit::TestCase
     end
 
     test 'can lookup default plugin' do
-      klass = Tumugi::Plugin.lookup_target(:file)
-      assert_equal(klass, Tumugi::Plugin::FileTarget)
+      klass = Tumugi::Plugin.lookup_target(:local_file)
+      assert_equal(klass, Tumugi::Plugin::LocalFileTarget)
     end
 
     test 'can lookup registered plugin' do

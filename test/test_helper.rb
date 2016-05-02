@@ -9,6 +9,8 @@ require 'test/unit/rr'
 require 'tumugi'
 require 'tumugi/plugin'
 
+Dir.mkdir('tmp') unless Dir.exist?('tmp')
+
 def capture_stdout
   out = StringIO.new
   $stdout = out

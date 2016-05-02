@@ -7,8 +7,8 @@ class Tumugi::Mixin::TaskHelperTest < Test::Unit::TestCase
   sub_test_case '#target' do
     test 'should return instance of specified target' do
       path = 'test.txt'
-      t = target(:file, path)
-      assert_true(t.is_a?(Tumugi::Plugin::FileTarget))
+      t = target(:local_file, path)
+      assert_true(t.is_a?(Tumugi::Plugin::LocalFileTarget))
       assert_equal(path, t.path)
     end
 

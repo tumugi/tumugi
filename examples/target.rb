@@ -1,36 +1,36 @@
-require 'tumugi/plugin/target/file'
+require 'tumugi/plugin/target/local_file'
 
 task :task1 do
   requires [:task2, :task3]
-  output target(:file, "/tmp/tumugi_#{id}.txt")
+  output target(:local_file, "/tmp/tumugi_#{id}.txt")
   run do
     log 'task1#run'
-    File.write(output.path, 'done')
+    output.open('w') {|f| f.puts('done') }
   end
 end
 
 task :task2 do
   requires [:task4]
-  output [target(:file, "/tmp/tumugi_#{id}.txt")]
+  output [target(:local_file, "/tmp/tumugi_#{id}.txt")]
   run do
     log 'task2#run'
-    File.write(output[0].path, 'done')
+    output[0].open('w') {|f| f.puts('done') }
   end
 end
 
 task :task3 do
   requires [:task4]
-  output { target(:file, "/tmp/tumugi_#{id}.txt") }
+  output { target(:local_file, "/tmp/tumugi_#{id}.txt") }
   run do
     log 'task3#run'
-    File.write(output.path, 'done')
+    output.open('w') {|f| f.puts('done') }
   end
 end
 
 task :task4 do
-  output Tumugi::Plugin::FileTarget.new("/tmp/tumugi_#{id}.txt")
+  output Tumugi::Plugin::LocalFileTarget.new("/tmp/tumugi_#{id}.txt")
   run do
     log 'task4#run'
-    File.write(output.path, 'done')
+    output.open('w') {|f| f.puts('done') }
   end
 end
