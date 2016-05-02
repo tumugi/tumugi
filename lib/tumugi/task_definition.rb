@@ -1,8 +1,12 @@
 require 'tumugi/task'
+require 'tumugi/plugin'
+require 'tumugi/mixin/listable'
+require 'tumugi/mixin/task_helper'
 
 module Tumugi
   class TaskDefinition
-    include Tumugi::Helper
+    include Tumugi::Mixin::Listable
+    include Tumugi::Mixin::TaskHelper
 
     def self.define(id, opts={}, &block)
       td = Tumugi::TaskDefinition.new(id, opts)
@@ -16,6 +20,10 @@ module Tumugi
     def initialize(id, opts={})
       @id = id
       @opts = { type: Tumugi::Task }.merge(opts)
+
+      unless @opts[:type].is_a?(Class)
+        @opts[:type] = Tumugi::Plugin.lookup_task(@opts[:type])
+      end
     end
 
     def instance
@@ -50,6 +58,7 @@ module Tumugi
 
     def create_task
       task = define_task.new
+      raise "Invalid type: '#{@opts[:type]}'" unless task.is_a?(Tumugi::Task)
       task.id = @id
       task
     end

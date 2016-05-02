@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative './test_helper'
 require 'tumugi/task_definition'
 
 class Tumugi::TaskDefinitionTest < Test::Unit::TestCase
@@ -11,10 +11,20 @@ class Tumugi::TaskDefinitionTest < Test::Unit::TestCase
       assert_equal(:test, @task_def.id)
     end
 
-    test 'opts' do
-      assert_equal(2, @task_def.opts.size)
-      assert_equal(Tumugi::Task, @task_def.opts[:type])
-      assert_equal('b', @task_def.opts[:a])
+    sub_test_case 'opts' do
+      test 'type is class' do
+        assert_equal(2, @task_def.opts.size)
+        assert_equal(Tumugi::Task, @task_def.opts[:type])
+        assert_equal('b', @task_def.opts[:a])
+      end
+
+      test 'type is plugin ID' do
+        class TestTask < Tumugi::Task
+          Tumugi::Plugin.register_task(:test, self)
+        end
+        @task_def = Tumugi::TaskDefinition.new(:test, type: :test)
+        assert_equal(TestTask, @task_def.opts[:type])
+      end
     end
   end
 
@@ -25,12 +35,29 @@ class Tumugi::TaskDefinitionTest < Test::Unit::TestCase
       assert_true(task.is_a?(Tumugi::Task))
     end
 
-    test 'returns instance of specified class' do
+    test 'returns instance of specified by class' do
       class Task1 < Tumugi::Task; end
       @task_def = Tumugi::TaskDefinition.new(:test, type: Task1)
       task = @task_def.instance
       assert_equal(:test, task.id)
       assert_true(task.is_a?(Task1))
+    end
+
+    test 'returns instance of specified by plugin ID' do
+      class Task1 < Tumugi::Task
+        Tumugi::Plugin.register_task(:task1, self)
+      end
+      @task_def = Tumugi::TaskDefinition.new(:test, type: :task1)
+      task = @task_def.instance
+      assert_equal(:test, task.id)
+      assert_true(task.is_a?(Task1))
+    end
+
+    test 'raise error if type is not a subclass of Tumugi::Task' do
+      assert_raise do
+        @task_def = Tumugi::TaskDefinition.new(:test, type: String)
+        @task_def.instance
+      end
     end
 
     test 'returns same instance after first call' do

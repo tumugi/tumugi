@@ -1,8 +1,10 @@
-require 'tumugi/helper'
+require 'tumugi/mixin/listable'
+require 'tumugi/mixin/task_helper'
 
 module Tumugi
   class Task
-    include Tumugi::Helper
+    include Tumugi::Mixin::Listable
+    include Tumugi::Mixin::TaskHelper
 
     attr_accessor :state # :pending, :running, :completed, :skipped
 

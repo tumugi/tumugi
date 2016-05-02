@@ -1,8 +1,8 @@
-require 'test_helper'
-require 'tumugi/helper'
+require_relative '../test_helper'
+require 'tumugi/mixin/listable'
 
-class Tumugi::HelperTest < Test::Unit::TestCase
-  include Tumugi::Helper
+class Tumugi::Mixin::ListableTest < Test::Unit::TestCase
+  include Tumugi::Mixin::Listable
 
   data(
     'nil'    => [[], nil],

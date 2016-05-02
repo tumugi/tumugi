@@ -1,4 +1,6 @@
-require 'test_helper'
+require_relative '../test_helper'
+require 'tumugi/dag'
+require 'tumugi/task'
 require 'tumugi/command/show'
 
 class Tumugi::Command::ShowTest < Test::Unit::TestCase

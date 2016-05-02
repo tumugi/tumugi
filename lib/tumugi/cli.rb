@@ -1,6 +1,5 @@
 require 'thor'
 require 'tumugi'
-require 'tumugi/tumugi_module'
 
 module Tumugi
   class CLI < Thor

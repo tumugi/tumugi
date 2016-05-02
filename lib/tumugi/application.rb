@@ -1,7 +1,7 @@
-require "active_support/all"
-
 require 'tumugi/dag'
 require 'tumugi/dsl'
+require 'tumugi/plugin'
+require 'tumugi/target'
 require 'tumugi/command/run'
 require 'tumugi/command/show'
 
@@ -14,7 +14,8 @@ module Tumugi
     def execute(command, root_task_id, options)
       load(options[:file], true)
       dag = create_dag(root_task_id)
-      cmd = "Tumugi::Command::#{command.to_s.classify}".constantize.new
+      command_module = Kernel.const_get("Tumugi").const_get("Command")
+      cmd = command_module.const_get("#{command.to_s.capitalize}").new
       cmd.execute(dag, options)
     end
 

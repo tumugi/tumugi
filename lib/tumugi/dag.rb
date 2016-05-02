@@ -1,10 +1,10 @@
 require 'tsort'
-require 'tumugi/helper'
+require 'tumugi/mixin/listable'
 
 module Tumugi
   class DAG
     include TSort
-    include Tumugi::Helper
+    include Tumugi::Mixin::Listable
 
     attr_reader :tasks
 
