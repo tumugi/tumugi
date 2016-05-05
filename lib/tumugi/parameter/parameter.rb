@@ -1,4 +1,5 @@
 require 'tumugi/parameter/converter'
+require 'tumugi/parameter/error'
 
 module Tumugi
   module Parameter
@@ -10,9 +11,10 @@ module Tumugi
         @opts = opts
         @application_param_auto_bind_enabled = Tumugi.config.param_auto_bind_enabled
         @task_param_auto_bind_enabled = @application_param_auto_bind_enabled
+        validate
       end
 
-      def get()
+      def get
         if auto_bind?
           value = search_from_application_parameters
           value = search_from_env if value.nil?
@@ -60,6 +62,14 @@ module Tumugi
         value = ENV[key] if ENV.has_key?(key)
         value = ENV[key.upcase] if ENV.has_key?(key.upcase)
         value ? Converter.convert(type, value) : nil
+      end
+
+      private
+
+      def validate
+        if required? && default_value != nil
+          raise ParameterError.new("When you set required: true, you cannot set default value")
+        end
       end
     end
   end

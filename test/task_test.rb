@@ -31,7 +31,7 @@ class Tumugi::TaskTest < Test::Unit::TestCase
   end
 
   class TestSubTask < TestTask
-    param :param_string_in_subclass
+    param :param_string_in_subclass, required: true
   end
 
   setup do
@@ -162,6 +162,12 @@ class Tumugi::TaskTest < Test::Unit::TestCase
       assert_true(task.respond_to? name.to_sym)
       assert_true(task.respond_to? "#{name}=".to_sym)
       assert_equal(deafult_value, task.send(name.to_sym))
+    end
+
+    test 'raise ParameterError when required parameter is not set' do
+      assert_raise(Tumugi::Parameter::ParameterError) do
+        TestSubTask.new
+      end
     end
   end
 end

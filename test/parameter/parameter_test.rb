@@ -14,15 +14,21 @@ class Tumugi::Parameter::ParameterTest < Test::Unit::TestCase
     test 'with options, return specified value' do
       opts = {
         auto_bind: false,
-        required: true,
+        required: false,
         type: :integer,
         default: 1,
       }
       param = Tumugi::Parameter::Parameter.new(:name, opts)
       assert_equal(false, param.auto_bind?)
-      assert_equal(true, param.required?)
+      assert_equal(false, param.required?)
       assert_equal(:integer, param.type)
       assert_equal(1, param.default_value)
+    end
+
+    test 'raise ParameterError when both required and default is set' do
+      assert_raise(Tumugi::Parameter::ParameterError) do
+        Tumugi::Parameter::Parameter.new(:name, required: true, default: 'test')
+      end
     end
   end
 

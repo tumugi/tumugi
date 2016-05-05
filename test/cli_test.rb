@@ -16,13 +16,13 @@ class Tumugi::CLITest < Test::Unit::TestCase
 
   data(examples)
   test 'run' do |(file, task)|
-    assert_true(system("bundle exec ./exe/tumugi run -f ./examples/#{file} -w 4 --quiet #{task}"))
+    assert_true(system("bundle exec ./exe/tumugi run -f ./examples/#{file} -w 4 --quiet #{task} -p key1:value1"))
   end
 
   sub_test_case 'show' do
     data(examples)
     test 'without output' do |(file, task)|
-      assert_true(system("bundle exec ./exe/tumugi show -f ./examples/#{file} #{task}"))
+      assert_true(system("bundle exec ./exe/tumugi show -f ./examples/#{file} #{task} -p key1:value1"))
     end
 
     data do
@@ -35,7 +35,7 @@ class Tumugi::CLITest < Test::Unit::TestCase
       data_set
     end
     test 'with valid output' do |(file, task, format)|
-      assert_true(system("bundle exec ./exe/tumugi show -f ./examples/#{file} #{task} -o tmp/#{file}.#{format}"))
+      assert_true(system("bundle exec ./exe/tumugi show -f ./examples/#{file} #{task} -o tmp/#{file}.#{format} -p key1:value1"))
     end
   end
 end

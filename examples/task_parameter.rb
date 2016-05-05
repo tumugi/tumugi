@@ -1,5 +1,5 @@
 task :task1 do
-  param :key1 #=> 'value1', get value from CLI parameter
+  param :key1, required: true #=> 'value1', get value from CLI parameter
   param :key2 #=> 'value2', get value from Environment variables
 
   requires :task2

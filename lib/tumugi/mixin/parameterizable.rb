@@ -1,3 +1,4 @@
+require 'tumugi/parameter/error'
 require 'tumugi/parameter/parameter_proxy'
 
 module Tumugi
@@ -11,9 +12,25 @@ module Tumugi
         super()
         proxy = self.class.merged_parameter_proxy
         proxy.params.each do |name, param|
-          param.task_param_auto_bind_enabled = proxy.param_auto_bind_enabled
+          unless proxy.param_auto_bind_enabled.nil?
+            param.task_param_auto_bind_enabled = proxy.param_auto_bind_enabled
+          end
           instance_variable_set("@#{name}", param.get)
         end
+        validate_params(proxy.params)
+        configure
+      end
+
+      def validate_params(params)
+        params.each do |name, param|
+          if param.required? && instance_variable_get("@#{name}").nil?
+            raise Tumugi::Parameter::ParameterError.new("Parameter #{name} is required")
+          end
+        end
+      end
+
+      def configure
+        # You can override in a subclass
       end
 
       module ClassMethods
