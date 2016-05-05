@@ -12,7 +12,11 @@ class Tumugi::TaskTest < Test::Unit::TestCase
   end
 
   class TestTask < Tumugi::Task
+    param :param_string
+    param :param_string_with_default, default: 'default value'
+
     def initialize(requires: [], output: [])
+      super()
       @requires = requires
       @output = output
     end
@@ -24,6 +28,10 @@ class Tumugi::TaskTest < Test::Unit::TestCase
     def output
       @output
     end
+  end
+
+  class TestSubTask < TestTask
+    param :param_string_in_subclass
   end
 
   setup do
@@ -141,6 +149,19 @@ class Tumugi::TaskTest < Test::Unit::TestCase
 
     test 'return true when all outputs are exists' do
       assert_true(TestTask.new(output: ExistOutput.new).completed?)
+    end
+  end
+
+  sub_test_case '#param' do
+    data(
+      "param_string" => ["param_string", nil],
+      "param_string_with_default" => ["param_string_with_default", "default value"],
+    )
+    test 'define implicit attribute accessor and assign deafult value if param has default value' do |(name, deafult_value)|
+      task = TestTask.new
+      assert_true(task.respond_to? name.to_sym)
+      assert_true(task.respond_to? "#{name}=".to_sym)
+      assert_equal(deafult_value, task.send(name.to_sym))
     end
   end
 end

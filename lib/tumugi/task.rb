@@ -1,14 +1,17 @@
 require 'tumugi/mixin/listable'
 require 'tumugi/mixin/task_helper'
+require 'tumugi/mixin/parameterizable'
 
 module Tumugi
   class Task
+    include Tumugi::Mixin::Parameterizable
     include Tumugi::Mixin::Listable
     include Tumugi::Mixin::TaskHelper
 
     attr_accessor :state # :pending, :running, :completed, :skipped
 
     def initialize
+      super()
       @state = :pending
     end
 
