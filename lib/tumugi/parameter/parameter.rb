@@ -1,3 +1,5 @@
+require 'tumugi/parameter/converter'
+
 module Tumugi
   module Parameter
     class Parameter
@@ -10,8 +12,11 @@ module Tumugi
 
       def get
         if auto_bind?
+          value = search_from_env
           # TODO: implement find auto binding value
         end
+
+        return value if value
         default_value
       end
 
@@ -29,6 +34,16 @@ module Tumugi
 
       def default_value
         @opts[:default] || nil
+      end
+
+      private
+
+      def search_from_env
+        key = @name.to_s
+        value = nil
+        value = ENV[key] if ENV.has_key?(key)
+        value = ENV[key.upcase] if ENV.has_key?(key.upcase)
+        value ? Converter.convert(type, value) : nil
       end
     end
   end
