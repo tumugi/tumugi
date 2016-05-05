@@ -26,6 +26,30 @@ class Tumugi::Parameter::ParameterTest < Test::Unit::TestCase
     end
   end
 
+  sub_test_case '#auto_bind?' do
+    teardown do
+      Tumugi.config.param_auto_bind_enabled = true
+    end
+
+    test 'should return false when global param_auto_bind_enabled is false' do
+      Tumugi.config.param_auto_bind_enabled = false
+      param = Tumugi::Parameter::Parameter.new(:name)
+      assert_false(param.auto_bind?)
+    end
+
+    test 'should return false when task param_auto_bind_enabled is false' do
+      param = Tumugi::Parameter::Parameter.new(:name)
+      param.task_param_auto_bind_enabled = false
+      assert_false(param.auto_bind?)
+    end
+
+    test 'should return true when auto_bind option is true' do
+      Tumugi.config.param_auto_bind_enabled = false
+      param = Tumugi::Parameter::Parameter.new(:name, auto_bind: true)
+      assert_true(param.auto_bind?)
+    end
+  end
+
   sub_test_case '#get' do
     sub_test_case 'auto_bind is enabled' do
       sub_test_case 'search from application parameter' do

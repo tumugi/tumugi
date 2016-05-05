@@ -3,7 +3,7 @@ require 'tumugi/parameter/parameter'
 module Tumugi
   module Parameter
     class ParameterProxy
-      attr_accessor :name, :params
+      attr_accessor :name, :params, :param_auto_bind_enabled
 
       def initialize(name)
         @name = name

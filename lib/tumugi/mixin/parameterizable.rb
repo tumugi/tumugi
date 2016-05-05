@@ -11,6 +11,7 @@ module Tumugi
         super()
         proxy = self.class.merged_parameter_proxy
         proxy.params.each do |name, param|
+          param.task_param_auto_bind_enabled = proxy.param_auto_bind_enabled
           instance_variable_set("@#{name}", param.get)
         end
       end
@@ -34,6 +35,10 @@ module Tumugi
         def param(name, opts={})
           parameter_proxy(proxy_id(self)).param(name, opts)
           attr_accessor name
+        end
+
+        def param_auto_bind_enabled(v)
+          parameter_proxy(proxy_id(self)).param_auto_bind_enabled = v
         end
 
         def merged_parameter_proxy

@@ -35,6 +35,10 @@ module Tumugi
       @params[name] = opts
     end
 
+    def param_auto_bind_enabled(v)
+      @param_auto_bind_enabled = v
+    end
+
     def requires(tasks)
       @required_tasks = tasks
     end
@@ -116,6 +120,9 @@ module Tumugi
     def setup_params(task_class)
       @params.each do |name, opts|
         task_class.param(name, opts)
+      end
+      unless @param_auto_bind_enabled.nil?
+        task_class.param_auto_bind_enabled(@param_auto_bind_enabled)
       end
     end
 

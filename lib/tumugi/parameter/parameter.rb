@@ -3,14 +3,16 @@ require 'tumugi/parameter/converter'
 module Tumugi
   module Parameter
     class Parameter
-      attr_accessor :name
+      attr_accessor :name, :task_param_auto_bind_enabled, :application_param_auto_bind_enabled
 
       def initialize(name, opts={})
         @name = name
         @opts = opts
+        @application_param_auto_bind_enabled = Tumugi.config.param_auto_bind_enabled
+        @task_param_auto_bind_enabled = @application_param_auto_bind_enabled
       end
 
-      def get
+      def get()
         if auto_bind?
           value = search_from_application_parameters
           value = search_from_env if value.nil?
@@ -21,7 +23,15 @@ module Tumugi
       end
 
       def auto_bind?
-        @opts[:auto_bind].nil? ? true : @opts[:auto_bind]
+        if @opts[:auto_bind].nil?
+          if @task_param_auto_bind_enabled
+            true
+          else
+            false
+          end
+        else
+          @opts[:auto_bind]
+        end
       end
 
       def required?
