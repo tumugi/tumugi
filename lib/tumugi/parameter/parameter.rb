@@ -12,11 +12,11 @@ module Tumugi
 
       def get
         if auto_bind?
-          value = search_from_env
-          # TODO: implement find auto binding value
+          value = search_from_application_parameters
+          value = search_from_env if value.nil?
         end
 
-        return value if value
+        return value unless value.nil?
         default_value
       end
 
@@ -37,6 +37,12 @@ module Tumugi
       end
 
       private
+
+      def search_from_application_parameters
+        key = @name.to_s
+        value = Tumugi.application.params[key]
+        value ? Converter.convert(type, value) : nil
+      end
 
       def search_from_env
         key = @name.to_s

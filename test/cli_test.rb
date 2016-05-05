@@ -7,6 +7,7 @@ class Tumugi::CLITest < Test::Unit::TestCase
     'simple' => ['simple.rb', 'task1'],
     'target' => ['target.rb', 'task1'],
     'task_inheritance' => ['task_inheritance.rb', 'task1'],
+    'task_parameter' => ['task_parameter.rb', 'task1'],
   }
 
   setup do

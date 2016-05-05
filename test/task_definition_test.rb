@@ -130,6 +130,16 @@ class Tumugi::TaskDefinitionTest < Test::Unit::TestCase
         end
       end
     end
+
+    sub_test_case 'Task::param' do
+      test 'should add param and assign default value' do
+        @task_def.param(:key1, default: 'value1')
+        @task_def.run {|t| t.key1}
+        task = @task_def.instance
+        assert_true(task.respond_to?(:key1))
+        assert_equal('value1', task.key1)
+      end
+    end
   end
 
   test '#required_tasks returns value which set by #requires' do

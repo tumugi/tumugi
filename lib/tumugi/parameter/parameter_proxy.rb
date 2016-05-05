@@ -19,6 +19,10 @@ module Tumugi
       def param(name, opts={})
         @params[name] = Tumugi::Parameter::Parameter.new(name, opts)
       end
+
+      def dump
+        Marshal.dump(self)
+      end
     end
   end
 end

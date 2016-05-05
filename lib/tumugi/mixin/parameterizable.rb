@@ -32,51 +32,23 @@ module Tumugi
         end
 
         def param(name, opts={})
-          parameter_proxy(self.name).param(name, opts)
+          parameter_proxy(proxy_id(self)).param(name, opts)
           attr_accessor name
         end
 
         def merged_parameter_proxy
           parameterizable = ancestors.reverse.select{ |a| a.respond_to?(:parameter_proxy) }
-          parameterizable.map { |a| a.parameter_proxy(a.name || a.object_id.to_s) }.reduce(:merge)
+          parameterizable.map { |a| a.parameter_proxy(proxy_id(a)) }.reduce(:merge)
         end
 
-        def dump(level = 0)
-          parameter_proxy_map[self.to_s].dump(level)
+        def dump
+          parameter_proxy_map[proxy_id(self)].dump
+        end
+
+        def proxy_id(klass)
+          self.name || self.object_id.to_s
         end
       end
     end
   end
-end
-
-class << self
-  def param(name, opts={})
-    @params ||= {}
-    @params[name.to_sym] = defaults.merge(opts)
-    attr_accessor name.to_sym
-  end
-
-  def params
-    @params
-  end
-end
-
-def _bind_params(args)
-  p self.class.params
-
-  self.class.params.each do |name, opts|
-    if opts[:auto_bind]
-      _bind_from_args(args, name, opts)
-    end
-    if opts[:default] && send(name.to_sym).nil?
-      send("#{name}=", opts[:deafult])
-    end
-  end
-end
-
-def _bind_from_args(args)
-end
-
-def configure
-  # Do nothing. You can override in a subclass.
 end

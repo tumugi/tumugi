@@ -7,8 +7,11 @@ require 'tumugi/command/show'
 
 module Tumugi
   class Application
+    attr_accessor :params
+
     def initialize
       @tasks = {}
+      @params = {}
     end
 
     def execute(command, root_task_id, options)

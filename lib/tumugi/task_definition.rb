@@ -20,6 +20,7 @@ module Tumugi
     def initialize(id, opts={})
       @id = id
       @opts = { type: Tumugi::Task }.merge(opts)
+      @params = {}
 
       unless @opts[:type].is_a?(Class)
         @opts[:type] = Tumugi::Plugin.lookup_task(@opts[:type])
@@ -28,6 +29,10 @@ module Tumugi
 
     def instance
       @task ||= create_task
+    end
+
+    def param(name, opts={})
+      @params[name] = opts
     end
 
     def requires(tasks)
@@ -64,10 +69,11 @@ module Tumugi
     end
 
     def define_task
-      task_class = Class.new(@opts[:type])
+      task_class = Class.new(lookup_parent_task_class)
       define_requires_method(task_class)
       define_output_method(task_class)
       define_run_method(task_class)
+      setup_params(task_class)
       task_class
     end
 
@@ -105,6 +111,20 @@ module Tumugi
           td.run_block(self)
         end
       end unless @run.nil?
+    end
+
+    def setup_params(task_class)
+      @params.each do |name, opts|
+        task_class.param(name, opts)
+      end
+    end
+
+    def lookup_parent_task_class
+      if @opts[:type].is_a?(Class)
+        @opts[:type]
+      else
+        Tumugi::Plugin.lookup_task(@opts[:type])
+      end
     end
   end
 end

@@ -28,22 +28,34 @@ class Tumugi::Parameter::ParameterTest < Test::Unit::TestCase
 
   sub_test_case '#get' do
     sub_test_case 'auto_bind is enabled' do
-      sub_test_case 'bind from ENV' do
+      sub_test_case 'search from application parameter' do
+        teardown do
+          Tumugi.application.params = {}
+        end
+
+        test 'returns specified value' do
+          Tumugi.application.params['param_1'] = 'param_value1'
+          param = Tumugi::Parameter::Parameter.new(:param_1)
+          assert_equal('param_value1', param.get)
+        end
+      end
+
+      sub_test_case 'search from ENV' do
         teardown do
           ENV.delete('env_var_1')
           ENV.delete('ENV_VAR_1')
         end
 
-        test 'find by raw value' do
-          ENV['env_var_1'] = 'value1'
+        test 'get value by raw value' do
+          ENV['env_var_1'] = 'env_value1'
           param = Tumugi::Parameter::Parameter.new(:env_var_1)
-          assert_equal('value1', param.get)
+          assert_equal('env_value1', param.get)
         end
 
-        test 'find by upcase value' do
-          ENV['ENV_VAR_1'] = 'value1'
+        test 'get value by upcase value' do
+          ENV['ENV_VAR_1'] = 'env_value1'
           param = Tumugi::Parameter::Parameter.new(:env_var_1)
-          assert_equal('value1', param.get)
+          assert_equal('env_value1', param.get)
         end
       end
 
