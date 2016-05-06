@@ -11,13 +11,18 @@ module Tumugi
       def initialize
         super()
         proxy = self.class.merged_parameter_proxy
-        proxy.params.each do |name, param|
+        params = proxy.params
+        proxy.param_defaults.each do |name, value|
+          param = params[name]
+          param.overwrite_default(value) if param
+        end
+        params.each do |name, param|
           unless proxy.param_auto_bind_enabled.nil?
             param.task_param_auto_bind_enabled = proxy.param_auto_bind_enabled
           end
           instance_variable_set("@#{name}", param.get)
         end
-        validate_params(proxy.params)
+        validate_params(params)
         configure
       end
 
@@ -52,6 +57,10 @@ module Tumugi
         def param(name, opts={})
           parameter_proxy(proxy_id(self)).param(name, opts)
           attr_accessor name
+        end
+
+        def param_set(name, value)
+          parameter_proxy(proxy_id(self)).param_set(name, value)
         end
 
         def param_auto_bind_enabled(v)

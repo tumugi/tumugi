@@ -48,6 +48,11 @@ module Tumugi
         @opts[:default] || nil
       end
 
+      def overwrite_default(value)
+        @opts[:required] = false
+        @opts[:default] = value
+      end
+
       private
 
       def search_from_application_parameters

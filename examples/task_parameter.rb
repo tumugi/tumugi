@@ -12,10 +12,13 @@ end
 task :task2 do
   # If you want do disable auto binding feature, set `auto_bind: false`
   param :key1, auto_bind: false #=> nil
+  param :key2
+  param_set :key2, 'value2' #=> 'value'
 
   requires :task3
   run do
     log "key1=#{key1}"
+    log "key2=#{key2}"
   end
 end
 

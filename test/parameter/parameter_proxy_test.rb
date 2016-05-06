@@ -46,4 +46,12 @@ class Tumugi::Parameter::ParameterProxyTest < Test::Unit::TestCase
       end
     end
   end
+
+  sub_test_case '#param_set' do
+    test 'should add param_defaults' do
+      @proxy.param_set(:param1, 'value1')
+      assert_true(@proxy.param_defaults.has_key?(:param1))
+      assert_equal('value1', @proxy.param_defaults[:param1])
+    end
+  end
 end

@@ -21,6 +21,7 @@ module Tumugi
       @id = id
       @opts = { type: Tumugi::Task }.merge(opts)
       @params = {}
+      @param_defaults = {}
 
       unless @opts[:type].is_a?(Class)
         @opts[:type] = Tumugi::Plugin.lookup_task(@opts[:type])
@@ -33,6 +34,10 @@ module Tumugi
 
     def param(name, opts={})
       @params[name] = opts
+    end
+
+    def param_set(name, value)
+      @param_defaults[name] = value
     end
 
     def param_auto_bind_enabled(v)
@@ -120,6 +125,9 @@ module Tumugi
     def setup_params(task_class)
       @params.each do |name, opts|
         task_class.param(name, opts)
+      end
+      @param_defaults.each do |name, value|
+        task_class.param_set(name, value)
       end
       unless @param_auto_bind_enabled.nil?
         task_class.param_auto_bind_enabled(@param_auto_bind_enabled)
