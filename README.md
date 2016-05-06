@@ -69,7 +69,33 @@ Save these code into `workflow.rb`,
 then run this script by `tumugi` command like this:
 
 ```bash
-$ tumugi workflow.rb task1
+$ tumugi run -f workflow.rb task1
+I, [2016-05-06T22:58:28.271234 #76156]  INFO -- : start: task4
+I, [2016-05-06T22:58:28.271310 #76156]  INFO -- : run: task4
+I, [2016-05-06T22:58:28.271386 #76156]  INFO -- : task4#run
+I, [2016-05-06T22:58:29.276218 #76156]  INFO -- : completed: task4
+I, [2016-05-06T22:58:29.276373 #76156]  INFO -- : start: task2
+I, [2016-05-06T22:58:29.276437 #76156]  INFO -- : run: task2
+I, [2016-05-06T22:58:29.276546 #76156]  INFO -- : task2#run
+I, [2016-05-06T22:58:29.276606 #76156]  INFO -- : completed: task2
+I, [2016-05-06T22:58:29.276650 #76156]  INFO -- : start: task3
+I, [2016-05-06T22:58:29.276688 #76156]  INFO -- : run: task3
+I, [2016-05-06T22:58:29.276733 #76156]  INFO -- : task3#run
+I, [2016-05-06T22:58:29.276765 #76156]  INFO -- : completed: task3
+I, [2016-05-06T22:58:29.276798 #76156]  INFO -- : start: task1
+I, [2016-05-06T22:58:29.276823 #76156]  INFO -- : run: task1
+I, [2016-05-06T22:58:29.276861 #76156]  INFO -- : task1#run
+I, [2016-05-06T22:58:29.276899 #76156]  INFO -- : completed: task1
+I, [2016-05-06T22:58:29.278919 #76156]  INFO -- : Result report:
++-------+----------+------------+-----------+
+| Task  | Requires | Parameters | State     |
++-------+----------+------------+-----------+
+| task1 | task2    |            | completed |
+|       | task3    |            |           |
+| task3 | task4    |            | completed |
+| task2 | task4    |            | completed |
+| task4 |          |            | completed |
++-------+----------+------------+-----------+
 ```
 
 ## Development
