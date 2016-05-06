@@ -20,6 +20,8 @@ module Tumugi
     def initialize(id, opts={})
       @id = id
       @opts = { type: Tumugi::Task }.merge(opts)
+      @params = {}
+      @param_defaults = {}
 
       unless @opts[:type].is_a?(Class)
         @opts[:type] = Tumugi::Plugin.lookup_task(@opts[:type])
@@ -28,6 +30,18 @@ module Tumugi
 
     def instance
       @task ||= create_task
+    end
+
+    def param(name, opts={})
+      @params[name] = opts
+    end
+
+    def param_set(name, value)
+      @param_defaults[name] = value
+    end
+
+    def param_auto_bind_enabled(v)
+      @param_auto_bind_enabled = v
     end
 
     def requires(tasks)
@@ -64,10 +78,11 @@ module Tumugi
     end
 
     def define_task
-      task_class = Class.new(@opts[:type])
+      task_class = Class.new(lookup_parent_task_class)
       define_requires_method(task_class)
       define_output_method(task_class)
       define_run_method(task_class)
+      setup_params(task_class)
       task_class
     end
 
@@ -105,6 +120,26 @@ module Tumugi
           td.run_block(self)
         end
       end unless @run.nil?
+    end
+
+    def setup_params(task_class)
+      @params.each do |name, opts|
+        task_class.param(name, opts)
+      end
+      @param_defaults.each do |name, value|
+        task_class.param_set(name, value)
+      end
+      unless @param_auto_bind_enabled.nil?
+        task_class.param_auto_bind_enabled(@param_auto_bind_enabled)
+      end
+    end
+
+    def lookup_parent_task_class
+      if @opts[:type].is_a?(Class)
+        @opts[:type]
+      else
+        Tumugi::Plugin.lookup_task(@opts[:type])
+      end
     end
   end
 end

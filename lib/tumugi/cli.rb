@@ -9,6 +9,7 @@ module Tumugi
       def common_options
         option :file, aliases: '-f', desc: 'Task definition file name', required: true
         option :config, aliases: '-c', desc: 'Configuration file name', default: 'tumugi.rb'
+        option :params, aliases: '-p', type: :hash, desc: 'Task parameters'
       end
     end
 
@@ -44,6 +45,9 @@ module Tumugi
       if config_file && File.exists?(config_file) && File.extname(config_file) == '.rb'
         load(config_file)
       end
+
+      params = options[:params]
+      Tumugi.application.params = params if params
     end
   end
 end
