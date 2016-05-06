@@ -1,9 +1,13 @@
 require 'parallel'
 require 'retriable'
+require 'terminal-table'
+require 'tumugi/mixin/listable'
 
 module Tumugi
   module Command
     class Run
+      include Tumugi::Mixin::Listable
+
       def execute(dag, options={})
         workers = options[:workers] || Tumugi.config.workers
         settings = { in_threads: workers }
@@ -37,6 +41,8 @@ module Tumugi
             Tumugi.logger.info "skip: #{t.id} is already completed"
           end
         end
+
+        show_result_report(dag)
       end
 
       private
@@ -57,6 +63,23 @@ module Tumugi
         Proc.new do |exception, try, elapsed_time, next_interval|
           Tumugi.logger.error "#{exception.class}: '#{exception.message}' - #{try} tries in #{elapsed_time} seconds and #{next_interval} seconds until the next try."
         end
+      end
+
+      def show_result_report(dag)
+        headings = ['Task', 'Requires', 'Parameters', 'State']
+        table = Terminal::Table.new headings: headings do |t|
+          dag.tsort.reverse.map do |task|
+            proxy = task.class.merged_parameter_proxy
+            requires = list(task.requires).map do |r|
+              r.id
+            end
+            params = proxy.params.map do |name, _|
+              "#{name}=#{task.instance_variable_get("@#{name}")}"
+            end
+            t << [ task.id, requires.join("\n"), params.join("\n"), task.state ]
+          end
+        end
+        Tumugi.logger.info "Result report:\n#{table.to_s}"
       end
     end
   end
