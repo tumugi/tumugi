@@ -1,6 +1,8 @@
 require 'parallel'
 require 'retriable'
 require 'terminal-table'
+require 'thor'
+
 require 'tumugi/mixin/listable'
 
 module Tumugi
@@ -11,17 +13,25 @@ module Tumugi
       def execute(dag, options={})
         workers = options[:workers] || Tumugi.config.workers
         settings = { in_threads: workers }
+        logger = Tumugi.logger
 
-        Tumugi.logger.verbose! if options[:verbose]
-        Tumugi.logger.quiet! if options[:quiet]
+        logger.verbose! if options[:verbose]
+        logger.quiet! if options[:quiet]
 
         Parallel.each(dag.tsort, settings) do |t|
-          Tumugi.logger.info "start: #{t.id}"
-          until t.ready?
+          logger.info "start: #{t.id}"
+          until t.ready? || t.requires_failed?
             sleep 1
           end
-          unless t.completed?
-            Tumugi.logger.info "run: #{t.id}"
+
+          if t.completed?
+            t.state = :skipped
+            logger.info "#{t.state}: #{t.id} is already completed"
+          elsif t.requires_failed?
+            t.state = :requires_failed
+            logger.info "#{t.state}: #{t.id} has failed requires task"
+          else
+            logger.info "run: #{t.id}"
             t.state = :running
 
             begin
@@ -29,20 +39,18 @@ module Tumugi
                 t.run
               end
             rescue => e
-              Tumugi.logger.info "failed: #{t.id}"
-              Tumugi.logger.error "#{e.message}"
               t.state = :failed
+              logger.info "#{t.state}: #{t.id}"
+              logger.error "#{e.message}"
             else
-              Tumugi.logger.info "completed: #{t.id}"
               t.state = :completed
+              logger.info "#{t.state}: #{t.id}"
             end
-          else
-            t.state = :skipped
-            Tumugi.logger.info "skip: #{t.id} is already completed"
           end
         end
 
         show_result_report(dag)
+        raise ::Thor::Error.new("run failed") if dag.tsort.any? { |t| t.state == :failed }
       end
 
       private
@@ -61,7 +69,11 @@ module Tumugi
 
       def on_retry
         Proc.new do |exception, try, elapsed_time, next_interval|
-          Tumugi.logger.error "#{exception.class}: '#{exception.message}' - #{try} tries in #{elapsed_time} seconds and #{next_interval} seconds until the next try."
+          if next_interval
+            Tumugi.logger.error "#{exception.class}: '#{exception.message}' - #{try} tries in #{elapsed_time} seconds and #{next_interval} seconds until the next try."
+          else
+            Tumugi.logger.error "#{exception.class}: '#{exception.message}' - #{try} tries in #{elapsed_time} seconds. Task failed."
+          end
         end
       end
 

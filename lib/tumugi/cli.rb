@@ -11,6 +11,10 @@ module Tumugi
         option :config, aliases: '-c', desc: 'Configuration file name', default: 'tumugi.rb'
         option :params, aliases: '-p', type: :hash, desc: 'Task parameters'
       end
+
+      def exit_on_failure?
+        true
+      end
     end
 
     desc "version", "Show version"

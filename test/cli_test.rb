@@ -10,6 +10,12 @@ class Tumugi::CLITest < Test::Unit::TestCase
     'task_parameter' => ['task_parameter.rb', 'task1'],
   }
 
+  failed_examples = {
+    'fail_first_task' => ['fail_first_task.rb', 'task1'],
+    'fail_intermediate_task' => ['fail_intermediate_task.rb', 'task1'],
+    'fail_last_task' => ['fail_last_task.rb', 'task1'],
+  }
+
   def exec(command, file, task, options)
     system("bundle exec ./exe/tumugi #{command} -f ./examples/#{file} #{task} #{options}")
   end
@@ -18,9 +24,16 @@ class Tumugi::CLITest < Test::Unit::TestCase
     system('rm -rf /tmp/tumugi_*')
   end
 
-  data(examples)
-  test 'run' do |(file, task)|
-    assert_true(exec('run', file, task, "-w 4 --quiet -p key1:value1"))
+  sub_test_case 'run' do
+    data(examples)
+    test 'success' do |(file, task)|
+      assert_true(exec('run', file, task, "-w 4 --quiet -p key1:value1"))
+    end
+
+    data(failed_examples)
+    test 'fail' do |(file, task)|
+      assert_false(exec('run', file, task, "-w 4 --quiet -c ./examples/tumugi_config.rb"))
+    end
   end
 
   sub_test_case 'show' do

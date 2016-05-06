@@ -170,4 +170,20 @@ class Tumugi::TaskTest < Test::Unit::TestCase
       end
     end
   end
+
+  sub_test_case '#requires_failed' do
+    test 'return true when requires task is failed' do
+      requires_task = TestTask.new(output: NotExistOutput.new)
+      requires_task.state = :failed
+      task = TestTask.new(requires: requires_task)
+      assert_true(task.requires_failed?)
+    end
+
+    test 'return false when requires task is completed' do
+      requires_task = TestTask.new(output: NotExistOutput.new)
+      requires_task.state = :completed
+      task = TestTask.new(requires: requires_task)
+      assert_false(task.requires_failed?)
+    end
+  end
 end

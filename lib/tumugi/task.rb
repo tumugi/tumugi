@@ -75,6 +75,10 @@ module Tumugi
       end
     end
 
+    def requires_failed?
+      list(_requires).any? { |t| t.instance.state == :failed || t.instance.state == :requires_failed }
+    end
+
     # Following methods are internal use only
 
     def _requires

@@ -39,7 +39,9 @@ class Tumugi::Command::RunTest < Test::Unit::TestCase
         c.retry_interval = 1
       end
 
-      @cmd.execute(@dag)
+      assert_raise(::Thor::Error) do
+        @cmd.execute(@dag)
+      end
       assert_equal(:failed, @task.state)
     end
 
