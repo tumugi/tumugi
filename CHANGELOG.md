@@ -1,12 +1,31 @@
 # Change Log
 
+## [v0.3.0](https://github.com/tumugi/tumugi/tree/v0.3.0) (2016-05-07)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.2.0...v0.3.0)
+
+**Implemented enhancements:**
+
+- Show result report [\#23](https://github.com/tumugi/tumugi/issues/23)
+- Support parameter [\#21](https://github.com/tumugi/tumugi/issues/21)
+
+**Fixed bugs:**
+
+- Fix workflow dead locked when some task failed [\#25](https://github.com/tumugi/tumugi/pull/25) ([hakobera](https://github.com/hakobera))
+
+**Merged pull requests:**
+
+- Update README [\#26](https://github.com/tumugi/tumugi/pull/26) ([hakobera](https://github.com/hakobera))
+- Implement workflow run result report [\#24](https://github.com/tumugi/tumugi/pull/24) ([hakobera](https://github.com/hakobera))
+- Implement parameter feature [\#22](https://github.com/tumugi/tumugi/pull/22) ([hakobera](https://github.com/hakobera))
+
 ## [v0.2.0](https://github.com/tumugi/tumugi/tree/v0.2.0) (2016-05-02)
 [Full Changelog](https://github.com/tumugi/tumugi/compare/v0.1.0...v0.2.0)
 
 **Implemented enhancements:**
 
-- Implement plugin architecture [\#18](https://github.com/tumugi/tumugi/pull/18) ([hakobera](https://github.com/hakobera))
-- \[Breaking change\] Change eval scope of output, run method [\#14](https://github.com/tumugi/tumugi/pull/14) ([hakobera](https://github.com/hakobera))
+- \[Breaking Change\] Support plugin [\#15](https://github.com/tumugi/tumugi/issues/15)
+- Add required\_ruby\_version to gemspec [\#19](https://github.com/tumugi/tumugi/pull/19) ([hakobera](https://github.com/hakobera))
+- \[Breaking Change\] Change eval scope of output, run method [\#14](https://github.com/tumugi/tumugi/pull/14) ([hakobera](https://github.com/hakobera))
 - \[Breaking Change\] Add Task\#logger and Task\#log method  [\#12](https://github.com/tumugi/tumugi/pull/12) ([hakobera](https://github.com/hakobera))
 - Update command description / Set file options mandatory [\#11](https://github.com/tumugi/tumugi/pull/11) ([hakobera](https://github.com/hakobera))
 
@@ -18,6 +37,8 @@
 
 - Use bundler cache on travis [\#17](https://github.com/tumugi/tumugi/pull/17) ([hakobera](https://github.com/hakobera))
 - Add gem version badge to README [\#16](https://github.com/tumugi/tumugi/pull/16) ([hakobera](https://github.com/hakobera))
+- Prepare for release v0.2.0 [\#20](https://github.com/tumugi/tumugi/pull/20) ([hakobera](https://github.com/hakobera))
+- \[Breaking Change\] Implement plugin architecture [\#18](https://github.com/tumugi/tumugi/pull/18) ([hakobera](https://github.com/hakobera))
 - Add changelog of v0.1.0 [\#10](https://github.com/tumugi/tumugi/pull/10) ([hakobera](https://github.com/hakobera))
 
 ## [v0.1.0](https://github.com/tumugi/tumugi/tree/v0.1.0) (2016-04-28)
