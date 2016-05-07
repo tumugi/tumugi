@@ -7,6 +7,13 @@ module Tumugi
       @max_retry = 3
       @retry_interval = 300 #seconds
       @param_auto_bind_enabled = true
+      @sections = {}
+    end
+
+    def section(name)
+      @sections[name] ||= {}
+      yield @sections[name] if block_given?
+      @sections[name]
     end
   end
 end

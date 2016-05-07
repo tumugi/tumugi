@@ -3,6 +3,7 @@ require_relative './test_helper'
 class Tumugi::CLITest < Test::Unit::TestCase
   examples = {
     'concurrent_task_run' => ['concurrent_task_run.rb', 'task1'],
+    'config_section' => ['config_section.rb', 'task1'],
     'data_pipeline' => ['data_pipeline.rb', 'sum'],
     'simple' => ['simple.rb', 'task1'],
     'target' => ['target.rb', 'task1'],
@@ -27,7 +28,7 @@ class Tumugi::CLITest < Test::Unit::TestCase
   sub_test_case 'run' do
     data(examples)
     test 'success' do |(file, task)|
-      assert_true(exec('run', file, task, "-w 4 --quiet -p key1:value1"))
+      assert_true(exec('run', file, task, "-w 4 --quiet -p key1:value1 -c ./examples/tumugi_config.rb"))
     end
 
     data(failed_examples)
