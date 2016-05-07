@@ -15,9 +15,7 @@ module Tumugi
 
     def config
       @config ||= Tumugi::Config.new
-      if block_given?
-        yield @config
-      end
+      yield @config if block_given?
       @config
     end
   end
