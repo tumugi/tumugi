@@ -19,3 +19,11 @@ def capture_stdout
 ensure
   $stdout = STDOUT
 end
+
+module Tumugi
+  class Config
+    def self.reset_config_sections
+      @@sections = {}
+    end
+  end
+end

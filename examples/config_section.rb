@@ -1,6 +1,8 @@
+::Tumugi::Config.register_section('example', :key)
+
 task :task1 do
   run do
     log 'task1#run'
-    log "config section example['key']=#{Tumugi.config.section('example')['key']}"
+    log "config section example.key=#{Tumugi.config.section('example').key}"
   end
 end
