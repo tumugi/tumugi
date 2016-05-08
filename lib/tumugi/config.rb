@@ -37,7 +37,12 @@ module Tumugi
       else
         @section_instances[name] ||= section_class.new
         if @section_procs[name]
-          @section_procs[name].call(@section_instances[name])
+          begin
+            @section_procs[name].call(@section_instances[name])
+          rescue NoMethodError => e
+            Tumugi.logger.error "#{e.message}. Available attributes are #{@section_instances[name].members}"
+            raise e
+          end
         end
         @section_instances[name]
       end
