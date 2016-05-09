@@ -41,6 +41,8 @@ module Tumugi
         else
           print g
         end
+
+        return true
       end
     end
   end

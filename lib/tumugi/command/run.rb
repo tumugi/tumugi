@@ -47,7 +47,7 @@ module Tumugi
         end
 
         show_result_report(dag)
-        raise ::Thor::Error.new("run failed") if dag.tsort.any? { |t| t.state == :failed }
+        return !dag.tsort.any? { |t| t.state == :failed }
       end
 
       private

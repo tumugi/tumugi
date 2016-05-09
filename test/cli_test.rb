@@ -48,7 +48,7 @@ class Tumugi::CLITest < Test::Unit::TestCase
   sub_test_case 'show' do
     data(examples)
     test 'without output' do |(file, task)|
-      assert_true(exec('show', file, task, "-p key1:value1"))
+      assert_true(exec('show', file, task, "--quiet -p key1:value1"))
     end
 
     data do
@@ -61,7 +61,7 @@ class Tumugi::CLITest < Test::Unit::TestCase
       data_set
     end
     test 'with valid output' do |(file, task, format)|
-      assert_true(exec('show', file, task, "-o tmp/#{file}.#{format} -p key1:value1"))
+      assert_true(exec('show', file, task, "-o tmp/#{file}.#{format} --quiet -p key1:value1"))
     end
   end
 end
