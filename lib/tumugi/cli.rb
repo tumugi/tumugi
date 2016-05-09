@@ -29,7 +29,7 @@ module Tumugi
     option :workers, aliases: '-w', type: :numeric, desc: 'Number of workers to run task concurrently'
     common_options
     def run_(task)
-      Tumugi.application.execute(:run, task, options)
+      execute(:run, task, options)
     end
 
     desc "show TASK", "Show DAG of TASK in a workflow"
@@ -37,7 +37,22 @@ module Tumugi
     option :out, aliases: '-o', desc: 'Output file name. If not specified, output result to STDOUT'
     option :format, aliases: '-t', desc: 'Output file format. Only affected --out option is specified.', enum: ['dot', 'png', 'svg']
     def show(task)
-      Tumugi.application.execute(:show, task, options)
+      execute(:show, task, options)
+    end
+
+    private
+
+    def execute(command, task, options)
+      success = Tumugi.application.execute(command, task, options)
+      unless success
+        Tumugi.logger.error "#{command} command failed"
+        raise Thor::Error, 'failed'
+      end
+    rescue => e
+      Tumugi.logger.error "#{command} command failed"
+      Tumugi.logger.error "Stacktrace:"
+      e.backtrace.each { |line| Tumugi.logger.error line }
+      raise Thor::Error, 'failed'
     end
   end
 end

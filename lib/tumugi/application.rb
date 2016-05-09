@@ -1,5 +1,6 @@
 require 'tumugi/dag'
 require 'tumugi/dsl'
+require 'tumugi/error'
 require 'tumugi/plugin'
 require 'tumugi/target'
 require 'tumugi/command/run'
@@ -16,7 +17,7 @@ module Tumugi
 
     def execute(command, root_task_id, options)
       process_common_options(options)
-      load(options[:file], true)
+      load_workflow_file(options[:file])
       dag = create_dag(root_task_id)
       command_module = Kernel.const_get("Tumugi").const_get("Command")
       cmd = command_module.const_get("#{command.to_s.capitalize}").new
@@ -29,11 +30,17 @@ module Tumugi
 
     def find_task(id)
       task = @tasks[id.to_s]
-      raise "Task not found: #{id}" if task.nil?
+      raise Tumugi::Error, "Task not found: #{id}" if task.nil?
       task
     end
 
     private
+
+    def load_workflow_file(file)
+      load(file, true)
+    rescue LoadError => e
+      raise Tumugi::Error, e
+    end
 
     def create_dag(id)
       dag = Tumugi::DAG.new
@@ -43,7 +50,7 @@ module Tumugi
     end
 
     def process_common_options(options)
-      init_logger(options)
+      setup_logger(options)
       load_config(options)
       set_params(options)
     end
@@ -52,7 +59,7 @@ module Tumugi
       @logger ||= Tumugi.logger
     end
 
-    def init_logger(options)
+    def setup_logger(options)
       logger.verbose! if options[:verbose]
       logger.quiet! if options[:quiet]
     end
@@ -63,6 +70,8 @@ module Tumugi
         logger.info "Load config from #{config_file}"
         load(config_file)
       end
+    rescue LoadError => e
+      raise Tumugi::Error, e
     end
 
     def set_params(options)
