@@ -1,7 +1,14 @@
 # Change Log
 
-## [0.4.0](https://github.com/tumugi/tumugi/tree/0.4.0) (2016-05-09)
-[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.3.0...0.4.0)
+## [0.4.1](https://github.com/tumugi/tumugi/tree/0.4.1) (2016-05-09)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.4.0...0.4.1)
+
+**Fixed bugs:**
+
+- Check workflow file existance before load [\#39](https://github.com/tumugi/tumugi/pull/39) ([hakobera](https://github.com/hakobera))
+
+## [v0.4.0](https://github.com/tumugi/tumugi/tree/v0.4.0) (2016-05-09)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.3.0...v0.4.0)
 
 **Implemented enhancements:**
 
@@ -10,6 +17,7 @@
 
 **Merged pull requests:**
 
+- Prepare release for v0.4.0 [\#38](https://github.com/tumugi/tumugi/pull/38) ([hakobera](https://github.com/hakobera))
 - Refactoring error handling [\#37](https://github.com/tumugi/tumugi/pull/37) ([hakobera](https://github.com/hakobera))
 - Change config section spec [\#35](https://github.com/tumugi/tumugi/pull/35) ([hakobera](https://github.com/hakobera))
 - Remove support Ruby 2.0 [\#34](https://github.com/tumugi/tumugi/pull/34) ([hakobera](https://github.com/hakobera))
