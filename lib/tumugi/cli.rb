@@ -7,7 +7,7 @@ module Tumugi
 
     class << self
       def common_options
-        option :file, aliases: '-f', desc: 'Task definition file name', required: true
+        option :file, aliases: '-f', desc: 'Workflow file name', required: true
         option :config, aliases: '-c', desc: 'Configuration file name', default: 'tumugi_config.rb'
         option :params, aliases: '-p', type: :hash, desc: 'Task parameters'
         option :quiet, type: :boolean, desc: 'Suppress log', default: false
@@ -50,7 +50,7 @@ module Tumugi
       end
     rescue => e
       Tumugi.logger.error "#{command} command failed"
-      Tumugi.logger.error "Stacktrace:"
+      Tumugi.logger.error e.message
       e.backtrace.each { |line| Tumugi.logger.error line }
       raise Thor::Error, 'failed'
     end
