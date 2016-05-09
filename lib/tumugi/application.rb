@@ -30,16 +30,22 @@ module Tumugi
 
     def find_task(id)
       task = @tasks[id.to_s]
-      raise Tumugi::Error, "Task not found: #{id}" if task.nil?
+      raise Tumugi::TumugiError, "Task not found: #{id}" if task.nil?
       task
     end
 
     private
 
     def load_workflow_file(file)
-      load(file, true)
-    rescue LoadError => e
-      raise Tumugi::Error, e
+      unless File.exist?(file)
+        raise Tumugi::TumugiError, "Workflow file '#{file}' not exist."
+      end
+
+      begin
+        load(file, true)
+      rescue LoadError => e
+        raise Tumugi::TumugiError, e.message
+      end
     end
 
     def create_dag(id)
@@ -71,7 +77,7 @@ module Tumugi
         load(config_file)
       end
     rescue LoadError => e
-      raise Tumugi::Error, e
+      raise Tumugi::TumugiError, e.message
     end
 
     def set_params(options)
