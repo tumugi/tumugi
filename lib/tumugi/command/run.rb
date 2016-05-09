@@ -15,9 +15,6 @@ module Tumugi
         settings = { in_threads: workers }
         logger = Tumugi.logger
 
-        logger.verbose! if options[:verbose]
-        logger.quiet! if options[:quiet]
-
         Parallel.each(dag.tsort, settings) do |t|
           logger.info "start: #{t.id}"
           until t.ready? || t.requires_failed?

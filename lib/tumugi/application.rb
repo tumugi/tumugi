@@ -15,6 +15,7 @@ module Tumugi
     end
 
     def execute(command, root_task_id, options)
+      process_common_options(options)
       load(options[:file], true)
       dag = create_dag(root_task_id)
       command_module = Kernel.const_get("Tumugi").const_get("Command")
@@ -39,6 +40,36 @@ module Tumugi
       task = find_task(id)
       dag.add_task(task)
       dag
+    end
+
+    def process_common_options(options)
+      init_logger(options)
+      load_config(options)
+      set_params(options)
+    end
+
+    def logger
+      @logger ||= Tumugi.logger
+    end
+
+    def init_logger(options)
+      logger.verbose! if options[:verbose]
+      logger.quiet! if options[:quiet]
+    end
+
+    def load_config(options)
+      config_file = options[:config]
+      if config_file && File.exists?(config_file) && File.extname(config_file) == '.rb'
+        logger.info "Load config from #{config_file}"
+        load(config_file)
+      end
+    end
+
+    def set_params(options)
+      if options[:params]
+        @params = options[:params]
+        logger.info "Parameters: #{@params}"
+      end
     end
   end
 end

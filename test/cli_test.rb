@@ -3,7 +3,6 @@ require_relative './test_helper'
 class Tumugi::CLITest < Test::Unit::TestCase
   examples = {
     'concurrent_task_run' => ['concurrent_task_run.rb', 'task1'],
-    'config_section' => ['config_section.rb', 'task1'],
     'data_pipeline' => ['data_pipeline.rb', 'sum'],
     'simple' => ['simple.rb', 'task1'],
     'target' => ['target.rb', 'task1'],
@@ -15,6 +14,10 @@ class Tumugi::CLITest < Test::Unit::TestCase
     'fail_first_task' => ['fail_first_task.rb', 'task1'],
     'fail_intermediate_task' => ['fail_intermediate_task.rb', 'task1'],
     'fail_last_task' => ['fail_last_task.rb', 'task1'],
+  }
+
+  config_section_examples = {
+    'config_section' => ['config_section.rb', 'task1'],
   }
 
   def exec(command, file, task, options)
@@ -34,6 +37,11 @@ class Tumugi::CLITest < Test::Unit::TestCase
     data(failed_examples)
     test 'fail' do |(file, task)|
       assert_false(exec('run', file, task, "-w 4 --quiet -c ./examples/tumugi_config.rb"))
+    end
+
+    data(config_section_examples)
+    test 'config_section' do |(file, task)|
+      assert_true(exec('run', file, task, "-w 4 --quiet -c ./examples/tumugi_config_with_section.rb"))
     end
   end
 
