@@ -1,6 +1,21 @@
 # Change Log
 
-## [v0.3.0](https://github.com/tumugi/tumugi/tree/v0.3.0) (2016-05-07)
+## [0.4.0](https://github.com/tumugi/tumugi/tree/0.4.0) (2016-05-09)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.3.0...0.4.0)
+
+**Implemented enhancements:**
+
+- \[Breaking Change\] Remove support ruby 2.0 [\#33](https://github.com/tumugi/tumugi/issues/33)
+- Add config section [\#31](https://github.com/tumugi/tumugi/issues/31)
+
+**Merged pull requests:**
+
+- Refactoring error handling [\#37](https://github.com/tumugi/tumugi/pull/37) ([hakobera](https://github.com/hakobera))
+- Change config section spec [\#35](https://github.com/tumugi/tumugi/pull/35) ([hakobera](https://github.com/hakobera))
+- Remove support Ruby 2.0 [\#34](https://github.com/tumugi/tumugi/pull/34) ([hakobera](https://github.com/hakobera))
+- Implement config section [\#32](https://github.com/tumugi/tumugi/pull/32) ([hakobera](https://github.com/hakobera))
+
+## [v0.3.0](https://github.com/tumugi/tumugi/tree/v0.3.0) (2016-05-06)
 [Full Changelog](https://github.com/tumugi/tumugi/compare/v0.2.0...v0.3.0)
 
 **Implemented enhancements:**
@@ -14,6 +29,7 @@
 
 **Merged pull requests:**
 
+- Prepare for release v0.3.0 [\#27](https://github.com/tumugi/tumugi/pull/27) ([hakobera](https://github.com/hakobera))
 - Update README [\#26](https://github.com/tumugi/tumugi/pull/26) ([hakobera](https://github.com/hakobera))
 - Implement workflow run result report [\#24](https://github.com/tumugi/tumugi/pull/24) ([hakobera](https://github.com/hakobera))
 - Implement parameter feature [\#22](https://github.com/tumugi/tumugi/pull/22) ([hakobera](https://github.com/hakobera))
