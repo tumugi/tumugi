@@ -1,11 +1,26 @@
 # Change Log
 
-## [0.4.1](https://github.com/tumugi/tumugi/tree/0.4.1) (2016-05-09)
-[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.4.0...0.4.1)
+## [0.4.2](https://github.com/tumugi/tumugi/tree/0.4.2) (2016-05-10)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.4.1...0.4.2)
+
+**Fixed bugs:**
+
+- Cannot read parameters of parent task [\#41](https://github.com/tumugi/tumugi/issues/41)
+
+**Merged pull requests:**
+
+- Fix parent class parameters are not visible in a subclass [\#42](https://github.com/tumugi/tumugi/pull/42) ([hakobera](https://github.com/hakobera))
+
+## [v0.4.1](https://github.com/tumugi/tumugi/tree/v0.4.1) (2016-05-09)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.4.0...v0.4.1)
 
 **Fixed bugs:**
 
 - Check workflow file existance before load [\#39](https://github.com/tumugi/tumugi/pull/39) ([hakobera](https://github.com/hakobera))
+
+**Merged pull requests:**
+
+- Prepare release for v0.4.1 [\#40](https://github.com/tumugi/tumugi/pull/40) ([hakobera](https://github.com/hakobera))
 
 ## [v0.4.0](https://github.com/tumugi/tumugi/tree/v0.4.0) (2016-05-09)
 [Full Changelog](https://github.com/tumugi/tumugi/compare/v0.3.0...v0.4.0)
