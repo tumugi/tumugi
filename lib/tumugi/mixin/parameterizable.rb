@@ -55,28 +55,28 @@ module Tumugi
         end
 
         def param(name, opts={})
-          parameter_proxy(proxy_id(self)).param(name, opts)
+          parameter_proxy(proxy_id).param(name, opts)
           attr_accessor name
         end
 
         def param_set(name, value)
-          parameter_proxy(proxy_id(self)).param_set(name, value)
+          parameter_proxy(proxy_id).param_set(name, value)
         end
 
         def param_auto_bind_enabled(v)
-          parameter_proxy(proxy_id(self)).param_auto_bind_enabled = v
+          parameter_proxy(proxy_id).param_auto_bind_enabled = v
         end
 
         def merged_parameter_proxy
-          parameterizable = ancestors.reverse.select{ |a| a.respond_to?(:parameter_proxy) }
-          parameterizable.map { |a| a.parameter_proxy(proxy_id(a)) }.reduce(:merge)
+          parameterizables = ancestors.reverse.select{ |a| a.respond_to?(:parameter_proxy) }
+          parameterizables.map { |a| a.parameter_proxy(a.proxy_id) }.reduce(:merge)
         end
 
         def dump
-          parameter_proxy_map[proxy_id(self)].dump
+          parameter_proxy_map[proxy_id].dump
         end
 
-        def proxy_id(klass)
+        def proxy_id
           self.name || self.object_id.to_s
         end
       end

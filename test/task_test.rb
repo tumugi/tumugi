@@ -34,6 +34,10 @@ class Tumugi::TaskTest < Test::Unit::TestCase
     param :param_string_in_subclass, required: true
   end
 
+  class TestSubSubTask < TestSubTask
+    param_set :param_string_in_subclass, 'test'
+  end
+
   setup do
     @task = Tumugi::Task.new
   end
@@ -168,6 +172,13 @@ class Tumugi::TaskTest < Test::Unit::TestCase
       assert_raise(Tumugi::Parameter::ParameterError) do
         TestSubTask.new
       end
+    end
+
+    test 'subclass can access and set parameter value by param_set' do
+      task = TestSubSubTask.new
+      assert_true(task.respond_to? "param_string_in_subclass".to_sym)
+      assert_true(task.respond_to? "param_string_in_subclass=".to_sym)
+      assert_equal('test', task.param_string_in_subclass)
     end
   end
 
