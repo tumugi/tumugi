@@ -1,7 +1,18 @@
 # Change Log
 
-## [0.4.2](https://github.com/tumugi/tumugi/tree/0.4.2) (2016-05-10)
-[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.4.1...0.4.2)
+## [0.4.3](https://github.com/tumugi/tumugi/tree/0.4.3) (2016-05-12)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.4.2...0.4.3)
+
+**Implemented enhancements:**
+
+- Param set accept proc [\#45](https://github.com/tumugi/tumugi/pull/45) ([hakobera](https://github.com/hakobera))
+
+**Fixed bugs:**
+
+- Fix param\_set in subclass overrite parent class param [\#44](https://github.com/tumugi/tumugi/pull/44) ([hakobera](https://github.com/hakobera))
+
+## [v0.4.2](https://github.com/tumugi/tumugi/tree/v0.4.2) (2016-05-10)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.4.1...v0.4.2)
 
 **Fixed bugs:**
 
@@ -9,6 +20,7 @@
 
 **Merged pull requests:**
 
+- Prepare release for v0.4.2 [\#43](https://github.com/tumugi/tumugi/pull/43) ([hakobera](https://github.com/hakobera))
 - Fix parent class parameters are not visible in a subclass [\#42](https://github.com/tumugi/tumugi/pull/42) ([hakobera](https://github.com/hakobera))
 
 ## [v0.4.1](https://github.com/tumugi/tumugi/tree/v0.4.1) (2016-05-09)
