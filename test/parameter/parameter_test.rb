@@ -108,18 +108,18 @@ class Tumugi::Parameter::ParameterTest < Test::Unit::TestCase
     end
   end
 
-  sub_test_case '#overwrite_default' do
-    test 'should overwrite default value' do
+  sub_test_case '#merge_default_value' do
+    test 'should merge default value' do
       param = Tumugi::Parameter::Parameter.new(:name, default: 'default')
-      param.overwrite_default('value1')
-      assert_equal('value1', param.get)
+      merged = param.merge_default_value('value1')
+      assert_equal('value1', merged.get)
     end
 
     test 'should disable required implicitly' do
       param = Tumugi::Parameter::Parameter.new(:name, required: true)
-      param.overwrite_default('value1')
-      assert_equal('value1', param.get)
-      assert_false(param.required?)
+      merged = param.merge_default_value('value1')
+      assert_equal('value1', merged.get)
+      assert_false(merged.required?)
     end
   end
 end

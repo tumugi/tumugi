@@ -48,9 +48,8 @@ module Tumugi
         @opts[:default] || nil
       end
 
-      def overwrite_default(value)
-        @opts[:required] = false
-        @opts[:default] = value
+      def merge_default_value(value)
+        self.class.new(@name, @opts.merge(required: false, default: value))
       end
 
       private
