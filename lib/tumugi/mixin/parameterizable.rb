@@ -11,10 +11,11 @@ module Tumugi
       def initialize
         super()
         proxy = self.class.merged_parameter_proxy
-        params = proxy.params
+        params = proxy.params.dup
         proxy.param_defaults.each do |name, value|
-          param = params[name]
-          param.overwrite_default(value) if param
+          if params[name]
+            params[name] = params[name].merge_default_value(value)
+          end
         end
         params.each do |name, param|
           unless proxy.param_auto_bind_enabled.nil?

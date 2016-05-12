@@ -35,7 +35,11 @@ class Tumugi::TaskTest < Test::Unit::TestCase
   end
 
   class TestSubSubTask < TestSubTask
-    param_set :param_string_in_subclass, 'test'
+    param_set :param_string_in_subclass, 'TestSubSubTask'
+  end
+
+  class TestSubSub2Task < TestSubTask
+   param_set :param_string_in_subclass, 'TestSubSub2Task'
   end
 
   setup do
@@ -178,7 +182,13 @@ class Tumugi::TaskTest < Test::Unit::TestCase
       task = TestSubSubTask.new
       assert_true(task.respond_to? "param_string_in_subclass".to_sym)
       assert_true(task.respond_to? "param_string_in_subclass=".to_sym)
-      assert_equal('test', task.param_string_in_subclass)
+      assert_equal('TestSubSubTask', task.param_string_in_subclass)
+
+      # Check between subclasses are not affected each other
+      task = TestSubSub2Task.new
+      assert_true(task.respond_to? "param_string_in_subclass".to_sym)
+      assert_true(task.respond_to? "param_string_in_subclass=".to_sym)
+      assert_equal('TestSubSub2Task', task.param_string_in_subclass)
     end
   end
 
