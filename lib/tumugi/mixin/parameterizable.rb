@@ -57,7 +57,15 @@ module Tumugi
 
         def param(name, opts={})
           parameter_proxy(proxy_id).param(name, opts)
-          attr_accessor name
+          attr_writer name
+          define_method(name) do
+            val = self.instance_variable_get("@#{name}")
+            if val.instance_of?(Proc)
+              self.instance_exec(&val)
+            else
+              val
+            end
+          end
         end
 
         def param_set(name, value)

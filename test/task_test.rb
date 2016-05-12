@@ -39,7 +39,16 @@ class Tumugi::TaskTest < Test::Unit::TestCase
   end
 
   class TestSubSub2Task < TestSubTask
-   param_set :param_string_in_subclass, 'TestSubSub2Task'
+    param_set :param_string_in_subclass, 'TestSubSub2Task'
+  end
+
+  class TestSubSub3Task < TestSubTask
+    param_set :param_string_in_subclass, ->{ @value }
+
+    def initialize(value)
+      super()
+      @value = value
+    end
   end
 
   setup do
@@ -189,6 +198,11 @@ class Tumugi::TaskTest < Test::Unit::TestCase
       assert_true(task.respond_to? "param_string_in_subclass".to_sym)
       assert_true(task.respond_to? "param_string_in_subclass=".to_sym)
       assert_equal('TestSubSub2Task', task.param_string_in_subclass)
+    end
+
+    test 'param_set can accept Proc and evaluate it later and instance scope' do
+      task = TestSubSub3Task.new('test')
+      assert_equal('test', task.param_string_in_subclass)
     end
   end
 
