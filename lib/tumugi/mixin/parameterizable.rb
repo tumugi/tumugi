@@ -61,7 +61,9 @@ module Tumugi
           define_method(name) do
             val = self.instance_variable_get("@#{name}")
             if val.instance_of?(Proc)
-              self.instance_exec(&val)
+              v = self.instance_exec(&val)
+              self.instance_variable_set("@#{name}", v)
+              v
             else
               val
             end
