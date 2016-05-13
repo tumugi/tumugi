@@ -1,7 +1,14 @@
 # Change Log
 
-## [0.4.3](https://github.com/tumugi/tumugi/tree/0.4.3) (2016-05-12)
-[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.4.2...0.4.3)
+## [0.4.4](https://github.com/tumugi/tumugi/tree/0.4.4) (2016-05-13)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.4.3...0.4.4)
+
+**Fixed bugs:**
+
+- Fix workflow result output of parameters [\#47](https://github.com/tumugi/tumugi/pull/47) ([hakobera](https://github.com/hakobera))
+
+## [v0.4.3](https://github.com/tumugi/tumugi/tree/v0.4.3) (2016-05-12)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.4.2...v0.4.3)
 
 **Implemented enhancements:**
 
@@ -10,6 +17,10 @@
 **Fixed bugs:**
 
 - Fix param\_set in subclass overrite parent class param [\#44](https://github.com/tumugi/tumugi/pull/44) ([hakobera](https://github.com/hakobera))
+
+**Merged pull requests:**
+
+- Prepare release for v0.4.3 [\#46](https://github.com/tumugi/tumugi/pull/46) ([hakobera](https://github.com/hakobera))
 
 ## [v0.4.2](https://github.com/tumugi/tumugi/tree/v0.4.2) (2016-05-10)
 [Full Changelog](https://github.com/tumugi/tumugi/compare/v0.4.1...v0.4.2)
