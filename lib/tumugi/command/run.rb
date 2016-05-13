@@ -83,7 +83,7 @@ module Tumugi
               r.id
             end
             params = proxy.params.map do |name, _|
-              "#{name}=#{task.instance_variable_get("@#{name}")}"
+              "#{name}=#{task.send(name.to_sym)}"
             end
             t << [ task.id, requires.join("\n"), params.join("\n"), task.state ]
           end

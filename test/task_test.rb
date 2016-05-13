@@ -43,7 +43,7 @@ class Tumugi::TaskTest < Test::Unit::TestCase
   end
 
   class TestSubSub3Task < TestSubTask
-    param_set :param_string_in_subclass, ->{ @value }
+    param_set :param_string_in_subclass, ->{ @value += 1 }
 
     def initialize(value)
       super()
@@ -200,9 +200,10 @@ class Tumugi::TaskTest < Test::Unit::TestCase
       assert_equal('TestSubSub2Task', task.param_string_in_subclass)
     end
 
-    test 'param_set can accept Proc and evaluate it later and instance scope' do
-      task = TestSubSub3Task.new('test')
-      assert_equal('test', task.param_string_in_subclass)
+    test 'param_set can accept Proc and evaluate it later and instance scope and cache results' do
+      task = TestSubSub3Task.new(1)
+      assert_equal(2, task.param_string_in_subclass)
+      assert_equal(2, task.param_string_in_subclass)
     end
   end
 
