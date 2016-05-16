@@ -1,11 +1,22 @@
 # Change Log
 
-## [0.4.4](https://github.com/tumugi/tumugi/tree/0.4.4) (2016-05-13)
-[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.4.3...0.4.4)
+## [0.4.5](https://github.com/tumugi/tumugi/tree/0.4.5) (2016-05-16)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.4.4...0.4.5)
+
+**Fixed bugs:**
+
+- Fix required parameter validation [\#49](https://github.com/tumugi/tumugi/pull/49) ([hakobera](https://github.com/hakobera))
+
+## [v0.4.4](https://github.com/tumugi/tumugi/tree/v0.4.4) (2016-05-13)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.4.3...v0.4.4)
 
 **Fixed bugs:**
 
 - Fix workflow result output of parameters [\#47](https://github.com/tumugi/tumugi/pull/47) ([hakobera](https://github.com/hakobera))
+
+**Merged pull requests:**
+
+- Prepare release for v0.4.4 [\#48](https://github.com/tumugi/tumugi/pull/48) ([hakobera](https://github.com/hakobera))
 
 ## [v0.4.3](https://github.com/tumugi/tumugi/tree/v0.4.3) (2016-05-12)
 [Full Changelog](https://github.com/tumugi/tumugi/compare/v0.4.2...v0.4.3)
