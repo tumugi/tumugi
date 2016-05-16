@@ -181,9 +181,19 @@ class Tumugi::TaskTest < Test::Unit::TestCase
       assert_equal(deafult_value, task.send(name.to_sym))
     end
 
-    test 'raise ParameterError when required parameter is not set' do
-      assert_raise(Tumugi::Parameter::ParameterError) do
-        TestSubTask.new
+    sub_test_case 'raise ParameterError when required parameter is not set' do
+      test 'not set' do
+        assert_raise(Tumugi::Parameter::ParameterError) do
+          TestSubTask.new
+        end
+      end
+
+      test 'set nil' do
+        klass = Class.new(TestSubTask)
+        klass.param_set(:param_string_in_subclass, nil)
+        assert_raise(Tumugi::Parameter::ParameterError) do
+          klass.new
+        end
       end
     end
 
