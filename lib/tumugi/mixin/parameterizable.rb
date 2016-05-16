@@ -23,7 +23,7 @@ module Tumugi
           end
           instance_variable_set("@#{name}", param.get)
         end
-        validate_params(params)
+        validate_params(proxy.params)
         configure
       end
 
