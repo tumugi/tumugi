@@ -1,4 +1,5 @@
 require_relative './test_helper'
+require 'tumugi/cli'
 
 class Tumugi::CLITest < Test::Unit::TestCase
   examples = {
@@ -20,35 +21,39 @@ class Tumugi::CLITest < Test::Unit::TestCase
     'config_section' => ['config_section.rb', 'task1'],
   }
 
-  def exec(command, file, task, options)
-    system("bundle exec ./exe/tumugi #{command} -f ./examples/#{file} #{task} #{options}")
+  def invoke(command, file, task, options)
+    Tumugi::CLI.new.invoke(command, [task], options.merge(file: "./examples/#{file}", quiet: true))
   end
 
   setup do
-    system('rm -rf /tmp/tumugi_*')
+    system('rm -rf tmp/tumugi_*')
   end
 
   sub_test_case 'run' do
     data(examples)
     test 'success' do |(file, task)|
-      assert_true(exec('run', file, task, "-w 4 --quiet -p key1:value1 -c ./examples/tumugi_config.rb"))
+      assert_true(invoke(:run_, file, task, params: { 'key1' => 'value1' }, workers: 4, config: "./examples/tumugi_config.rb"))
     end
 
     data(failed_examples)
     test 'fail' do |(file, task)|
-      assert_false(exec('run', file, task, "-w 4 --quiet -c ./examples/tumugi_config.rb"))
+      assert_raise(Thor::Error) do
+        invoke(:run_, file, task, workers: 4, config: "./examples/tumugi_config.rb")
+      end
     end
 
     data(config_section_examples)
     test 'config_section' do |(file, task)|
-      assert_true(exec('run', file, task, "-w 4 --quiet -c ./examples/tumugi_config_with_section.rb"))
+      assert_true(invoke(:run_, file, task, workers: 4, config: "./examples/tumugi_config_with_section.rb"))
     end
   end
 
   sub_test_case 'show' do
     data(examples)
     test 'without output' do |(file, task)|
-      assert_true(exec('show', file, task, "--quiet -p key1:value1"))
+      capture_stdout do
+        assert_true(invoke(:show, file, task, params: { 'key1' => 'value1' }))
+      end
     end
 
     data do
@@ -61,7 +66,9 @@ class Tumugi::CLITest < Test::Unit::TestCase
       data_set
     end
     test 'with valid output' do |(file, task, format)|
-      assert_true(exec('show', file, task, "-o tmp/#{file}.#{format} --quiet -p key1:value1"))
+      capture_stdout do
+        assert_true(invoke(:show, file, task, output: "tmp/#{file}.#{format}", params: { 'key1' => 'value1' }))
+      end
     end
   end
 end
