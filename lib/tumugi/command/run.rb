@@ -39,6 +39,7 @@ module Tumugi
               t.state = :failed
               logger.info "#{t.state}: #{t.id}"
               logger.error "#{e.message}"
+              logger.error e.backtrace.join("\n")
             else
               t.state = :completed
               logger.info "#{t.state}: #{t.id}"
