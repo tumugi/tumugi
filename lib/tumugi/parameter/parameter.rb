@@ -1,5 +1,5 @@
+require 'tumugi/error'
 require 'tumugi/parameter/converter'
-require 'tumugi/parameter/error'
 
 module Tumugi
   module Parameter
@@ -72,7 +72,7 @@ module Tumugi
 
       def validate
         if required? && default_value != nil
-          raise ParameterError.new("When you set required: true, you cannot set default value")
+          raise Tumugi::ParameterError.new("When you set required: true, you cannot set default value")
         end
       end
     end

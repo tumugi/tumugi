@@ -41,7 +41,7 @@ class Tumugi::Parameter::ParameterProxyTest < Test::Unit::TestCase
     end
 
     test 'raise ParameterError when both required and default is set' do
-      assert_raise(Tumugi::Parameter::ParameterError) do
+      assert_raise(Tumugi::ParameterError) do
         @proxy.param(:param1, required: true, default: 'test')
       end
     end

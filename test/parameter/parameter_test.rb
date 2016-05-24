@@ -26,7 +26,7 @@ class Tumugi::Parameter::ParameterTest < Test::Unit::TestCase
     end
 
     test 'raise ParameterError when both required and default is set' do
-      assert_raise(Tumugi::Parameter::ParameterError) do
+      assert_raise(Tumugi::ParameterError) do
         Tumugi::Parameter::Parameter.new(:name, required: true, default: 'test')
       end
     end

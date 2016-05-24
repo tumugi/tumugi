@@ -1,4 +1,4 @@
-require 'tumugi/parameter/error'
+require 'tumugi/error'
 require 'tumugi/parameter/parameter_proxy'
 
 module Tumugi
@@ -30,7 +30,7 @@ module Tumugi
       def validate_params(params)
         params.each do |name, param|
           if param.required? && instance_variable_get("@#{name}").nil?
-            raise Tumugi::Parameter::ParameterError.new("Parameter #{name} is required")
+            raise Tumugi::ParameterError.new("Parameter #{name} is required")
           end
         end
       end
