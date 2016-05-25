@@ -28,6 +28,10 @@ class Tumugi::TaskTest < Test::Unit::TestCase
     def output
       @output
     end
+
+    def timeout
+      5
+    end
   end
 
   class TestSubTask < TestTask
@@ -230,6 +234,16 @@ class Tumugi::TaskTest < Test::Unit::TestCase
       requires_task.state = :completed
       task = TestTask.new(requires: requires_task)
       assert_false(task.requires_failed?)
+    end
+  end
+
+  sub_test_case '#timeout' do
+    test 'default value is nil' do
+      assert_nil(Tumugi::Task.new.timeout)
+    end
+
+    test 'sub class can override timeout' do
+      assert_equal(5, TestTask.new.timeout)
     end
   end
 end

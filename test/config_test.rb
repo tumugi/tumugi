@@ -15,6 +15,7 @@ class Tumugi::ConfigTest < Test::Unit::TestCase
     assert_equal(3, @config.max_retry)
     assert_equal(300, @config.retry_interval)
     assert_equal(true, @config.param_auto_bind_enabled)
+    assert_equal(0, @config.timeout)
   end
 
   data(
