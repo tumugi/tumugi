@@ -2,7 +2,7 @@ class FileTask < Tumugi::Task
   Tumugi::Plugin.register_task(:local_file, self)
 
   def output
-    target(:local_file, "/tmp/tumugi_#{self.id}.txt")
+    target(:local_file, "tmp/tumugi_#{self.id}.txt")
   end
 
   def run
