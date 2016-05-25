@@ -34,11 +34,15 @@ class Tumugi::Parameter::ParameterTest < Test::Unit::TestCase
 
   sub_test_case '#auto_bind?' do
     teardown do
-      Tumugi.config.param_auto_bind_enabled = true
+      Tumugi.configure do |config|
+        config.param_auto_bind_enabled = true
+      end
     end
 
     test 'should return false when global param_auto_bind_enabled is false' do
-      Tumugi.config.param_auto_bind_enabled = false
+      Tumugi.configure do |config|
+        config.param_auto_bind_enabled = false
+      end
       param = Tumugi::Parameter::Parameter.new(:name)
       assert_false(param.auto_bind?)
     end
@@ -50,7 +54,9 @@ class Tumugi::Parameter::ParameterTest < Test::Unit::TestCase
     end
 
     test 'should return true when auto_bind option is true' do
-      Tumugi.config.param_auto_bind_enabled = false
+      Tumugi.configure do |config|
+        config.param_auto_bind_enabled = false
+      end
       param = Tumugi::Parameter::Parameter.new(:name, auto_bind: true)
       assert_true(param.auto_bind?)
     end

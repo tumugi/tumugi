@@ -18,7 +18,7 @@ class Tumugi::Command::RunTest < Test::Unit::TestCase
   end
 
   teardown do
-    Tumugi.config do |config|
+    Tumugi.configure do |config|
       config.timeout = 0
     end
   end
@@ -42,7 +42,7 @@ class Tumugi::Command::RunTest < Test::Unit::TestCase
       def @task.run
         raise 'always failed'
       end
-      Tumugi.config do |config|
+      Tumugi.configure do |config|
         config.max_retry = 2
         config.retry_interval = 1
       end
@@ -53,7 +53,7 @@ class Tumugi::Command::RunTest < Test::Unit::TestCase
     end
 
     test 'failed when task got timeout' do
-      Tumugi.config do |config|
+      Tumugi.configure do |config|
         config.timeout = 1
       end
 
