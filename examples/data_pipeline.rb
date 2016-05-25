@@ -1,6 +1,6 @@
 task :generate_data do
   output do
-    target(:local_file, "/tmp/tumugi_data_#{Time.now.strftime('%Y-%m-%d')}.txt")
+    target(:local_file, "tmp/tumugi_data_#{Time.now.strftime('%Y-%m-%d')}.txt")
   end
 
   run do
@@ -16,7 +16,7 @@ task :sum do
   requires :generate_data
 
   output do
-    target(:local_file, "/tmp/tumugi_output_#{Time.now.strftime('%Y-%m-%d')}.txt")
+    target(:local_file, "tmp/tumugi_output_#{Time.now.strftime('%Y-%m-%d')}.txt")
   end
 
   run do

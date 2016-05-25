@@ -48,6 +48,7 @@ module Tumugi
         Tumugi.logger.error "#{command} command failed"
         raise Thor::Error, 'failed'
       end
+      success
     rescue => e
       Tumugi.logger.error "#{command} command failed"
       Tumugi.logger.error e.message
