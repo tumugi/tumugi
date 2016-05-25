@@ -1,9 +1,13 @@
 require_relative '../../test_helper'
 require 'tumugi/plugin/target/local_file'
 
-class Tumugi::LocalFileTargetTest < Test::Unit::TestCase
+class Tumugi::Plugin::LocalFileTargetTest < Test::Unit::TestCase
   setup do
     @path = "tmp/local_file_target_test_file_#{SecureRandom.uuid}"
+  end
+
+  test 'plugin' do
+    assert_equal(Tumugi::Plugin::LocalFileTarget, Tumugi::Plugin.lookup_target('local_file'))
   end
 
   sub_test_case '#exist?' do

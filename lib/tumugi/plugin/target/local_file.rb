@@ -5,7 +5,7 @@ require 'tumugi/plugin/local_file_system'
 module Tumugi
   module Plugin
     class LocalFileTarget < FileSystemTarget
-      Plugin.register_target(:local_file, self)
+      Plugin.register_target('local_file', self)
 
       def fs
         @fs ||= LocalFileSystem.new
