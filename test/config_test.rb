@@ -40,8 +40,19 @@ class Tumugi::ConfigTest < Test::Unit::TestCase
     end
 
     test 'raise error when section is not registered before call' do
-      assert_raise do
+      assert_raise(Tumugi::ConfigError) do
         @config.section('not_registered_section')
+      end
+    end
+
+    test 'raise error when change section value' do
+      Tumugi::Config.register_section('name3', :key3)
+      assert_raise(Tumugi::ConfigError) do
+        config = @config.clone.freeze
+        config.section('name3') { |s| s.key3 = 'value3' }
+        section = config.section('name3')
+        assert_equal('value3', section.key3)
+        section.key3 = 'another value'
       end
     end
   end

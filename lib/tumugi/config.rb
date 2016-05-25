@@ -34,23 +34,27 @@ module Tumugi
     end
 
     def section(name, &block)
-      section_class = @@sections[name]
       if block_given?
+        raise Tumugi::ConfigError.new('You cannot change section') if frozen?
         @section_procs[name] ||= block
-      elsif section_class.nil?
-        raise ConfigError, "Config section '#{name}' is not registered."
-      else
-        @section_instances[name] ||= section_class.new
-        if @section_procs[name]
-          begin
-            @section_procs[name].call(@section_instances[name])
-          rescue NoMethodError => e
-            Tumugi.logger.error "#{e.message}. Available attributes are #{@section_instances[name].members}"
-            raise e
-          end
-        end
-        @section_instances[name]
+        return nil
       end
+
+      section_class = @@sections[name]
+      if section_class.nil?
+        raise ConfigError.new("Config section '#{name}' is not registered.")
+      end
+
+      if @section_instances[name].nil?
+        @section_instances[name] = section_class.new
+        begin
+          @section_procs[name].call(@section_instances[name])
+        rescue NoMethodError => e
+          Tumugi.logger.error "#{e.message}. Available attributes are #{@section_instances[name].members}"
+          raise e
+        end if @section_procs[name]
+      end
+      @section_instances[name].clone.freeze
     end
   end
 end
