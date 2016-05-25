@@ -70,25 +70,6 @@ class Tumugi::Parameter::ParameterTest < Test::Unit::TestCase
         end
       end
 
-      sub_test_case 'search from ENV' do
-        teardown do
-          ENV.delete('env_var_1')
-          ENV.delete('ENV_VAR_1')
-        end
-
-        test 'get value by raw value' do
-          ENV['env_var_1'] = 'env_value1'
-          param = Tumugi::Parameter::Parameter.new(:env_var_1)
-          assert_equal('env_value1', param.get)
-        end
-
-        test 'get value by upcase value' do
-          ENV['ENV_VAR_1'] = 'env_value1'
-          param = Tumugi::Parameter::Parameter.new(:env_var_1)
-          assert_equal('env_value1', param.get)
-        end
-      end
-
       test 'returns default value when binding value not found in any scope' do
         param = Tumugi::Parameter::Parameter.new(:not_found, default: 'default')
         assert_equal('default', param.get)
