@@ -44,7 +44,7 @@ module Tumugi
       begin
         load(file, true)
       rescue LoadError => e
-        raise Tumugi::TumugiError, e.message
+        raise Tumugi::TumugiError.new("Workflow file load error: #{file}", e)
       end
     end
 
@@ -77,7 +77,7 @@ module Tumugi
         load(config_file)
       end
     rescue LoadError => e
-      raise Tumugi::TumugiError, e.message
+      raise Tumugi::TumugiError.new("Config file load error: #{config_file}", e)
     end
 
     def set_params(options)
