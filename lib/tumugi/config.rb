@@ -1,7 +1,6 @@
-module Tumugi
-  class ConfigError < StandardError
-  end
+require 'tumugi/error'
 
+module Tumugi
   class Config
     attr_accessor :workers, :max_retry, :retry_interval, :param_auto_bind_enabled
 

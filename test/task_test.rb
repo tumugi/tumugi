@@ -183,7 +183,7 @@ class Tumugi::TaskTest < Test::Unit::TestCase
 
     sub_test_case 'raise ParameterError when required parameter is not set' do
       test 'not set' do
-        assert_raise(Tumugi::Parameter::ParameterError) do
+        assert_raise(Tumugi::ParameterError) do
           TestSubTask.new
         end
       end
@@ -191,7 +191,7 @@ class Tumugi::TaskTest < Test::Unit::TestCase
       test 'set nil' do
         klass = Class.new(TestSubTask)
         klass.param_set(:param_string_in_subclass, nil)
-        assert_raise(Tumugi::Parameter::ParameterError) do
+        assert_raise(Tumugi::ParameterError) do
           klass.new
         end
       end
