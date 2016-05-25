@@ -2,7 +2,11 @@ require 'tumugi/error'
 
 module Tumugi
   class Config
-    attr_accessor :workers, :max_retry, :retry_interval, :param_auto_bind_enabled
+    attr_accessor :workers
+    attr_accessor :max_retry
+    attr_accessor :retry_interval
+    attr_accessor :param_auto_bind_enabled
+    attr_accessor :timeout
 
     @@sections ||= {}
 
@@ -23,6 +27,8 @@ module Tumugi
       @max_retry = 3
       @retry_interval = 300 #seconds
       @param_auto_bind_enabled = true
+      @timeout = 0 # meaning no timeout
+
       @section_procs = {}
       @section_instances = {}
     end

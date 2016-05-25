@@ -2,7 +2,9 @@ require 'parallel'
 require 'retriable'
 require 'terminal-table'
 require 'thor'
+require 'timeout'
 
+require 'tumugi/error'
 require 'tumugi/mixin/listable'
 
 module Tumugi
@@ -17,32 +19,35 @@ module Tumugi
 
         Parallel.each(dag.tsort, settings) do |t|
           logger.info "start: #{t.id}"
-          until t.ready? || t.requires_failed?
-            sleep 1
-          end
+          timeout = t.timeout || Tumugi.config.timeout
+          Timeout::timeout(timeout, Tumugi::TimeoutError) do
+            until t.ready? || t.requires_failed?
+              sleep 1
+            end
 
-          if t.completed?
-            t.state = :skipped
-            logger.info "#{t.state}: #{t.id} is already completed"
-          elsif t.requires_failed?
-            t.state = :requires_failed
-            logger.info "#{t.state}: #{t.id} has failed requires task"
-          else
-            logger.info "run: #{t.id}"
-            t.state = :running
-
-            begin
-              Retriable.retriable retry_options do
-                t.run
-              end
-            rescue => e
-              t.state = :failed
-              logger.info "#{t.state}: #{t.id}"
-              logger.error "#{e.message}"
-              logger.error e.backtrace.join("\n")
+            if t.completed?
+              t.state = :skipped
+              logger.info "#{t.state}: #{t.id} is already completed"
+            elsif t.requires_failed?
+              t.state = :requires_failed
+              logger.info "#{t.state}: #{t.id} has failed requires task"
             else
-              t.state = :completed
-              logger.info "#{t.state}: #{t.id}"
+              logger.info "run: #{t.id}"
+              t.state = :running
+
+              begin
+                Retriable.retriable retry_options do
+                  t.run
+                end
+              rescue => e
+                t.state = :failed
+                logger.info "#{t.state}: #{t.id}"
+                logger.error "#{e.message}"
+                logger.error e.backtrace.join("\n")
+              else
+                t.state = :completed
+                logger.info "#{t.state}: #{t.id}"
+              end
             end
           end
         end

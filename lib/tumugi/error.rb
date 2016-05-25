@@ -13,4 +13,7 @@ module Tumugi
 
   class ParameterError < TumugiError
   end
+
+  class TimeoutError < TumugiError
+  end
 end

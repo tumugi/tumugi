@@ -5,7 +5,9 @@ require 'tumugi/command/run'
 
 class Tumugi::Command::RunTest < Test::Unit::TestCase
   class TestTask < Tumugi::Task
-    def run; end
+    def run
+      sleep 3
+    end
   end
 
   setup do
@@ -13,6 +15,12 @@ class Tumugi::Command::RunTest < Test::Unit::TestCase
     @dag = Tumugi::DAG.new
     @task = TestTask.new
     @dag.add_task(@task)
+  end
+
+  teardown do
+    Tumugi.config do |config|
+      config.timeout = 0
+    end
   end
 
   sub_test_case '#execute' do
@@ -34,9 +42,19 @@ class Tumugi::Command::RunTest < Test::Unit::TestCase
       def @task.run
         raise 'always failed'
       end
-      Tumugi.config do |c|
-        c.max_retry = 2
-        c.retry_interval = 1
+      Tumugi.config do |config|
+        config.max_retry = 2
+        config.retry_interval = 1
+      end
+
+      success = @cmd.execute(@dag)
+      assert_false(success)
+      assert_equal(:failed, @task.state)
+    end
+
+    test 'failed when task got timeout' do
+      Tumugi.config do |config|
+        config.timeout = 1
       end
 
       success = @cmd.execute(@dag)

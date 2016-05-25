@@ -79,6 +79,10 @@ module Tumugi
       list(_requires).any? { |t| t.instance.state == :failed || t.instance.state == :requires_failed }
     end
 
+    def timeout
+      nil # meaning use default timeout
+    end
+
     # Following methods are internal use only
 
     def _requires
