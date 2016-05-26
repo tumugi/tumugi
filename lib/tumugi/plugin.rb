@@ -19,7 +19,7 @@ module Tumugi
         raise "Invalid implementation as #{kind} plugin: '#{type}'. It must be a Class."
       end
       registry.register(type, value)
-      Tumugi.logger.debug "registered #{kind} plugin '#{type}'"
+      Tumugi::Logger.instance.debug "registered #{kind} plugin '#{type}'"
       nil
     end
 

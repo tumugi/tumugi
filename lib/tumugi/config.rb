@@ -12,7 +12,7 @@ module Tumugi
 
     def self.register_section(name, *args)
       @@sections[name] = Struct.new(camelize(name), *args)
-      Tumugi.logger.debug "registered config section '#{name}' with '#{args}'"
+      logger.debug "registered config section '#{name}' with '#{args}'"
     end
 
     def self.camelize(term)
@@ -20,6 +20,10 @@ module Tumugi
       string = string.sub(/^[a-z\d]*/) { $&.capitalize }
       string.gsub!(/(?:_|(\/))([a-z\d]*)/) { $2.capitalize }
       string
+    end
+
+    def self.logger
+      Tumugi::Logger.instance
     end
 
     def initialize
@@ -50,7 +54,7 @@ module Tumugi
         begin
           @section_procs[name].call(@section_instances[name])
         rescue NoMethodError => e
-          Tumugi.logger.error "#{e.message}. Available attributes are #{@section_instances[name].members}"
+          logger.error "#{e.message}. Available attributes are #{@section_instances[name].members}"
           raise e
         end if @section_procs[name]
       end

@@ -3,7 +3,11 @@ require 'tumugi/logger'
 
 class Tumugi::LoggerTest < Test::Unit::TestCase
   setup do
-    @logger = Tumugi::Logger.new
+    @logger = Tumugi::Logger.instance
+    @logger.init
+
+    @log_file = 'tmp/test.log'
+    File.delete(@log_file) if File.exist?(@log_file)
   end
 
   test 'verbose!' do
@@ -22,5 +26,11 @@ class Tumugi::LoggerTest < Test::Unit::TestCase
     [:debug, :error, :fatal, :info, :warn, :level].each do |method|
       assert_true(@logger.respond_to?(method))
     end
+  end
+
+  test 'output to file' do
+    @logger.init(@log_file)
+    @logger.info('test')
+    assert_true(File.exist?(@log_file))
   end
 end

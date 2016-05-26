@@ -10,10 +10,6 @@ module Tumugi
       @application ||= Tumugi::Application.new
     end
 
-    def logger
-      @logger ||= Tumugi::Logger.new
-    end
-
     def configure(&block)
       raise Tumugi::ConfigError.new 'Tumugi.configure must have block' unless block_given?
       yield _config

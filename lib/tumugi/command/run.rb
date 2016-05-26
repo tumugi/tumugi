@@ -15,7 +15,6 @@ module Tumugi
       def execute(dag, options={})
         workers = options[:workers] || Tumugi.config.workers
         settings = { in_threads: workers }
-        logger = Tumugi.logger
 
         Parallel.each(dag.tsort, settings) do |t|
           logger.info "start: #{t.id}"
@@ -73,9 +72,9 @@ module Tumugi
       def on_retry
         Proc.new do |exception, try, elapsed_time, next_interval|
           if next_interval
-            Tumugi.logger.error "#{exception.class}: '#{exception.message}' - #{try} tries in #{elapsed_time} seconds and #{next_interval} seconds until the next try."
+            logger.error "#{exception.class}: '#{exception.message}' - #{try} tries in #{elapsed_time} seconds and #{next_interval} seconds until the next try."
           else
-            Tumugi.logger.error "#{exception.class}: '#{exception.message}' - #{try} tries in #{elapsed_time} seconds. Task failed."
+            logger.error "#{exception.class}: '#{exception.message}' - #{try} tries in #{elapsed_time} seconds. Task failed."
           end
         end
       end
@@ -94,7 +93,11 @@ module Tumugi
             t << [ task.id, requires.join("\n"), params.join("\n"), task.state ]
           end
         end
-        Tumugi.logger.info "Result report:\n#{table.to_s}"
+        logger.info "Result report:\n#{table.to_s}"
+      end
+
+      def logger
+        Tumugi::Logger.instance
       end
     end
   end
