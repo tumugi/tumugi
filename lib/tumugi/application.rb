@@ -16,7 +16,7 @@ module Tumugi
     end
 
     def execute(command, root_task_id, options)
-      process_common_options(options)
+      process_common_options(command, options)
       load_workflow_file(options[:file])
       dag = create_dag(root_task_id)
       command_module = Kernel.const_get("Tumugi").const_get("Command")
@@ -55,17 +55,22 @@ module Tumugi
       dag
     end
 
-    def process_common_options(options)
-      setup_logger(options)
+    def process_common_options(command, options)
+      setup_logger(command, options)
       load_config(options)
       set_params(options)
     end
 
     def logger
-      @logger ||= Tumugi.logger
+      @logger ||= Tumugi::Logger.instance
     end
 
-    def setup_logger(options)
+    def setup_logger(command, options)
+      if command == :run && !options[:out].nil?
+        Tumugi::Logger.instance.init(options[:out])
+      else
+        Tumugi::Logger.instance.init
+      end
       logger.verbose! if options[:verbose]
       logger.quiet! if options[:quiet]
     end

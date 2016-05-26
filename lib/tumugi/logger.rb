@@ -1,13 +1,15 @@
 require 'logger'
 require 'forwardable'
+require 'singleton'
 
 module Tumugi
   class Logger
+    include Singleton
     extend Forwardable
     def_delegators :@logger, :debug, :error, :fatal, :info, :warn, :level
 
-    def initialize
-      @logger = ::Logger.new(STDOUT)
+    def init(output=STDOUT)
+      @logger = ::Logger.new(output)
       @logger.level = ::Logger::INFO
     end
 

@@ -32,6 +32,7 @@ module Tumugi
         end
 
         if out
+          logger.info "output result to #{out}"
           FileUtils.mkdir_p(File.dirname(out))
           if format == 'dot'
             File.write(out, g.to_s)
@@ -43,6 +44,10 @@ module Tumugi
         end
 
         return true
+      end
+
+      def logger
+        Tumugi::Logger.instance
       end
     end
   end

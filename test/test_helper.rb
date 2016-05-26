@@ -20,6 +20,8 @@ ensure
   $stdout = STDOUT
 end
 
+Tumugi::Logger.instance.init
+
 module Tumugi
   class Config
     def self.reset_config_sections

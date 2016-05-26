@@ -30,7 +30,7 @@ module Tumugi
     end
 
     def rename(path, dest)
-      Tumugi.logger.warn "File system #{self.class.name} client doesn't support atomic move."
+      Tumugi::Logger.instance.warn "File system #{self.class.name} client doesn't support atomic move."
       raise FileAlreadyExistError if exist?(dest)
       move(path, dest)
     end

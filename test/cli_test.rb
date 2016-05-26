@@ -44,16 +44,23 @@ class Tumugi::CLITest < Test::Unit::TestCase
 
     data(config_section_examples)
     test 'config_section' do |(file, task)|
-      assert_true(invoke(:run_, file, task, workers: 4, config: "./examples/tumugi_config_with_section.rb"))
+      assert_true(invoke(:run_, file, task, workers: 4, config: "./examples/tumugi_config_with_section.rb", output: 'tmp/tumugi.log'))
+    end
+
+    test 'logfile' do
+      assert_true(invoke(:run_, 'simple.rb', 'task1', out: 'tmp/tumugi.log', config: "./examples/tumugi_config.rb"))
+      assert_true(File.exist?('tmp/tumugi.log'))
     end
   end
 
   sub_test_case 'show' do
     data(examples)
-    test 'without output' do |(file, task)|
-      capture_stdout do
+    test 'without out' do |(file, task)|
+      text = capture_stdout do
         assert_true(invoke(:show, file, task, params: { 'key1' => 'value1' }))
       end
+      assert_true(text.include?('digraph G'))
+      assert_false(text.include?('INFO'))
     end
 
     data do
