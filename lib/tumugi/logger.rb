@@ -8,6 +8,10 @@ module Tumugi
     extend Forwardable
     def_delegators :@logger, :debug, :error, :fatal, :info, :warn, :level
 
+    def initialize
+      init
+    end
+
     def init(output=STDOUT)
       @logger = ::Logger.new(output)
       @logger.level = ::Logger::INFO
