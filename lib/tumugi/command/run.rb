@@ -15,13 +15,39 @@ module Tumugi
       def execute(dag, options={})
         workers = options[:workers] || Tumugi.config.workers
         settings = { in_threads: workers }
+        start(task_queue(dag), settings)
+        show_result_report(dag)
+        !dag.tsort.any? { |t| t.state == :failed }
+      end
 
-        Parallel.each(dag.tsort, settings) do |t|
+      private
+
+      def task_queue(dag)
+        waiting_task_queue = Queue.new
+        available_task_queue = Queue.new
+        dag.tsort.each do |t|
+          if t.ready?
+            available_task_queue << t
+          else
+            waiting_task_queue << t
+          end
+        end
+        lambda {
+          task = (available_task_queue.empty? ? nil : available_task_queue.pop)
+          if task.nil?
+            task = (waiting_task_queue.empty? ? nil : waiting_task_queue.pop)
+          end
+          task || Parallel::Stop
+        }
+      end
+
+      def start(proc, settings)
+        Parallel.each(proc, settings) do |t|
           logger.info "start: #{t.id}"
           timeout = t.timeout || Tumugi.config.timeout
           Timeout::timeout(timeout, Tumugi::TimeoutError) do
             until t.ready? || t.requires_failed?
-              sleep 1
+              sleep 5
             end
 
             if t.completed?
@@ -50,12 +76,7 @@ module Tumugi
             end
           end
         end
-
-        show_result_report(dag)
-        return !dag.tsort.any? { |t| t.state == :failed }
       end
-
-      private
 
       def retry_options
         {
