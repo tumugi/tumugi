@@ -21,7 +21,6 @@ ensure
 end
 
 Tumugi::Logger.instance.init
-Tumugi::Logger.instance.quiet!
 
 module Tumugi
   class Config

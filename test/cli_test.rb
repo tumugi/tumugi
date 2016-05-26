@@ -22,7 +22,7 @@ class Tumugi::CLITest < Test::Unit::TestCase
   }
 
   def invoke(command, file, task, options)
-    Tumugi::CLI.new.invoke(command, [task], options.merge(file: "./examples/#{file}"))
+    Tumugi::CLI.new.invoke(command, [task], options.merge(file: "./examples/#{file}", quiet: true))
   end
 
   setup do
@@ -55,10 +55,12 @@ class Tumugi::CLITest < Test::Unit::TestCase
 
   sub_test_case 'show' do
     data(examples)
-    test 'without output' do |(file, task)|
-      capture_stdout do
+    test 'without out' do |(file, task)|
+      text = capture_stdout do
         assert_true(invoke(:show, file, task, params: { 'key1' => 'value1' }))
       end
+      assert_true(text.include?('digraph G'))
+      assert_false(text.include?('INFO'))
     end
 
     data do

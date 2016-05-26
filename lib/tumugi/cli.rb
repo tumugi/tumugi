@@ -38,7 +38,9 @@ module Tumugi
     option :out, aliases: '-o', desc: 'Output file name. If not specified, output result to STDOUT'
     option :format, aliases: '-t', desc: 'Output file format. Only affected --out option is specified.', enum: ['dot', 'png', 'svg']
     def show(task)
-      execute(:show, task, options)
+      opts = options.dup
+      opts[:quiet] = true if opts[:out].nil?
+      execute(:show, task, opts.freeze)
     end
 
     private
