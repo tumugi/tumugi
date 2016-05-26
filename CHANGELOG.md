@@ -1,11 +1,40 @@
 # Change Log
 
-## [0.4.5](https://github.com/tumugi/tumugi/tree/0.4.5) (2016-05-16)
-[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.4.4...0.4.5)
+## [0.5.0](https://github.com/tumugi/tumugi/tree/0.5.0) (2016-05-26)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.4.5...0.5.0)
+
+**Implemented enhancements:**
+
+- Add ExternalTask as bundled plugin [\#61](https://github.com/tumugi/tumugi/issues/61)
+- \[Breaking Change\] Tumugi.configure [\#60](https://github.com/tumugi/tumugi/issues/60)
+- Better task scheduling [\#57](https://github.com/tumugi/tumugi/issues/57)
+- \[Breaking Change\] Disable parameter auto binding from ENV [\#56](https://github.com/tumugi/tumugi/issues/56)
+- Timeout feature [\#54](https://github.com/tumugi/tumugi/issues/54)
+- \[Breaking Change\] Restruct Error class [\#51](https://github.com/tumugi/tumugi/issues/51)
+- Enhance logger [\#36](https://github.com/tumugi/tumugi/issues/36)
+
+**Merged pull requests:**
+
+- Call init first Tumugi::Logger instance access [\#67](https://github.com/tumugi/tumugi/pull/67) ([hakobera](https://github.com/hakobera))
+- Better task scheduling. [\#66](https://github.com/tumugi/tumugi/pull/66) ([hakobera](https://github.com/hakobera))
+- Support log output to file [\#65](https://github.com/tumugi/tumugi/pull/65) ([hakobera](https://github.com/hakobera))
+- Add EternalTask as bundled plugin [\#64](https://github.com/tumugi/tumugi/pull/64) ([hakobera](https://github.com/hakobera))
+- Add Tumugi.configure method to modify config. [\#63](https://github.com/tumugi/tumugi/pull/63) ([hakobera](https://github.com/hakobera))
+- Implement timeout feature [\#62](https://github.com/tumugi/tumugi/pull/62) ([hakobera](https://github.com/hakobera))
+- Disable parameter auto binding from ENV [\#59](https://github.com/tumugi/tumugi/pull/59) ([hakobera](https://github.com/hakobera))
+- Restruct error handling [\#58](https://github.com/tumugi/tumugi/pull/58) ([hakobera](https://github.com/hakobera))
+- Change CLI test to fix failed test with ruby-head [\#52](https://github.com/tumugi/tumugi/pull/52) ([hakobera](https://github.com/hakobera))
+
+## [v0.4.5](https://github.com/tumugi/tumugi/tree/v0.4.5) (2016-05-16)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.4.4...v0.4.5)
 
 **Fixed bugs:**
 
 - Fix required parameter validation [\#49](https://github.com/tumugi/tumugi/pull/49) ([hakobera](https://github.com/hakobera))
+
+**Merged pull requests:**
+
+- Prepare release for v0.4.5 [\#50](https://github.com/tumugi/tumugi/pull/50) ([hakobera](https://github.com/hakobera))
 
 ## [v0.4.4](https://github.com/tumugi/tumugi/tree/v0.4.4) (2016-05-13)
 [Full Changelog](https://github.com/tumugi/tumugi/compare/v0.4.3...v0.4.4)
