@@ -1,6 +1,6 @@
 require 'tumugi/target'
 require 'tumugi/file_system'
-require 'tumugi/file_system_error'
+require 'tumugi/error'
 
 module Tumugi
   module Plugin

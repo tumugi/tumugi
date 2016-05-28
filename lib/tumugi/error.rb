@@ -16,4 +16,16 @@ module Tumugi
 
   class TimeoutError < TumugiError
   end
+
+  class FileSystemError < TumugiError
+  end
+
+  class FileAlreadyExistError < FileSystemError
+  end
+
+  class MissingParentDirectoryError < FileSystemError
+  end
+
+  class NotADirectoryError < FileSystemError
+  end
 end

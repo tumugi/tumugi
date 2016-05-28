@@ -1,6 +1,6 @@
 require 'fileutils'
 require 'tumugi/file_system'
-require 'tumugi/file_system_error'
+require 'tumugi/error'
 
 module Tumugi
   module Plugin
@@ -20,9 +20,9 @@ module Tumugi
       def mkdir(path, parents: true, raise_if_exist: false)
         if File.exist?(path)
           if raise_if_exist
-            raise FileAlreadyExistError
+            raise FileAlreadyExistError.new("Path #{path} is already exist")
           elsif !directory?(path)
-            raise NotADirectoryError
+            raise NotADirectoryError.new("Path #{path} is not a directory")
           else
             return
           end
@@ -31,10 +31,11 @@ module Tumugi
         if parents
           FileUtils.mkdir_p(path)
         else
-          if File.exist?(File.expand_path("..", path))
+          parent_path = File.expand_path("..", path)
+          if File.exist?(parent_path)
             FileUtils.mkdir(path)
           else
-            raise MissingParentDirectoryError
+            raise MissingParentDirectoryError.new("Parent path #{parent_path} is not exist")
           end
         end
       end
