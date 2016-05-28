@@ -1,5 +1,5 @@
 require 'tumugi'
-require 'tumugi/file_system_error'
+require 'tumugi/error'
 
 module Tumugi
   # This class defines interfaces of file system
