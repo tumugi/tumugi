@@ -1,11 +1,9 @@
 task :task1 do
-  param :key1, required: true #=> 'value1', get value from CLI parameter
-  param :key2 #=> 'value2', get value from Environment variables
+  param :key1, auto_bind: true, required: true #=> 'value1', get value from CLI parameter
 
   requires :task2
   run do
     log "key1=#{key1}" # You can get param as task property
-    log "key2=#{key2}"
   end
 end
 

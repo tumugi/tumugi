@@ -5,7 +5,7 @@ class Tumugi::Parameter::ParameterTest < Test::Unit::TestCase
   sub_test_case '#initialize' do
     test 'without options, returns default options' do
       param = Tumugi::Parameter::Parameter.new(:name)
-      assert_equal(true, param.auto_bind?)
+      assert_equal(false, param.auto_bind?)
       assert_equal(false, param.required?)
       assert_equal(:string, param.type)
       assert_equal(nil, param.default_value)
@@ -13,13 +13,13 @@ class Tumugi::Parameter::ParameterTest < Test::Unit::TestCase
 
     test 'with options, return specified value' do
       opts = {
-        auto_bind: false,
+        auto_bind: true,
         required: false,
         type: :integer,
         default: 1,
       }
       param = Tumugi::Parameter::Parameter.new(:name, opts)
-      assert_equal(false, param.auto_bind?)
+      assert_equal(true, param.auto_bind?)
       assert_equal(false, param.required?)
       assert_equal(:integer, param.type)
       assert_equal(1, param.default_value)
@@ -33,32 +33,19 @@ class Tumugi::Parameter::ParameterTest < Test::Unit::TestCase
   end
 
   sub_test_case '#auto_bind?' do
-    teardown do
-      Tumugi.configure do |config|
-        config.param_auto_bind_enabled = true
-      end
-    end
-
-    test 'should return false when global param_auto_bind_enabled is false' do
-      Tumugi.configure do |config|
-        config.param_auto_bind_enabled = false
-      end
-      param = Tumugi::Parameter::Parameter.new(:name)
-      assert_false(param.auto_bind?)
-    end
-
-    test 'should return false when task param_auto_bind_enabled is false' do
-      param = Tumugi::Parameter::Parameter.new(:name)
-      param.task_param_auto_bind_enabled = false
-      assert_false(param.auto_bind?)
-    end
-
     test 'should return true when auto_bind option is true' do
-      Tumugi.configure do |config|
-        config.param_auto_bind_enabled = false
-      end
       param = Tumugi::Parameter::Parameter.new(:name, auto_bind: true)
       assert_true(param.auto_bind?)
+    end
+
+    test 'should false true when auto_bind option is false' do
+      param = Tumugi::Parameter::Parameter.new(:name, auto_bind: false)
+      assert_false(param.auto_bind?)
+    end
+
+    test 'should false true when auto_bind option is nil' do
+      param = Tumugi::Parameter::Parameter.new(:name)
+      assert_false(param.auto_bind?)
     end
   end
 
@@ -71,13 +58,13 @@ class Tumugi::Parameter::ParameterTest < Test::Unit::TestCase
 
         test 'returns specified value' do
           Tumugi.application.params['param_1'] = 'param_value1'
-          param = Tumugi::Parameter::Parameter.new(:param_1)
+          param = Tumugi::Parameter::Parameter.new(:param_1, auto_bind: true)
           assert_equal('param_value1', param.get)
         end
       end
 
       test 'returns default value when binding value not found in any scope' do
-        param = Tumugi::Parameter::Parameter.new(:not_found, default: 'default')
+        param = Tumugi::Parameter::Parameter.new(:not_found, auto_bind: true, default: 'default')
         assert_equal('default', param.get)
       end
     end

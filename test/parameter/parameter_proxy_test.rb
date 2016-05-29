@@ -17,7 +17,7 @@ class Tumugi::Parameter::ParameterProxyTest < Test::Unit::TestCase
 
       param = @proxy.params[:param1]
       assert_equal(1, @proxy.params.count)
-      assert_equal(true, param.auto_bind?)
+      assert_equal(false, param.auto_bind?)
       assert_equal(false, param.required?)
       assert_equal(:string, param.type)
       assert_equal(nil, param.default_value)
@@ -25,7 +25,7 @@ class Tumugi::Parameter::ParameterProxyTest < Test::Unit::TestCase
 
     test 'with opts' do
       opts = {
-        auto_bind: false,
+        auto_bind: true,
         required: false,
         type: :integer,
         default: 1,
@@ -34,7 +34,7 @@ class Tumugi::Parameter::ParameterProxyTest < Test::Unit::TestCase
 
       param = @proxy.params[:param1]
       assert_equal(1, @proxy.params.count)
-      assert_equal(false, param.auto_bind?)
+      assert_equal(true, param.auto_bind?)
       assert_equal(false, param.required?)
       assert_equal(:integer, param.type)
       assert_equal(1, param.default_value)
