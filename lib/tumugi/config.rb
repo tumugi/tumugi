@@ -5,7 +5,6 @@ module Tumugi
     attr_accessor :workers
     attr_accessor :max_retry
     attr_accessor :retry_interval
-    attr_accessor :param_auto_bind_enabled
     attr_accessor :timeout
 
     @@sections ||= {}
@@ -30,7 +29,6 @@ module Tumugi
       @workers = 1
       @max_retry = 3
       @retry_interval = 300 #seconds
-      @param_auto_bind_enabled = true
       @timeout = 0 # meaning no timeout
 
       @section_procs = {}
