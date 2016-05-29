@@ -1,7 +1,19 @@
 # Change Log
 
-## [0.5.0](https://github.com/tumugi/tumugi/tree/0.5.0) (2016-05-26)
-[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.4.5...0.5.0)
+## [0.5.1](https://github.com/tumugi/tumugi/tree/0.5.1) (2016-05-30)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.5.0...0.5.1)
+
+**Implemented enhancements:**
+
+- \[Breaking Change\] Parameter auto bind feature is disabled as default [\#69](https://github.com/tumugi/tumugi/issues/69)
+- Restruct FileSystemError [\#70](https://github.com/tumugi/tumugi/pull/70) ([hakobera](https://github.com/hakobera))
+
+**Merged pull requests:**
+
+- Disable param auto binding feature as default [\#71](https://github.com/tumugi/tumugi/pull/71) ([hakobera](https://github.com/hakobera))
+
+## [v0.5.0](https://github.com/tumugi/tumugi/tree/v0.5.0) (2016-05-26)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.4.5...v0.5.0)
 
 **Implemented enhancements:**
 
@@ -15,6 +27,7 @@
 
 **Merged pull requests:**
 
+- Prepare release for v0.5.0 [\#68](https://github.com/tumugi/tumugi/pull/68) ([hakobera](https://github.com/hakobera))
 - Call init first Tumugi::Logger instance access [\#67](https://github.com/tumugi/tumugi/pull/67) ([hakobera](https://github.com/hakobera))
 - Better task scheduling. [\#66](https://github.com/tumugi/tumugi/pull/66) ([hakobera](https://github.com/hakobera))
 - Support log output to file [\#65](https://github.com/tumugi/tumugi/pull/65) ([hakobera](https://github.com/hakobera))
