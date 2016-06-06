@@ -25,6 +25,10 @@ module Tumugi
       def remove
         fs.remove(@path)
       end
+
+      def to_s
+        path
+      end
     end
   end
 end
