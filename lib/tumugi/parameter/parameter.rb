@@ -36,7 +36,7 @@ module Tumugi
       end
 
       def default_value
-        @opts[:default] || nil
+        @opts[:default].nil? ? nil : @opts[:default]
       end
 
       def merge_default_value(value)
@@ -54,7 +54,7 @@ module Tumugi
       private
 
       def validate
-        if required? && default_value != nil
+        if required? && !default_value.nil?
           raise Tumugi::ParameterError.new("When you set required: true, you cannot set default value")
         end
       end
