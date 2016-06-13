@@ -1,7 +1,23 @@
 # Change Log
 
-## [0.5.1](https://github.com/tumugi/tumugi/tree/0.5.1) (2016-05-30)
-[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.5.0...0.5.1)
+## [0.5.2](https://github.com/tumugi/tumugi/tree/0.5.2) (2016-06-13)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.5.1...0.5.2)
+
+**Implemented enhancements:**
+
+- Add `to\_s` method to FileSystemTarget [\#73](https://github.com/tumugi/tumugi/issues/73)
+
+**Fixed bugs:**
+
+- Parameter should return `false` if default value is `false` [\#76](https://github.com/tumugi/tumugi/issues/76)
+
+**Merged pull requests:**
+
+- when type is boolean and default value is false, it should return false [\#77](https://github.com/tumugi/tumugi/pull/77) ([hakobera](https://github.com/hakobera))
+- Add to\_s method to FileSystemTarget [\#74](https://github.com/tumugi/tumugi/pull/74) ([hakobera](https://github.com/hakobera))
+
+## [v0.5.1](https://github.com/tumugi/tumugi/tree/v0.5.1) (2016-05-29)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.5.0...v0.5.1)
 
 **Implemented enhancements:**
 
@@ -10,6 +26,7 @@
 
 **Merged pull requests:**
 
+- Prepare release for v0.5.1 [\#72](https://github.com/tumugi/tumugi/pull/72) ([hakobera](https://github.com/hakobera))
 - Disable param auto binding feature as default [\#71](https://github.com/tumugi/tumugi/pull/71) ([hakobera](https://github.com/hakobera))
 
 ## [v0.5.0](https://github.com/tumugi/tumugi/tree/v0.5.0) (2016-05-26)
