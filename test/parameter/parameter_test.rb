@@ -30,6 +30,14 @@ class Tumugi::Parameter::ParameterTest < Test::Unit::TestCase
         Tumugi::Parameter::Parameter.new(:name, required: true, default: 'test')
       end
     end
+
+    test 'when type is boolean and default value is false, it should return false' do
+      param = Tumugi::Parameter::Parameter.new(:name, type: :bool, default: false)
+      assert_equal(false, param.auto_bind?)
+      assert_equal(false, param.required?)
+      assert_equal(:bool, param.type)
+      assert_equal(false, param.default_value)
+    end
   end
 
   sub_test_case '#auto_bind?' do
