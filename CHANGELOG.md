@@ -1,7 +1,14 @@
 # Change Log
 
-## [0.5.2](https://github.com/tumugi/tumugi/tree/0.5.2) (2016-06-13)
-[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.5.1...0.5.2)
+## [0.5.3](https://github.com/tumugi/tumugi/tree/0.5.3) (2016-06-14)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.5.2...0.5.3)
+
+**Fixed bugs:**
+
+- Fix logger not defiend in Tumugi::Config [\#79](https://github.com/tumugi/tumugi/pull/79) ([hakobera](https://github.com/hakobera))
+
+## [v0.5.2](https://github.com/tumugi/tumugi/tree/v0.5.2) (2016-06-13)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.5.1...v0.5.2)
 
 **Implemented enhancements:**
 
@@ -13,6 +20,7 @@
 
 **Merged pull requests:**
 
+- Prepare release for 0.5.2 [\#78](https://github.com/tumugi/tumugi/pull/78) ([hakobera](https://github.com/hakobera))
 - when type is boolean and default value is false, it should return false [\#77](https://github.com/tumugi/tumugi/pull/77) ([hakobera](https://github.com/hakobera))
 - Add to\_s method to FileSystemTarget [\#74](https://github.com/tumugi/tumugi/pull/74) ([hakobera](https://github.com/hakobera))
 
