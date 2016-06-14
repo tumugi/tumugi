@@ -52,7 +52,7 @@ module Tumugi
         begin
           @section_procs[name].call(@section_instances[name])
         rescue NoMethodError => e
-          logger.error "#{e.message}. Available attributes are #{@section_instances[name].members}"
+          Config.logger.error "#{e.message}. Available attributes are #{@section_instances[name].members}"
           raise e
         end if @section_procs[name]
       end

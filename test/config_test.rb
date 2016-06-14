@@ -54,5 +54,14 @@ class Tumugi::ConfigTest < Test::Unit::TestCase
         section.key3 = 'another value'
       end
     end
+
+    test 'raise error when set wrong key' do
+      Tumugi::Config.register_section('name1', :key1)
+
+      assert_raise(NoMethodError) do
+        @config.section('name1') { |s| s.key2 = 'value1' }
+        @config.section('name1').key1
+      end
+    end
   end
 end
