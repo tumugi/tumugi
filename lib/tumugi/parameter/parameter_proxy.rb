@@ -22,7 +22,7 @@ module Tumugi
         @params[name] = Tumugi::Parameter::Parameter.new(name, opts)
       end
 
-      def param_set(name, value)
+      def set(name, value)
         @param_defaults[name] = value
       end
 

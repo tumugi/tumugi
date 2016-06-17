@@ -1,5 +1,6 @@
-require 'tumugi/task'
+require 'tumugi/logger'
 require 'tumugi/plugin'
+require 'tumugi/task'
 require 'tumugi/mixin/listable'
 require 'tumugi/mixin/task_helper'
 
@@ -36,8 +37,13 @@ module Tumugi
       @params[name] = opts
     end
 
-    def param_set(name, value)
+    def set(name, value)
       @param_defaults[name] = value
+    end
+
+    def param_set(name, value)
+      Tumugi::Logger.instance.warn("'param_set' is deprecated and will be removed in a future release. Use 'set' instead.")
+      set(name, value)
     end
 
     def param_auto_bind_enabled(v)
@@ -127,7 +133,7 @@ module Tumugi
         task_class.param(name, opts)
       end
       @param_defaults.each do |name, value|
-        task_class.param_set(name, value)
+        task_class.set(name, value)
       end
       unless @param_auto_bind_enabled.nil?
         task_class.param_auto_bind_enabled(@param_auto_bind_enabled)

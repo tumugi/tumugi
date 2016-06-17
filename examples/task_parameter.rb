@@ -8,10 +8,9 @@ task :task1 do
 end
 
 task :task2 do
-  # If you want do disable auto binding feature, set `auto_bind: false`
-  param :key1, auto_bind: false #=> nil
+  param :key1
   param :key2
-  param_set :key2, 'value2' #=> 'value'
+  set :key2, 'value2' #=> 'value'
 
   requires :task3
   run do

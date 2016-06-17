@@ -1,4 +1,5 @@
 require 'tumugi/error'
+require 'tumugi/logger'
 require 'tumugi/parameter/parameter_proxy'
 
 module Tumugi
@@ -70,8 +71,13 @@ module Tumugi
           end
         end
 
+        def set(name, value)
+          parameter_proxy(proxy_id).set(name, value)
+        end
+
         def param_set(name, value)
-          parameter_proxy(proxy_id).param_set(name, value)
+          Tumugi::Logger.instance.warn("'param_set' is deprecated and will be removed in a future release. Use 'set' instead.")
+          set(name, value)
         end
 
         def param_auto_bind_enabled(v)

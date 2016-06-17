@@ -39,15 +39,15 @@ class Tumugi::TaskTest < Test::Unit::TestCase
   end
 
   class TestSubSubTask < TestSubTask
-    param_set :param_string_in_subclass, 'TestSubSubTask'
+    set :param_string_in_subclass, 'TestSubSubTask'
   end
 
   class TestSubSub2Task < TestSubTask
-    param_set :param_string_in_subclass, 'TestSubSub2Task'
+    set :param_string_in_subclass, 'TestSubSub2Task'
   end
 
   class TestSubSub3Task < TestSubTask
-    param_set :param_string_in_subclass, ->{ @value += 1 }
+    set :param_string_in_subclass, ->{ @value += 1 }
 
     def initialize(value)
       super()
@@ -194,14 +194,14 @@ class Tumugi::TaskTest < Test::Unit::TestCase
 
       test 'set nil' do
         klass = Class.new(TestSubTask)
-        klass.param_set(:param_string_in_subclass, nil)
+        klass.set(:param_string_in_subclass, nil)
         assert_raise(Tumugi::ParameterError) do
           klass.new
         end
       end
     end
 
-    test 'subclass can access and set parameter value by param_set' do
+    test 'subclass can access and set parameter value by set' do
       task = TestSubSubTask.new
       assert_true(task.respond_to? "param_string_in_subclass".to_sym)
       assert_true(task.respond_to? "param_string_in_subclass=".to_sym)
@@ -214,7 +214,7 @@ class Tumugi::TaskTest < Test::Unit::TestCase
       assert_equal('TestSubSub2Task', task.param_string_in_subclass)
     end
 
-    test 'param_set can accept Proc and evaluate it later and instance scope and cache results' do
+    test 'set can accept Proc and evaluate it later and instance scope and cache results' do
       task = TestSubSub3Task.new(1)
       assert_equal(2, task.param_string_in_subclass)
       assert_equal(2, task.param_string_in_subclass)
