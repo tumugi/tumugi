@@ -57,6 +57,9 @@ module Tumugi
         end
 
         def param(name, opts={})
+          if instance_methods.include?(name)
+            raise Tumugi::ParameterError.new("Parameter '#{name}' cannot use, because it is already defined or override instance method.")
+          end
           parameter_proxy(proxy_id).param(name, opts)
           attr_writer name
           define_method(name) do
