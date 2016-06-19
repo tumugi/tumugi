@@ -103,7 +103,7 @@ module Tumugi
       def show_result_report(dag)
         headings = ['Task', 'Requires', 'Parameters', 'State']
         table = Terminal::Table.new headings: headings do |t|
-          dag.tsort.reverse.map do |task|
+          dag.tsort.reverse.map.with_index do |task, index|
             proxy = task.class.merged_parameter_proxy
             requires = list(task.requires).map do |r|
               r.id
@@ -111,6 +111,7 @@ module Tumugi
             params = proxy.params.map do |name, _|
               "#{name}=#{task.send(name.to_sym)}"
             end
+            t << :separator if index != 0
             t << [ task.id, requires.join("\n"), params.join("\n"), task.state ]
           end
         end
