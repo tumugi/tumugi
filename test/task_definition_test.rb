@@ -149,9 +149,27 @@ class Tumugi::TaskDefinitionTest < Test::Unit::TestCase
         assert_equal('value1', task.key1)
       end
 
-      test 'set should assign default value by named method' do
+      test 'set should assign default value by named shourcut method' do
         @task_def.param(:key1)
         @task_def.key1('value1')
+        @task_def.run {|t| t.key1}
+        task = @task_def.instance
+        assert_true(task.respond_to?(:key1))
+        assert_equal('value1', task.key1)
+      end
+
+      test 'set accept block' do
+        @task_def.param(:key1)
+        @task_def.set(:key1) { 'value1' }
+        @task_def.run {|t| t.key1}
+        task = @task_def.instance
+        assert_true(task.respond_to?(:key1))
+        assert_equal('value1', task.key1)
+      end
+
+      test 'named shortcut method accept block' do
+        @task_def.param(:key1)
+        @task_def.key1 { 'value1' }
         @task_def.run {|t| t.key1}
         task = @task_def.instance
         assert_true(task.respond_to?(:key1))
