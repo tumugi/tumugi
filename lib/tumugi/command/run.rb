@@ -102,14 +102,14 @@ module Tumugi
 
       def show_result_report(dag)
         headings = ['Task', 'Requires', 'Parameters', 'State']
-        table = Terminal::Table.new headings: headings do |t|
-          dag.tsort.reverse.map.with_index do |task, index|
+        table = Terminal::Table.new title: "Workflow Result", headings: headings do |t|
+          dag.tsort.map.with_index do |task, index|
             proxy = task.class.merged_parameter_proxy
             requires = list(task.requires).map do |r|
               r.id
             end
             params = proxy.params.map do |name, _|
-              "#{name}=#{task.send(name.to_sym)}"
+              "#{name}=#{truncate(task.send(name.to_sym), 15)}"
             end
             t << :separator if index != 0
             t << [ task.id, requires.join("\n"), params.join("\n"), task.state ]
@@ -120,6 +120,15 @@ module Tumugi
 
       def logger
         Tumugi::Logger.instance
+      end
+
+      def truncate(text, length)
+        return nil if text.nil?
+        if text.length <= length
+          text
+        else
+          text[0, length].concat('...')
+        end
       end
     end
   end
