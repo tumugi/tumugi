@@ -219,6 +219,23 @@ class Tumugi::TaskTest < Test::Unit::TestCase
       assert_equal(2, task.param_string_in_subclass)
       assert_equal(2, task.param_string_in_subclass)
     end
+
+    sub_test_case 'raise ParameterError when parameter name cannot use' do
+      test 'override instance method' do
+        klass = Class.new(TestTask)
+        assert_raise(Tumugi::ParameterError) do
+          klass.param(:output, type: :string)
+        end
+      end
+
+      test 'defined twice' do
+        klass = Class.new(TestTask)
+        assert_raise(Tumugi::ParameterError) do
+          klass.param(:param1, type: :string)
+          klass.param(:param1, type: :string)
+        end
+      end
+    end
   end
 
   sub_test_case '#requires_failed' do

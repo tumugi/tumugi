@@ -23,10 +23,7 @@ module Tumugi
       @opts = { type: Tumugi::Task }.merge(opts)
       @params = {}
       @param_defaults = {}
-
-      unless @opts[:type].is_a?(Class)
-        @opts[:type] = Tumugi::Plugin.lookup_task(@opts[:type])
-      end
+      define_parent_parameter_methods
     end
 
     def instance
@@ -34,6 +31,7 @@ module Tumugi
     end
 
     def param(name, opts={})
+      define_parameter_method(name)
       @params[name] = opts
     end
 
@@ -74,6 +72,14 @@ module Tumugi
       task.instance_eval(&@run)
     end
 
+    def parent_task_class
+      if @opts[:type].is_a?(Class)
+        @opts[:type]
+      else
+        Tumugi::Plugin.lookup_task(@opts[:type])
+      end
+    end
+
     private
 
     def create_task
@@ -84,7 +90,7 @@ module Tumugi
     end
 
     def define_task
-      task_class = Class.new(lookup_parent_task_class)
+      task_class = Class.new(parent_task_class)
       define_requires_method(task_class)
       define_output_method(task_class)
       define_run_method(task_class)
@@ -140,11 +146,14 @@ module Tumugi
       end
     end
 
-    def lookup_parent_task_class
-      if @opts[:type].is_a?(Class)
-        @opts[:type]
-      else
-        Tumugi::Plugin.lookup_task(@opts[:type])
+    def define_parameter_method(name)
+      instance_eval("def self.#{name}(value); set(:#{name}, value); end")
+    end
+
+    def define_parent_parameter_methods
+      proxy = parent_task_class.merged_parameter_proxy
+      proxy.params.each do |name, _|
+        define_parameter_method(name)
       end
     end
   end
