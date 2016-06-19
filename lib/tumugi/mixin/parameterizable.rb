@@ -90,7 +90,7 @@ module Tumugi
         end
 
         def dump
-          parameter_proxy_map[proxy_id].dump
+          parameter_proxy(proxy_id).dump
         end
 
         def proxy_id

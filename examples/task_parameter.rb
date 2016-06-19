@@ -10,7 +10,7 @@ end
 task :task2 do
   param :key1
   param :key2
-  set :key2, 'value2' #=> 'value'
+  key2 'value2' #=> 'value'
 
   requires :task3
   run do

@@ -9,13 +9,13 @@ class Tumugi::TaskDefinitionTest < Test::Unit::TestCase
   sub_test_case 'initialize' do
     test 'id' do
       assert_equal(:test, @task_def.id)
+      assert_equal('b', @task_def.opts[:a])
     end
 
     sub_test_case 'opts' do
       test 'type is class' do
         assert_equal(2, @task_def.opts.size)
-        assert_equal(Tumugi::Task, @task_def.opts[:type])
-        assert_equal('b', @task_def.opts[:a])
+        assert_equal(Tumugi::Task, @task_def.parent_task_class)
       end
 
       test 'type is plugin ID' do
@@ -23,7 +23,7 @@ class Tumugi::TaskDefinitionTest < Test::Unit::TestCase
           Tumugi::Plugin.register_task(:test, self)
         end
         @task_def = Tumugi::TaskDefinition.new(:test, type: :test)
-        assert_equal(TestTask, @task_def.opts[:type])
+        assert_equal(TestTask, @task_def.parent_task_class)
       end
     end
   end
@@ -140,9 +140,18 @@ class Tumugi::TaskDefinitionTest < Test::Unit::TestCase
         assert_equal('value1', task.key1)
       end
 
-      test 'set should assign default value' do
+      test 'set should assign default value by set' do
         @task_def.param(:key1)
         @task_def.set(:key1, 'value1')
+        @task_def.run {|t| t.key1}
+        task = @task_def.instance
+        assert_true(task.respond_to?(:key1))
+        assert_equal('value1', task.key1)
+      end
+
+      test 'set should assign default value by named method' do
+        @task_def.param(:key1)
+        @task_def.key1('value1')
         @task_def.run {|t| t.key1}
         task = @task_def.instance
         assert_true(task.respond_to?(:key1))
