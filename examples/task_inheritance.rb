@@ -34,5 +34,7 @@ task :task3, type: FileTask do
 end
 
 task :task4, type: FileTask do
-  param1 'param1 of task4'
+  param1 do
+    'param1 of task4'
+  end
 end
