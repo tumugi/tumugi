@@ -12,6 +12,7 @@ module Tumugi
         option :params, aliases: '-p', type: :hash, desc: 'Task parameters'
         option :quiet, type: :boolean, desc: 'Suppress log', default: false
         option :verbose, type: :boolean, desc: 'Show verbose log', default: false
+        option :log_format, type: :string, desc: 'Log format', enum: ['text', 'json'], default: 'text'
       end
 
       def exit_on_failure?
