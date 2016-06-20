@@ -6,7 +6,7 @@ require 'tumugi/command/run'
 class Tumugi::Command::RunTest < Test::Unit::TestCase
   class TestTask < Tumugi::Task
     def run
-      sleep 10
+      sleep 2
     end
   end
 
@@ -19,7 +19,7 @@ class Tumugi::Command::RunTest < Test::Unit::TestCase
 
   teardown do
     Tumugi.configure do |config|
-      config.timeout = 0
+      config.timeout = nil
     end
   end
 

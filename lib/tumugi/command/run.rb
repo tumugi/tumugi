@@ -1,8 +1,8 @@
+require 'much-timeout'
 require 'parallel'
 require 'retriable'
 require 'terminal-table'
 require 'thor'
-require 'timeout'
 
 require 'tumugi/error'
 require 'tumugi/mixin/listable'
@@ -46,8 +46,7 @@ module Tumugi
 
         Parallel.each(proc, settings) do |t|
           logger.info "start: #{t.id}"
-          timeout = t.timeout || Tumugi.config.timeout
-          Timeout::timeout(timeout, Tumugi::TimeoutError) do
+          MuchTimeout.optional_timeout(task_timeout(t), Tumugi::TimeoutError) do
             until t.ready? || t.requires_failed?
               sleep 5
             end
@@ -131,6 +130,12 @@ module Tumugi
         else
           text[0, length].concat('...')
         end
+      end
+
+      def task_timeout(task)
+        timeout = task.timeout || Tumugi.config.timeout
+        timeout = nil if !timeout.nil? && timeout == 0 # for backward compatibility
+        timeout
       end
     end
   end

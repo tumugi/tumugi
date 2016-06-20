@@ -29,7 +29,7 @@ module Tumugi
       @workers = 1
       @max_retry = 3
       @retry_interval = 300 #seconds
-      @timeout = 0 # meaning no timeout
+      @timeout = nil # meaning no timeout
 
       @section_procs = {}
       @section_instances = {}
