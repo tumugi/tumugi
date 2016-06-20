@@ -1,0 +1,4 @@
+task main, type: :<%= name %> do
+  param1 'value1'
+  output { target(:<%= name %>, param1) }
+end
