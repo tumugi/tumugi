@@ -1,5 +1,6 @@
 require 'thor'
 require 'tumugi'
+require 'tumugi/command/new'
 
 module Tumugi
   class CLI < Thor
@@ -44,6 +45,11 @@ module Tumugi
       execute(:show, task, opts.freeze)
     end
 
+    desc "new PLUGIN_NAME", "Create new plugin project"
+    def new(name)
+      generate_plugin(name, options)
+    end
+
     private
 
     def execute(command, task, options)
@@ -55,6 +61,15 @@ module Tumugi
       success
     rescue => e
       logger.error "#{command} command failed"
+      logger.error e.message
+      e.backtrace.each { |line| logger.error line }
+      raise Thor::Error, 'failed'
+    end
+
+    def generate_plugin(name, options)
+      Tumugi::Command::New.new.execute(name, options)
+    rescue => e
+      logger.error "new command failed"
       logger.error e.message
       e.backtrace.each { |line| logger.error line }
       raise Thor::Error, 'failed'

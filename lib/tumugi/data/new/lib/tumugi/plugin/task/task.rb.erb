@@ -1,0 +1,22 @@
+require 'tumugi'
+require 'tumugi/plugin/target/<%= name %>'
+
+module Tumugi
+  module Plugin
+    class <%= name.capitalize %>Task < Tumugi::Task
+      Tumugi::Plugin.register_task('<%= name %>', self)
+
+      param :param1, type: :string, default: ""
+
+      def output
+        @output ||= Tumugi::Plugin::<%= name.capitalize %>Target.new(param1)
+      end
+
+      def run
+        # TODO: Implemente this method
+        log "run #{self.class.name}"
+        log "param1: #{param1}"
+      end
+    end
+  end
+end

@@ -12,8 +12,8 @@ module Tumugi
 
     def initialize
       @formatters = {
-        text: Proc.new{|severity, datetime, progname, msg| "#{datetime} #{severity} [#{job.id}] #{msg}\n" },
-        json: Proc.new{|severity, datetime, progname, msg| "#{JSON.generate(time: datetime, severity: severity, job: job.id, message: msg)}\n" },
+        text: text_formatter,
+        json: json_formatter
       }
       init
     end
@@ -30,6 +30,28 @@ module Tumugi
 
     def quiet!
       @logger = ::Logger.new(nil)
+    end
+
+    private
+
+    def text_formatter
+      Proc.new { |severity, datetime, progname, msg|
+        if job.nil?
+          "#{datetime} #{severity} #{msg}\n"
+        else
+          "#{datetime} #{severity} [#{job.id}] #{msg}\n"
+        end
+      }
+    end
+
+    def json_formatter
+      Proc.new { |severity, datetime, progname, msg|
+        hash = { time: datetime, severity: severity, message: msg }
+        if not job.nil?
+          hash[:job] = job.id
+        end
+        "#{JSON.generate(hash)}\n"
+      }
     end
   end
 end
