@@ -42,6 +42,8 @@ module Tumugi
       end
 
       def start(proc, settings)
+        logger.info "start job: #{Tumugi.application.job.id}"
+
         Parallel.each(proc, settings) do |t|
           logger.info "start: #{t.id}"
           timeout = t.timeout || Tumugi.config.timeout

@@ -35,13 +35,17 @@ module Tumugi
       @params[name] = opts
     end
 
-    def set(name, value)
-      @param_defaults[name] = value
+    def set(name, value=nil, &block)
+      if block_given?
+        @param_defaults[name] = block
+      else
+        @param_defaults[name] = value
+      end
     end
 
-    def param_set(name, value)
+    def param_set(name, value=nil, &block)
       Tumugi::Logger.instance.warn("'param_set' is deprecated and will be removed in a future release. Use 'set' instead.")
-      set(name, value)
+      set(name, value, &block)
     end
 
     def param_auto_bind_enabled(v)
@@ -147,7 +151,7 @@ module Tumugi
     end
 
     def define_parameter_method(name)
-      instance_eval("def self.#{name}(value); set(:#{name}, value); end")
+      instance_eval("def self.#{name}(value=nil, &block); set(:#{name}, value, &block); end")
     end
 
     def define_parent_parameter_methods
