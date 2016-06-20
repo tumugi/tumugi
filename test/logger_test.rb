@@ -4,9 +4,12 @@ require 'tumugi/logger'
 class Tumugi::LoggerTest < Test::Unit::TestCase
   setup do
     @logger = Tumugi::Logger.instance
+    @logger.job = @job = Tumugi::Job.new
     @logger.init
-
     @log_file = 'tmp/test.log'
+  end
+
+  teardown do
     File.delete(@log_file) if File.exist?(@log_file)
   end
 
@@ -17,9 +20,11 @@ class Tumugi::LoggerTest < Test::Unit::TestCase
   end
 
   test 'quiet!' do
+    output = StringIO.new
+    @logger.init(output: output)
     @logger.quiet!
-    result = capture_stdout { @logger.info 'test' }
-    assert_equal('', result)
+    @logger.info 'test'
+    assert_equal('', output.string)
   end
 
   test 'should respond to delegated methods' do
@@ -29,8 +34,19 @@ class Tumugi::LoggerTest < Test::Unit::TestCase
   end
 
   test 'output to file' do
-    @logger.init(@log_file)
+    @logger.init(output: @log_file)
     @logger.info('test')
     assert_true(File.exist?(@log_file))
+  end
+
+  data({
+    "text" => [:text, proc{ |logger| /\d{4}\-\d{2}\-\d{2} \d{2}:\d{2}:\d{2} \+\d{4} INFO \[#{logger.job.id}\] test\n$/ }],
+    "json" => [:json, proc{ |logger| /\{"time":"\d{4}\-\d{2}\-\d{2} \d{2}:\d{2}:\d{2} \+\d{4}","severity\":"INFO","job":"#{logger.job.id}","message":"test"\}\n$/ }]
+  })
+  test 'log format' do |(format, expected)|
+    output = StringIO.new
+    @logger.init(output: output, format: format)
+    @logger.info 'test'
+    assert_match(expected.call(@logger), output.string)
   end
 end

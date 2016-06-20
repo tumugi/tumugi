@@ -1,6 +1,7 @@
 require 'tumugi/dag'
 require 'tumugi/dsl'
 require 'tumugi/error'
+require 'tumugi/job'
 require 'tumugi/plugin'
 require 'tumugi/target'
 require 'tumugi/command/run'
@@ -8,11 +9,12 @@ require 'tumugi/command/show'
 
 module Tumugi
   class Application
-    attr_accessor :params
+    attr_accessor :params, :job
 
     def initialize
       @tasks = {}
       @params = {}
+      @job = Tumugi::Job.new
     end
 
     def execute(command, root_task_id, options)
@@ -66,13 +68,15 @@ module Tumugi
     end
 
     def setup_logger(command, options)
+      log_format = (options[:log_format] || :text).to_sym
       if command == :run && !options[:out].nil?
-        Tumugi::Logger.instance.init(options[:out])
+        logger.init(output: options[:out], format: log_format)
       else
-        Tumugi::Logger.instance.init
+        logger.init(format: log_format)
       end
       logger.verbose! if options[:verbose]
       logger.quiet! if options[:quiet]
+      logger.job = job
     end
 
     def load_config(options)
