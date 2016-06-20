@@ -8,17 +8,10 @@ require 'test/unit/rr'
 
 require 'tumugi'
 require 'tumugi/plugin'
+require 'tumugi/test/helper'
+include Tumugi::Test::Helpers
 
 Dir.mkdir('tmp') unless Dir.exist?('tmp')
-
-def capture_stdout
-  out = StringIO.new
-  $stdout = out
-  yield
-  return out.string
-ensure
-  $stdout = STDOUT
-end
 
 Tumugi::Logger.instance.init
 
