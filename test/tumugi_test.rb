@@ -15,6 +15,10 @@ class TumugiTest < Test::Unit::TestCase
     end
   end
 
+  test '#app returns same instance of #application' do
+    assert_same(Tumugi.app, Tumugi.application)
+  end
+
   sub_test_case '#logger' do
     test 'returns Tumugi::Logger instance' do
       assert_equal(Tumugi::Logger, Tumugi::Logger.instance.class)
