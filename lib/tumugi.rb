@@ -9,6 +9,7 @@ module Tumugi
     def application
       @application ||= Tumugi::Application.new
     end
+    alias_method :app, :application
 
     def configure(&block)
       raise Tumugi::ConfigError.new 'Tumugi.configure must have block' unless block_given?
