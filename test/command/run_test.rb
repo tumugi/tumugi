@@ -6,7 +6,7 @@ require 'tumugi/command/run'
 class Tumugi::Command::RunTest < Test::Unit::TestCase
   class TestTask < Tumugi::Task
     def run
-      sleep 3
+      sleep 10
     end
   end
 

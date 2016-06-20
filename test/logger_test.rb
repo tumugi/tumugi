@@ -41,7 +41,7 @@ class Tumugi::LoggerTest < Test::Unit::TestCase
 
   data({
     "text" => [:text, proc{ |logger| /\d{4}\-\d{2}\-\d{2} \d{2}:\d{2}:\d{2} \+\d{4} INFO \[#{logger.job.id}\] test\n$/ }],
-    "json" => [:json, proc{ |logger| /\{"time":"\d{4}\-\d{2}\-\d{2} \d{2}:\d{2}:\d{2} \+\d{4}","severity\":"INFO","job":"#{logger.job.id}","message":"test"\}\n$/ }]
+    "json" => [:json, proc{ |logger| /\{"time":"\d{4}\-\d{2}\-\d{2} \d{2}:\d{2}:\d{2} \+\d{4}","severity":"INFO","message":"test","job":"#{logger.job.id}"\}\n$/ }]
   })
   test 'log format' do |(format, expected)|
     output = StringIO.new
