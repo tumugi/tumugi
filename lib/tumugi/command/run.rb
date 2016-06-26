@@ -65,14 +65,13 @@ module Tumugi
                 Retriable.retriable retry_options do
                   t.run
                 end
+                t.state = :completed
+                logger.info "#{t.state}: #{t.id}"
               rescue => e
                 t.state = :failed
                 logger.info "#{t.state}: #{t.id}"
                 logger.error "#{e.message}"
                 logger.error e.backtrace.join("\n")
-              else
-                t.state = :completed
-                logger.info "#{t.state}: #{t.id}"
               end
             end
           end
