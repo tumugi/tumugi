@@ -15,48 +15,35 @@ module Tumugi
       def execute(dag, options={})
         workers = options[:workers] || Tumugi.config.workers
         settings = { in_threads: workers }
-        start(task_queue(dag), settings)
+        start(dag, settings)
         show_result_report(dag)
         !dag.tsort.any? { |t| t.state == :failed }
       end
 
       private
 
-      def task_queue(dag)
-        waiting_task_queue = Queue.new
-        available_task_queue = Queue.new
-        dag.tsort.each do |t|
-          if t.ready?
-            available_task_queue << t
-          else
-            waiting_task_queue << t
-          end
-        end
-        lambda {
-          task = (available_task_queue.empty? ? nil : available_task_queue.pop)
-          if task.nil?
-            task = (waiting_task_queue.empty? ? nil : waiting_task_queue.pop)
-          end
-          task || Parallel::Stop
-        }
-      end
-
-      def start(proc, settings)
+      def start(dag, settings)
         logger.info "start job: #{Tumugi.application.job.id}"
 
-        Parallel.each(proc, settings) do |t|
+        setup_task_queue(dag)
+        Parallel.each(dequeue_task, settings) do |t|
           logger.info "start: #{t.id}"
-          MuchTimeout.optional_timeout(task_timeout(t), Tumugi::TimeoutError) do
-            until t.ready? || t.requires_failed?
-              sleep 5
-            end
 
+          if !t.ready?
+            enqueu_task(t)
+            next
+          end
+
+          if t.requires_failed?
+            t.state = :requires_failed
+            logger.info "#{t.state}: #{t.id} has failed requires task"
+            next
+          end
+
+          MuchTimeout.optional_timeout(task_timeout(t), Tumugi::TimeoutError) do
             if t.completed?
               t.state = :skipped
               logger.info "#{t.state}: #{t.id} is already completed"
-            elsif t.requires_failed?
-              t.state = :requires_failed
-              logger.info "#{t.state}: #{t.id} has failed requires task"
             else
               logger.info "run: #{t.id}"
               t.state = :running
@@ -135,6 +122,29 @@ module Tumugi
         timeout = task.timeout || Tumugi.config.timeout
         timeout = nil if !timeout.nil? && timeout == 0 # for backward compatibility
         timeout
+      end
+
+      def setup_task_queue(dag)
+        @queue = Queue.new
+        dag.tsort.each do |t|
+          @queue << t
+        end
+        @queue
+      end
+
+      def dequeue_task
+        lambda {
+          begin
+            @queue.pop(true)
+          rescue ThreadError
+            Parallel::Stop
+          end
+        }
+      end
+
+      def enqueu_task(task)
+        sleep 1
+        @queue << task
       end
     end
   end
