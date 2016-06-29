@@ -1,5 +1,5 @@
 task :task1 do
-  param :key1, auto_bind: true, required: true #=> 'value1', get value from CLI parameter
+  param :key1, auto_bind: true, required: true #=> get value from CLI parameter
 
   requires :task2
   run do
@@ -9,8 +9,8 @@ end
 
 task :task2 do
   param :key1
-  param :key2
-  key2 'value2' #=> 'value'
+  param :key2, type: :time
+  key2 Time.parse('2016-06-27')
 
   requires :task3
   run do
