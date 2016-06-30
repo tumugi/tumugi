@@ -44,6 +44,7 @@ module Tumugi
       end
 
       begin
+        logger.info "Load workflow from #{file}"
         load(file, true)
       rescue LoadError => e
         raise Tumugi::TumugiError.new("Workflow file load error: #{file}", e)
