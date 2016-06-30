@@ -27,20 +27,19 @@ module Tumugi
 
         setup_task_queue(dag)
         Parallel.each(dequeue_task, settings) do |t|
-          logger.info "start: #{t.id}"
-
-          if !t.ready?
-            enqueu_task(t)
-            next
-          end
-
           if t.requires_failed?
             t.state = :requires_failed
             logger.info "#{t.state}: #{t.id} has failed requires task"
             next
           end
 
+          if !t.ready?
+            enqueu_task(t)
+            next
+          end
+
           MuchTimeout.optional_timeout(task_timeout(t), Tumugi::TimeoutError) do
+            logger.info "start: #{t.id}"
             if t.completed?
               t.state = :skipped
               logger.info "#{t.state}: #{t.id} is already completed"
