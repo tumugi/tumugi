@@ -15,7 +15,7 @@ module Tumugi
             r.id
           end
           params = proxy.params.map do |name, _|
-            "#{name}=#{truncate(task.send(name.to_sym), 15)}"
+            "#{name}=#{truncate(task.send(name.to_sym).to_s, 25)}"
           end
           t << :separator if index != 0
           t << [ task.id, requires.join("\n"), params.join("\n"), task.state ]
