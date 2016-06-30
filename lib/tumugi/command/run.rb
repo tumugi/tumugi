@@ -1,17 +1,14 @@
 require 'much-timeout'
 require 'parallel'
 require 'retriable'
-require 'terminal-table'
 require 'thor'
 
 require 'tumugi/error'
-require 'tumugi/mixin/listable'
+require 'tumugi/dag_result_reporter'
 
 module Tumugi
   module Command
     class Run
-      include Tumugi::Mixin::Listable
-
       def execute(dag, options={})
         workers = options[:workers] || Tumugi.config.workers
         settings = { in_threads: workers }
@@ -87,34 +84,13 @@ module Tumugi
       end
 
       def show_result_report(dag)
-        headings = ['Task', 'Requires', 'Parameters', 'State']
-        table = Terminal::Table.new title: "Workflow Result", headings: headings do |t|
-          dag.tsort.map.with_index do |task, index|
-            proxy = task.class.merged_parameter_proxy
-            requires = list(task.requires).map do |r|
-              r.id
-            end
-            params = proxy.params.map do |name, _|
-              "#{name}=#{truncate(task.send(name.to_sym), 15)}"
-            end
-            t << :separator if index != 0
-            t << [ task.id, requires.join("\n"), params.join("\n"), task.state ]
-          end
-        end
-        logger.info "Result report:\n#{table.to_s}"
+        reporter = Tumugi::DAGResultReporter.new
+        report = reporter.show(dag)
+        logger.info "Result report:\n#{report.to_s}"
       end
 
       def logger
         Tumugi::Logger.instance
-      end
-
-      def truncate(text, length)
-        return nil if text.nil?
-        if text.length <= length
-          text
-        else
-          text[0, length].concat('...')
-        end
       end
 
       def task_timeout(task)
