@@ -53,7 +53,7 @@ module Tumugi
     private
 
     def execute(command, task, options)
-      success = Tumugi.application.execute(command, task, options)
+      success = Tumugi.workflow.execute(command, task, options)
       unless success
         raise Thor::Error, "execute finished, but return it's failed"
       end

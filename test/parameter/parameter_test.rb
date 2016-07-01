@@ -59,13 +59,13 @@ class Tumugi::Parameter::ParameterTest < Test::Unit::TestCase
 
   sub_test_case '#get' do
     sub_test_case 'auto_bind is enabled' do
-      sub_test_case 'search from application parameter' do
+      sub_test_case 'search from workflow parameter' do
         teardown do
-          Tumugi.application.params = {}
+          Tumugi.workflow.params = {}
         end
 
         test 'returns specified value' do
-          Tumugi.application.params['param_1'] = 'param_value1'
+          Tumugi.workflow.params['param_1'] = 'param_value1'
           param = Tumugi::Parameter::Parameter.new(:param_1, auto_bind: true)
           assert_equal('param_value1', param.get)
         end

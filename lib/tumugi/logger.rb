@@ -8,7 +8,7 @@ module Tumugi
     include Singleton
     extend Forwardable
     def_delegators :@logger, :debug, :error, :fatal, :info, :warn, :level
-    attr_accessor :job
+    attr_accessor :workflow_id
 
     def initialize
       @formatters = {
@@ -36,10 +36,10 @@ module Tumugi
 
     def text_formatter
       Proc.new { |severity, datetime, progname, msg|
-        if job.nil?
-          "#{datetime} #{severity} #{msg}\n"
+        if !workflow_id.nil?
+          "#{datetime} #{severity} [#{workflow_id}] #{msg}\n"
         else
-          "#{datetime} #{severity} [#{job.id}] #{msg}\n"
+          "#{datetime} #{severity} #{msg}\n"
         end
       }
     end
@@ -47,8 +47,8 @@ module Tumugi
     def json_formatter
       Proc.new { |severity, datetime, progname, msg|
         hash = { time: datetime, severity: severity, message: msg }
-        if not job.nil?
-          hash[:job] = job.id
+        if !workflow_id.nil?
+          hash[:workflow] = workflow_id
         end
         "#{JSON.generate(hash)}\n"
       }

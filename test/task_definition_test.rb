@@ -76,8 +76,8 @@ class Tumugi::TaskDefinitionTest < Test::Unit::TestCase
         task = @task_def.instance
         t1 = Tumugi::Task.new
         t2 = Tumugi::Task.new
-        stub(Tumugi.application).find_task(:a) { t1 }
-        stub(Tumugi.application).find_task(:b) { t2 }
+        stub(Tumugi.workflow).find_task(:a) { t1 }
+        stub(Tumugi.workflow).find_task(:b) { t2 }
         stub(@task_def).required_tasks { [:a, :b] }
         assert_equal([t1, t2], task.requires)
       end
@@ -86,8 +86,8 @@ class Tumugi::TaskDefinitionTest < Test::Unit::TestCase
         task = @task_def.instance
         t1 = Tumugi::Task.new
         t2 = Tumugi::Task.new
-        stub(Tumugi.application).find_task(:a) { t1 }
-        stub(Tumugi.application).find_task(:b) { t2 }
+        stub(Tumugi.workflow).find_task(:a) { t1 }
+        stub(Tumugi.workflow).find_task(:b) { t2 }
         stub(@task_def).required_tasks { { a: :a, b: :b } }
         assert_equal({ a: t1, b: t2 }, task.requires)
       end
@@ -95,7 +95,7 @@ class Tumugi::TaskDefinitionTest < Test::Unit::TestCase
       test 'Tumugi::Task' do
         task = @task_def.instance
         t1 = Tumugi::Task.new
-        stub(Tumugi.application).find_task(:a) { t1 }
+        stub(Tumugi.workflow).find_task(:a) { t1 }
         stub(@task_def).required_tasks { :a }
         assert_equal(t1, task.requires)
       end

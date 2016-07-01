@@ -1,24 +1,28 @@
 require_relative './test_helper'
-require 'tumugi/application'
+require 'tumugi/workflow'
 
-class Tumugi::ApplictionTest < Test::Unit::TestCase
+class Tumugi::WorkflowTest < Test::Unit::TestCase
   setup do
-    @app = Tumugi::Application.new
+    @workflow = Tumugi::Workflow.new
+  end
+
+  test '#initialize' do
+    assert_not_nil(@workflow.id)
   end
 
   sub_test_case '#setup_logger' do
     test 'default log level is INFO' do
-      @app.send(:setup_logger, :run, {})
+      @workflow.send(:setup_logger, :run, {})
       assert_equal(Logger::INFO, Tumugi::Logger.instance.level)
     end
 
     test 'log level is DEBUG when verbose flag is true' do
-      @app.send(:setup_logger, :run, verbose: true)
+      @workflow.send(:setup_logger, :run, verbose: true)
       assert_equal(Logger::DEBUG, Tumugi::Logger.instance.level)
     end
 
     test 'log is disabled when quiet flag is true' do
-      @app.send(:setup_logger, :run, quiet: true)
+      @workflow.send(:setup_logger, :run, quiet: true)
       result = capture_stdout { Tumugi::Logger.instance.info 'test' }
       assert_equal('', result)
     end

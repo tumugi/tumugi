@@ -15,9 +15,9 @@ module Tumugi
       private
 
       def start(executor)
-        logger.info "start job: #{Tumugi.application.job.id}"
+        logger.info "start workflow: #{Tumugi.workflow.id}"
         executor.execute
-        logger.info "end job: #{Tumugi.application.job.id}"
+        logger.info "end workflow: #{Tumugi.workflow.id}"
       end
 
       def show_result_report(dag)

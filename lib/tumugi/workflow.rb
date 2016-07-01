@@ -1,20 +1,22 @@
 require 'tumugi/dag'
 require 'tumugi/dsl'
 require 'tumugi/error'
-require 'tumugi/job'
 require 'tumugi/plugin'
 require 'tumugi/target'
 require 'tumugi/command/run'
 require 'tumugi/command/show'
 
+require 'securerandom'
+
 module Tumugi
-  class Application
-    attr_accessor :params, :job
+  class Workflow
+    attr_reader :id
+    attr_accessor :params
 
     def initialize
+      @id = SecureRandom.uuid
       @tasks = {}
       @params = {}
-      @job = Tumugi::Job.new
     end
 
     def execute(command, root_task_id, options)
@@ -77,7 +79,7 @@ module Tumugi
       end
       logger.verbose! if options[:verbose]
       logger.quiet! if options[:quiet]
-      logger.job = job
+      logger.workflow_id = id
     end
 
     def load_config(options)

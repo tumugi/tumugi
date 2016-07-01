@@ -14,7 +14,7 @@ module Tumugi
 
       def get
         if auto_bind?
-          value = search_from_application_parameters
+          value = search_from_workflow_parameters
         end
         value.nil? ? default_value : value
       end
@@ -45,9 +45,9 @@ module Tumugi
 
       private
 
-      def search_from_application_parameters
+      def search_from_workflow_parameters
         key = @name.to_s
-        value = Tumugi.application.params[key]
+        value = Tumugi.workflow.params[key]
         value ? Converter.convert(type, value) : nil
       end
 

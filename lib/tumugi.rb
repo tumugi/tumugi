@@ -1,4 +1,4 @@
-require 'tumugi/application'
+require 'tumugi/workflow'
 require 'tumugi/config'
 require 'tumugi/error'
 require 'tumugi/logger'
@@ -6,10 +6,12 @@ require 'tumugi/version'
 
 module Tumugi
   class << self
-    def application
-      @application ||= Tumugi::Application.new
+    def workflow
+      @workflow ||= Tumugi::Workflow.new
     end
-    alias_method :app, :application
+    # alias for backward compatibility
+    alias_method :app, :workflow
+    alias_method :application, :workflow
 
     def configure(&block)
       raise Tumugi::ConfigError.new 'Tumugi.configure must have block' unless block_given?

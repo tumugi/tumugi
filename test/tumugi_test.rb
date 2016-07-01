@@ -5,18 +5,19 @@ class TumugiTest < Test::Unit::TestCase
     refute_nil ::Tumugi::VERSION
   end
 
-  sub_test_case '#application' do
-    test 'returns Tumugi::Application instance' do
-      assert_equal(Tumugi::Application, Tumugi.application.class)
+  sub_test_case '#workflow' do
+    test 'returns Tumugi::Workflow instance' do
+      assert_equal(Tumugi::Workflow, Tumugi.workflow.class)
     end
 
     test 'returns same instance when called multiple' do
-      assert_same(Tumugi.application, Tumugi.application)
+      assert_same(Tumugi.workflow, Tumugi.workflow)
     end
   end
 
-  test '#app returns same instance of #application' do
-    assert_same(Tumugi.app, Tumugi.application)
+  test 'alias methods of #workflow' do
+    assert_same(Tumugi.workflow, Tumugi.app)
+    assert_same(Tumugi.workflow, Tumugi.application)
   end
 
   sub_test_case '#logger' do
