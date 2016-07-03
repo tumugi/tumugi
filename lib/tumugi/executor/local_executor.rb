@@ -17,35 +17,16 @@ module Tumugi
       def execute
         setup_task_queue(@dag)
         Parallel.each(dequeue_task, { in_threads: @options[:worker_num] }) do |task|
-          @logger.debug "dequeue: #{task.id}"
-
-          if task.requires_failed?
-            task.mark_requires_failed!
-            @logger.info "#{task.state}: #{task.id} has failed requires task"
-            next
-          end
-
-          if !task.runnable?(Time.now)
-            enqueue_task(task)
-            next
-          end
-
-          @logger.info "run: #{task.id}"
-
-          if task.completed?
-            task.skip!
-            @logger.info "#{task.state}: #{task.id} is already completed"
-          else
-            begin
-              task.start!
-              MuchTimeout.optional_timeout(task_timeout(task), Tumugi::TimeoutError) do
-                task.run
-              end
-              task.mark_completed!
-              @logger.info "#{task.state}: #{task.id}"
-            rescue => e
-              handle_error(task, e)
+          begin
+            @logger.info "run: #{task.id}"
+            task.start!
+            MuchTimeout.optional_timeout(task_timeout(task), Tumugi::TimeoutError) do
+              task.run
             end
+            task.mark_completed!
+            @logger.info "#{task.state}: #{task.id}"
+          rescue => e
+            handle_error(task, e)
           end
         end
         @dag.tsort.all? { |t| t.success? }
@@ -69,7 +50,27 @@ module Tumugi
         lambda {
           loop do
             begin
-              break @queue.pop(true)
+              task = @queue.pop(true)
+              @logger.debug "dequeue: #{task.id}"
+
+              if task.requires_failed?
+                task.mark_requires_failed!
+                @logger.info "#{task.state}: #{task.id} has failed requires task"
+                next
+              end
+
+              if !task.runnable?(Time.now)
+                enqueue_task(task)
+                next
+              end
+
+              if task.completed?
+                task.skip!
+                @logger.info "#{task.state}: #{task.id} is already completed"
+                next
+              end
+
+              break task
             rescue ThreadError
               if @last_task.finished?
                 break Parallel::Stop
