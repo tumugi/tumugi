@@ -82,7 +82,6 @@ module Tumugi
       end
 
       def enqueue_task(task)
-        sleep 1
         @logger.debug "enqueue: #{task.id}"
         @queue << task
       end
