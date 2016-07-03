@@ -7,17 +7,18 @@ module Tumugi
       def execute(dag, options={})
         worker_num = options[:workers] || Tumugi.config.workers
         executor = Tumugi::Executor::LocalExecutor.new(dag, logger, worker_num: worker_num)
-        start(executor)
+        result = start(executor)
         show_result_report(dag)
-        !dag.tsort.any? { |t| t.state == :failed }
+        result
       end
 
       private
 
       def start(executor)
         logger.info "start workflow: #{Tumugi.workflow.id}"
-        executor.execute
+        result = executor.execute
         logger.info "end workflow: #{Tumugi.workflow.id}"
+        result
       end
 
       def show_result_report(dag)

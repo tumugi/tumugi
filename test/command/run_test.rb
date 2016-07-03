@@ -26,7 +26,7 @@ class Tumugi::Command::RunTest < Test::Unit::TestCase
   sub_test_case '#execute' do
     test 'completed' do
       @cmd.execute(@dag)
-      assert_equal(:completed, @task.state)
+      assert_equal('completed', @task.state)
     end
 
     test 'skipped' do
@@ -35,31 +35,38 @@ class Tumugi::Command::RunTest < Test::Unit::TestCase
       end
 
       @cmd.execute(@dag)
-      assert_equal(:skipped, @task.state)
+      assert_equal('skipped', @task.state)
     end
 
     test 'faild' do
-      def @task.run
-        raise 'always failed'
-      end
       Tumugi.configure do |config|
         config.max_retry = 2
         config.retry_interval = 1
       end
+      @dag = Tumugi::DAG.new
+      @task = TestTask.new
+      @dag.add_task(@task)
+
+      def @task.run
+        raise 'always failed'
+      end
 
       success = @cmd.execute(@dag)
       assert_false(success)
-      assert_equal(:failed, @task.state)
+      assert_equal('failed', @task.state)
     end
 
     test 'failed when task got timeout' do
       Tumugi.configure do |config|
         config.timeout = 1
       end
+      @dag = Tumugi::DAG.new
+      @task = TestTask.new
+      @dag.add_task(@task)
 
       success = @cmd.execute(@dag)
       assert_false(success)
-      assert_equal(:failed, @task.state)
+      assert_equal('failed', @task.state)
     end
   end
 end

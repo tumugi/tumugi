@@ -2,17 +2,72 @@ require 'tumugi/mixin/listable'
 require 'tumugi/mixin/task_helper'
 require 'tumugi/mixin/parameterizable'
 
+require 'state_machines'
+
 module Tumugi
   class Task
     include Tumugi::Mixin::Parameterizable
     include Tumugi::Mixin::Listable
     include Tumugi::Mixin::TaskHelper
 
-    attr_accessor :state # :pending, :running, :completed, :skipped
+    state_machine :state, initial: :pending do
+      event :skip do
+        transition pending: :skipped
+      end
+
+      event :start do
+        transition pending: :running
+      end
+
+      event :pend do
+        transition all => :pending
+      end
+
+      event :mark_completed do
+        transition [:pending, :running] => :completed
+      end
+
+      event :mark_failed do
+        transition [:pending, :running] => :failed
+      end
+
+      event :mark_requires_failed do
+        transition [:pending, :running] => :requires_failed
+      end
+
+      state :completed, :skipped do
+        def success?
+          true
+        end
+      end
+
+      state all - [:completed, :skipped] do
+        def success?
+          false
+        end
+      end
+
+      state :completed, :skipped, :failed, :requires_failed do
+        def finished?
+          true
+        end
+      end
+
+      state all - [:completed, :skipped, :failed, :requires_failed] do
+        def finished?
+          false
+        end
+      end
+    end
+
+    attr_reader :visible_at, :tries, :max_retry, :retry_interval
 
     def initialize
       super()
-      @state = :pending
+      @visible_at = Time.now
+      @tries = 0
+      @max_retry = Tumugi.config.max_retry
+      @retry_interval = Tumugi.config.retry_interval
     end
 
     def id
@@ -69,18 +124,32 @@ module Tumugi
     def completed?
       outputs = list(output)
       if outputs.empty?
-        @state == :completed || @state == :skipped
+        success?
       else
         outputs.all?(&:exist?)
       end
     end
 
     def requires_failed?
-      list(_requires).any? { |t| t.instance.state == :failed || t.instance.state == :requires_failed }
+      list(_requires).any? { |t| t.instance.finish_failed? }
+    end
+
+    def finish_failed?
+      finished? && !success?
     end
 
     def timeout
       nil # meaning use default timeout
+    end
+
+    def runnable?(now)
+      ready? && visible?(now)
+    end
+
+    def retry(err)
+      @tries += 1
+      @visible_at += @retry_interval
+      retriable?
     end
 
     # Following methods are internal use only
@@ -105,6 +174,14 @@ module Tumugi
       else
         _requires.instance._output
       end
+    end
+
+    def visible?(now)
+      now >= @visible_at
+    end
+
+    def retriable?
+      @tries <= @max_retry
     end
   end
 end

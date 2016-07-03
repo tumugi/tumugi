@@ -61,7 +61,7 @@ module Tumugi
     rescue => e
       logger.error "#{command} command failed"
       logger.error e.message
-      logger.error "If you want to know more detail, run with '--vebose' option"
+      logger.error "If you want to know more detail, run with '--verbose' option"
       e.backtrace.each { |line| logger.debug line }
       logger.error "status: failed, command: #{command}, task: #{task}, options: #{options}"
       raise Thor::Error.new("tumugi #{command} failed, please check log")
@@ -72,7 +72,7 @@ module Tumugi
       logger.info "status: success, command: new, name: #{name}, options: #{options}"
     rescue => e
       logger.error e.message
-      logger.error "If you want to know more detail, run with '--vebose' option"
+      logger.error "If you want to know more detail, run with '--verbose' option"
       e.backtrace.each { |line| logger.debug line }
       logger.error "status: failed, command: new, name: #{name}, options: #{options}"
       raise Thor::Error.new("tumugi new failed, please check log")

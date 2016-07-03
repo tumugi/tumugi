@@ -241,14 +241,14 @@ class Tumugi::TaskTest < Test::Unit::TestCase
   sub_test_case '#requires_failed' do
     test 'return true when requires task is failed' do
       requires_task = TestTask.new(output: NotExistOutput.new)
-      requires_task.state = :failed
+      requires_task.mark_failed!
       task = TestTask.new(requires: requires_task)
       assert_true(task.requires_failed?)
     end
 
     test 'return false when requires task is completed' do
       requires_task = TestTask.new(output: NotExistOutput.new)
-      requires_task.state = :completed
+      requires_task.mark_completed!
       task = TestTask.new(requires: requires_task)
       assert_false(task.requires_failed?)
     end
@@ -261,6 +261,13 @@ class Tumugi::TaskTest < Test::Unit::TestCase
 
     test 'sub class can override timeout' do
       assert_equal(5, TestTask.new.timeout)
+    end
+  end
+
+  sub_test_case 'state' do
+    test 'initial state is pending' do
+      assert_equal('pending', @task.state)
+      assert_true(@task.pending?)
     end
   end
 end

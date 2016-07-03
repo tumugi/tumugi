@@ -3,13 +3,13 @@ require 'parallel'
 
 require 'tumugi'
 require 'tumugi/error'
-require 'tumugi/executor/task_wrapper'
 
 module Tumugi
   module Executor
     class LocalExecutor
       def initialize(dag, logger=nil, worker_num: 1)
         @dag = dag
+        @last_task = dag.tsort.last
         @logger = logger || Tumugi::Logger.instance
         @options = { worker_num: worker_num }
       end
@@ -20,12 +20,12 @@ module Tumugi
           @logger.debug "dequeue: #{task.id}"
 
           if task.requires_failed?
-            task.state = :requires_failed
+            task.mark_requires_failed!
             @logger.info "#{task.state}: #{task.id} has failed requires task"
             next
           end
 
-          if !task.ready?(Time.now)
+          if !task.runnable?(Time.now)
             enqueue_task(task)
             next
           end
@@ -33,22 +33,22 @@ module Tumugi
           @logger.info "run: #{task.id}"
 
           if task.completed?
-            task.state = :skipped
+            task.skip!
             @logger.info "#{task.state}: #{task.id} is already completed"
           else
-            task.state = :running
-
             begin
+              task.start!
               MuchTimeout.optional_timeout(task_timeout(task), Tumugi::TimeoutError) do
                 task.run
               end
-              task.state = :completed
+              task.mark_completed!
               @logger.info "#{task.state}: #{task.id}"
             rescue => e
               handle_error(task, e)
             end
           end
         end
+        @dag.tsort.all? { |t| t.success? }
       end
 
       private
@@ -61,18 +61,22 @@ module Tumugi
 
       def setup_task_queue(dag)
         @queue = Queue.new
-        dag.tsort.each do |t|
-          @queue << Tumugi::Executor::TaskWrapper.new(t)
-        end
+        dag.tsort.each { |t| @queue << t }
         @queue
       end
 
       def dequeue_task
         lambda {
-          begin
-            @queue.pop(true)
-          rescue ThreadError
-            Parallel::Stop
+          loop do
+            begin
+              break @queue.pop(true)
+            rescue ThreadError
+              if @last_task.finished?
+                break Parallel::Stop
+              else
+                sleep 1
+              end
+            end
           end
         }
       end
@@ -85,10 +89,11 @@ module Tumugi
 
       def handle_error(task, err)
         if task.retry(err)
+          task.pend!
           @logger.error "#{err.class}: '#{err.message}' - #{task.tries} tries and wait #{task.retry_interval} seconds until the next try."
           enqueue_task(task)
         else
-          task.state = :failed
+          task.mark_failed!
           @logger.error "#{err.class}: '#{err.message}' - #{task.tries} tries and reached max retry count, so task #{task.id} failed."
           @logger.info "#{task.state}: #{task.id}"
           @logger.error "#{err.message}"

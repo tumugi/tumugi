@@ -23,9 +23,10 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'erubis', '~> 2.7.0'
   spec.add_runtime_dependency 'parallel', '~> 1.8.0'
   spec.add_runtime_dependency 'ruby-graphviz', '~> 1.2.2'
+  spec.add_runtime_dependency 'state_machines'
   spec.add_runtime_dependency 'terminal-table', '~> 1.5.2'
   spec.add_runtime_dependency 'thor', '~> 0.19.1'
-  spec.add_runtime_dependency 'much-timeout', '0.1.0'
+  spec.add_runtime_dependency 'much-timeout', '~> 0.1.1'
 
   spec.add_development_dependency 'bundler', '~> 1.11'
   spec.add_development_dependency 'rake', '~> 10.0'

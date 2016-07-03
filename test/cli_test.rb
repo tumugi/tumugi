@@ -28,21 +28,21 @@ class Tumugi::CLITest < Tumugi::Test::TumugiTestCase
   sub_test_case 'run' do
     data(examples)
     test 'success' do |(file, task)|
-      assert_run_success("examples/#{file}", task, workers: 24, params: { 'key1' => 'value1' }, config: "examples/tumugi_config.rb")
+      assert_run_success("examples/#{file}", task, workers: 24, quiet: false, params: { 'key1' => 'value1' }, config: "examples/tumugi_config.rb")
     end
 
     data(failed_examples)
     test 'fail' do |(file, task)|
-      assert_run_fail("examples/#{file}", task, workers: 24, config: "examples/tumugi_config.rb")
+      assert_run_fail("examples/#{file}", task, workers: 24, quiet: false, config: "examples/tumugi_config.rb")
     end
 
     data(config_section_examples)
     test 'config_section' do |(file, task)|
-      assert_run_success("examples/#{file}", task, workers: 24, config: "examples/tumugi_config_with_section.rb", output: 'tmp/tumugi.log')
+      assert_run_success("examples/#{file}", task, workers: 24, quiet: false, config: "examples/tumugi_config_with_section.rb", output: 'tmp/tumugi.log')
     end
 
     test 'logfile' do
-      assert_run_success('examples/simple.rb', 'task1', out: 'tmp/tumugi.log', config: "examples/tumugi_config.rb")
+      assert_run_success('examples/simple.rb', 'task1', quiet: false, out: 'tmp/tumugi.log', config: "examples/tumugi_config.rb")
       assert_true(File.exist?('tmp/tumugi.log'))
     end
   end
