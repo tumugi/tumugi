@@ -26,19 +26,35 @@ class Tumugi::CLITest < Tumugi::Test::TumugiTestCase
   end
 
   sub_test_case 'run' do
-    data(examples)
-    test 'success' do |(file, task)|
-      assert_run_success("examples/#{file}", task, workers: 24, quiet: false, params: { 'key1' => 'value1' }, config: "examples/tumugi_config.rb")
+    data do
+      data_set = {}
+      examples.each do |k, v|
+        [1, 2, 12].each do |n|
+          data_set["#{k}_workers_#{n}"] = (v.dup << n)
+        end
+      end
+      data_set
+    end
+    test 'success' do |(file, task, worker)|
+      assert_run_success("examples/#{file}", task, workers: worker, verbose: true, quiet: false, params: { 'key1' => 'value1' }, config: "examples/tumugi_config.rb")
     end
 
-    data(failed_examples)
-    test 'fail' do |(file, task)|
-      assert_run_fail("examples/#{file}", task, workers: 24, quiet: false, config: "examples/tumugi_config.rb")
+    data do
+      data_set = {}
+      failed_examples.each do |k, v|
+        [1, 2, 12].each do |n|
+          data_set["#{k}_workers_#{n}"] = (v.dup << n)
+        end
+      end
+      data_set
+    end
+    test 'fail' do |(file, task, worker)|
+      assert_run_fail("examples/#{file}", task, workers: worker, verbose: true, quiet: false, config: "examples/tumugi_config.rb")
     end
 
     data(config_section_examples)
     test 'config_section' do |(file, task)|
-      assert_run_success("examples/#{file}", task, workers: 24, quiet: false, config: "examples/tumugi_config_with_section.rb", output: 'tmp/tumugi.log')
+      assert_run_success("examples/#{file}", task, quiet: false, config: "examples/tumugi_config_with_section.rb", output: 'tmp/tumugi.log')
     end
 
     test 'logfile' do
@@ -61,7 +77,7 @@ class Tumugi::CLITest < Tumugi::Test::TumugiTestCase
       data_set = {}
       examples.each do |k, v|
         %w(dot jpg pdf png svg).each do |fmt|
-          data_set["#{k}_#{fmt}"] = (v << fmt)
+          data_set["#{k}_#{fmt}"] = (v.dup << fmt)
         end
       end
       data_set
