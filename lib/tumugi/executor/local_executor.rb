@@ -17,6 +17,12 @@ module Tumugi
       def execute
         setup_task_queue(@dag)
         Parallel.each(dequeue_task, { in_threads: @options[:worker_num] }) do |task|
+          if !task.runnable?(Time.now)
+            sleep(task_wait_sec)
+            enqueue_task(task)
+            next
+          end
+
           begin
             @logger.info "run: #{task.id}"
             task.start!
@@ -40,6 +46,10 @@ module Tumugi
         timeout
       end
 
+      def task_wait_sec
+        1 # TODO: Make this configurable
+      end
+
       def setup_task_queue(dag)
         @queue = Queue.new
         dag.tsort.each { |t| @queue << t }
@@ -59,11 +69,6 @@ module Tumugi
                 next
               end
 
-              if !task.runnable?(Time.now)
-                enqueue_task(task)
-                next
-              end
-
               if task.completed?
                 task.skip!
                 @logger.info "#{task.state}: #{task.id} is already completed"
@@ -75,7 +80,7 @@ module Tumugi
               if @last_task.finished?
                 break Parallel::Stop
               else
-                sleep 1
+                sleep(task_wait_sec)
               end
             end
           end

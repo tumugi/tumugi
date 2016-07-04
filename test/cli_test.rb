@@ -36,7 +36,7 @@ class Tumugi::CLITest < Tumugi::Test::TumugiTestCase
       data_set
     end
     test 'success' do |(file, task, worker)|
-      assert_run_success("examples/#{file}", task, workers: worker, params: { 'key1' => 'value1' }, config: "examples/tumugi_config.rb")
+      assert_run_success("examples/#{file}", task, quite: false, verbose: true, workers: worker, params: { 'key1' => 'value1' }, config: "examples/tumugi_config.rb")
     end
 
     data do
