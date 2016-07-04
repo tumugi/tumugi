@@ -1,5 +1,6 @@
 require 'much-timeout'
 require 'parallel'
+require 'thread_safe'
 
 require 'tumugi'
 require 'tumugi/error'
@@ -17,6 +18,8 @@ module Tumugi
       def execute
         setup_task_queue(@dag)
         Parallel.each(dequeue_task, { in_threads: @options[:worker_num] }) do |task|
+          @logger.info "start: #{task.id}, worker_number: #{Parallel.worker_number}"
+
           if !task.runnable?(Time.now)
             sleep(task_wait_sec)
             enqueue_task(task)
@@ -24,7 +27,6 @@ module Tumugi
           end
 
           begin
-            @logger.info "run: #{task.id}"
             task.start!
             MuchTimeout.optional_timeout(task_timeout(task), Tumugi::TimeoutError) do
               task.run
@@ -51,36 +53,33 @@ module Tumugi
       end
 
       def setup_task_queue(dag)
-        @queue = Queue.new
-        dag.tsort.each { |t| @queue << t }
+        @queue = ThreadSafe::Array.new
+        dag.tsort.each { |t| enqueue_task(t) }
         @queue
       end
 
       def dequeue_task
         lambda {
           loop do
-            begin
-              task = @queue.pop(true)
+            @logger.debug "queue: #{@queue.map(&:id)}"
+            task = @queue.shift
+            if task.nil?
+              if @last_task.finished?
+                break Parallel::Stop
+              else
+                sleep(task_wait_sec)
+              end
+            else
               @logger.debug "dequeue: #{task.id}"
 
               if task.requires_failed?
                 task.mark_requires_failed!
                 @logger.info "#{task.state}: #{task.id} has failed requires task"
-                next
-              end
-
-              if task.completed?
+              elsif task.completed?
                 task.skip!
                 @logger.info "#{task.state}: #{task.id} is already completed"
-                next
-              end
-
-              break task
-            rescue ThreadError
-              if @last_task.finished?
-                break Parallel::Stop
               else
-                sleep(task_wait_sec)
+                break task
               end
             end
           end
@@ -89,7 +88,7 @@ module Tumugi
 
       def enqueue_task(task)
         @logger.debug "enqueue: #{task.id}"
-        @queue << task
+        @queue.push(task)
       end
 
       def handle_error(task, err)
