@@ -1,6 +1,5 @@
 require 'much-timeout'
 require 'parallel'
-require 'thread_safe'
 
 require 'tumugi'
 require 'tumugi/error'
@@ -13,6 +12,7 @@ module Tumugi
         @last_task = dag.tsort.last
         @logger = logger || Tumugi::Logger.instance
         @options = { worker_num: worker_num }
+        @mutex = Mutex.new
       end
 
       def execute
@@ -53,7 +53,7 @@ module Tumugi
       end
 
       def setup_task_queue(dag)
-        @queue = ThreadSafe::Array.new
+        @queue = []
         dag.tsort.each { |t| enqueue_task(t) }
         @queue
       end
@@ -61,8 +61,11 @@ module Tumugi
       def dequeue_task
         lambda {
           loop do
-            @logger.debug "queue: #{@queue.map(&:id)}"
-            task = @queue.shift
+            task = @mutex.synchronize {
+              @logger.debug "queue: #{@queue.map(&:id)}"
+              @queue.shift
+            }
+
             if task.nil?
               if @last_task.finished?
                 break Parallel::Stop
@@ -88,7 +91,7 @@ module Tumugi
 
       def enqueue_task(task)
         @logger.debug "enqueue: #{task.id}"
-        @queue.push(task)
+        @mutex.synchronize { @queue.push(task) }
       end
 
       def handle_error(task, err)
