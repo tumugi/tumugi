@@ -1,42 +1,55 @@
 require 'much-timeout'
-require 'parallel'
+require 'concurrent'
 
 require 'tumugi'
 require 'tumugi/error'
+
+Concurrent.use_stdlib_logger(Logger::DEBUG)
 
 module Tumugi
   module Executor
     class LocalExecutor
       def initialize(dag, logger=nil, worker_num: 1)
         @dag = dag
-        @last_task = dag.tsort.last
+        @main_task = dag.tsort.last
         @logger = logger || Tumugi::Logger.instance
         @options = { worker_num: worker_num }
         @mutex = Mutex.new
       end
 
       def execute
-        setup_task_queue(@dag)
-        Parallel.each(dequeue_task, { in_threads: @options[:worker_num] }) do |task|
-          @logger.info "start: #{task.id}, worker_number: #{Parallel.worker_number}"
+        pool = Concurrent::ThreadPoolExecutor.new(
+          max_threads: @options[:worker_num]
+        )
 
+        setup_task_queue(@dag)
+        loop do
+          task = dequeue_task
+          break if task.nil?
+
+          info "start: #{task.id}"
           if !task.runnable?(Time.now)
             sleep(task_wait_sec)
             enqueue_task(task)
-            next
-          end
-
-          begin
-            task.start!
-            MuchTimeout.optional_timeout(task_timeout(task), Tumugi::TimeoutError) do
-              task.run
+          else
+            pool.post do
+              begin
+                task.trigger!(:start)
+                MuchTimeout.optional_timeout(task_timeout(task), Tumugi::TimeoutError) do
+                  task.run
+                end
+                task.trigger!(:complete)
+                info "#{task.state}: #{task.id}"
+              rescue => e
+                handle_error(task, e)
+              end
             end
-            task.mark_completed!
-            @logger.info "#{task.state}: #{task.id}"
-          rescue => e
-            handle_error(task, e)
           end
         end
+
+        pool.shutdown
+        pool.wait_for_termination
+
         @dag.tsort.all? { |t| t.success? }
       end
 
@@ -59,53 +72,59 @@ module Tumugi
       end
 
       def dequeue_task
-        lambda {
-          loop do
-            task = @mutex.synchronize {
-              @logger.debug "queue: #{@queue.map(&:id)}"
-              @queue.shift
-            }
+        loop do
+          task = @mutex.synchronize {
+            debug "queue: #{@queue.map(&:id)}"
+            @queue.shift
+          }
 
-            if task.nil?
-              if @last_task.finished?
-                break Parallel::Stop
-              else
-                sleep(task_wait_sec)
-              end
+          if task.nil?
+            if @main_task.finished?
+              break nil
             else
-              @logger.debug "dequeue: #{task.id}"
+              sleep(task_wait_sec)
+            end
+          else
+            debug "dequeue: #{task.id}"
 
-              if task.requires_failed?
-                task.mark_requires_failed!
-                @logger.info "#{task.state}: #{task.id} has failed requires task"
-              elsif task.completed?
-                task.skip!
-                @logger.info "#{task.state}: #{task.id} is already completed"
-              else
-                break task
-              end
+            if task.requires_failed?
+              task.trigger!(:requires_fail)
+              info "#{task.state}: #{task.id} has failed requires task"
+            elsif task.completed?
+              task.trigger!(:skip)
+              info "#{task.state}: #{task.id} is already completed"
+            else
+              break task
             end
           end
-        }
+        end
       end
 
       def enqueue_task(task)
-        @logger.debug "enqueue: #{task.id}"
+        debug "enqueue: #{task.id}"
         @mutex.synchronize { @queue.push(task) }
       end
 
       def handle_error(task, err)
         if task.retry(err)
-          task.pend!
+          task.trigger!(:pend)
           @logger.error "#{err.class}: '#{err.message}' - #{task.tries} tries and wait #{task.retry_interval} seconds until the next try."
           enqueue_task(task)
         else
-          task.mark_failed!
+          task.trigger!(:fail)
           @logger.error "#{err.class}: '#{err.message}' - #{task.tries} tries and reached max retry count, so task #{task.id} failed."
-          @logger.info "#{task.state}: #{task.id}"
+          info "#{task.state}: #{task.id}"
           @logger.error "#{err.message}"
           @logger.debug err.backtrace.join("\n")
         end
+      end
+
+      def info(message)
+        @logger.info("#{message}, thread: #{Thread.current.object_id}")
+      end
+
+      def debug(message)
+        @logger.info("#{message}, thread: #{Thread.current.object_id}")
       end
     end
   end

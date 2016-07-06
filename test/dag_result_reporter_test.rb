@@ -19,7 +19,7 @@ class Tumugi::DAGResultReporterTest < Test::Unit::TestCase
     @reporter = Tumugi::DAGResultReporter.new
     @dag = Tumugi::DAG.new
     @task = TestTask.new
-    @task.skip
+    @task.trigger!(:skip)
     @dag.add_task(@task)
   end
 
@@ -38,11 +38,11 @@ class Tumugi::DAGResultReporterTest < Test::Unit::TestCase
     assert_equal("Tumugi::DAGResultReporterTest::TestTask2", rows[0].cells[0].value)
     assert_equal("", rows[0].cells[1].value)
     assert_equal("long_param=aaaaaaaaaaaaaaaaaaaaaaaaa...", rows[0].cells[2].value)
-    assert_equal("pending", rows[0].cells[3].value)
+    assert_equal(:pending, rows[0].cells[3].value)
 
     assert_equal("Tumugi::DAGResultReporterTest::TestTask", rows[1].cells[0].value)
     assert_equal("Tumugi::DAGResultReporterTest::TestTask2", rows[1].cells[1].value)
     assert_equal("param1=value1\nparam2=2016-06-01 09:00:00 UTC", rows[1].cells[2].value)
-    assert_equal("skipped", rows[1].cells[3].value)
+    assert_equal(:skipped, rows[1].cells[3].value)
   end
 end

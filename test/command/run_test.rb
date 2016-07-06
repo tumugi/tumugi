@@ -26,7 +26,7 @@ class Tumugi::Command::RunTest < Test::Unit::TestCase
   sub_test_case '#execute' do
     test 'completed' do
       @cmd.execute(@dag)
-      assert_equal('completed', @task.state)
+      assert_equal(:completed, @task.state)
     end
 
     test 'skipped' do
@@ -35,7 +35,7 @@ class Tumugi::Command::RunTest < Test::Unit::TestCase
       end
 
       @cmd.execute(@dag)
-      assert_equal('skipped', @task.state)
+      assert_equal(:skipped, @task.state)
     end
 
     test 'faild' do
@@ -53,7 +53,7 @@ class Tumugi::Command::RunTest < Test::Unit::TestCase
 
       success = @cmd.execute(@dag)
       assert_false(success)
-      assert_equal('failed', @task.state)
+      assert_equal(:failed, @task.state)
     end
 
     test 'failed when task got timeout' do
@@ -66,7 +66,7 @@ class Tumugi::Command::RunTest < Test::Unit::TestCase
 
       success = @cmd.execute(@dag)
       assert_false(success)
-      assert_equal('failed', @task.state)
+      assert_equal(:failed, @task.state)
     end
   end
 end

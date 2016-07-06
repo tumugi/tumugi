@@ -241,14 +241,14 @@ class Tumugi::TaskTest < Test::Unit::TestCase
   sub_test_case '#requires_failed' do
     test 'return true when requires task is failed' do
       requires_task = TestTask.new(output: NotExistOutput.new)
-      requires_task.mark_failed!
+      requires_task.trigger!(:fail)
       task = TestTask.new(requires: requires_task)
       assert_true(task.requires_failed?)
     end
 
     test 'return false when requires task is completed' do
       requires_task = TestTask.new(output: NotExistOutput.new)
-      requires_task.mark_completed!
+      requires_task.trigger!(:complete)
       task = TestTask.new(requires: requires_task)
       assert_false(task.requires_failed?)
     end
@@ -266,8 +266,7 @@ class Tumugi::TaskTest < Test::Unit::TestCase
 
   sub_test_case 'state' do
     test 'initial state is pending' do
-      assert_equal('pending', @task.state)
-      assert_true(@task.pending?)
+      assert_equal(:pending, @task.state)
     end
   end
 end
