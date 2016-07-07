@@ -8,7 +8,7 @@ module Tumugi
     include Tumugi::Mixin::Listable
     include Tumugi::Mixin::TaskHelper
 
-    attr_reader :visible_at, :tries, :max_retry, :retry_interval, :state
+    attr_reader :visible_at, :tries, :max_retry, :retry_interval
 
     def initialize
       super()
@@ -17,6 +17,7 @@ module Tumugi
       @max_retry = Tumugi.config.max_retry
       @retry_interval = Tumugi.config.retry_interval
       @state = :pending
+      @lock = Mutex.new
     end
 
     def id
@@ -115,21 +116,27 @@ module Tumugi
       retriable?
     end
 
+    def state
+      @lock.synchronize { @state }
+    end
+
     def trigger!(event)
-      @state =  case event
-                when :skip
-                  :skipped
-                when :start
-                  :running
-                when :pend
-                  :pending
-                when :complete
-                  :completed
-                when :fail
-                  :failed
-                when :requires_fail
-                  :requires_failed
-                end
+      @lock.synchronize do
+        @state =  case event
+                  when :skip
+                    :skipped
+                  when :start
+                    :running
+                  when :pend
+                    :pending
+                  when :complete
+                    :completed
+                  when :fail
+                    :failed
+                  when :requires_fail
+                    :requires_failed
+                  end
+      end
     end
 
     # Following methods are internal use only

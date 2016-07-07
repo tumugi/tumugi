@@ -19,6 +19,7 @@ module Tumugi
 
       def execute
         pool = Concurrent::ThreadPoolExecutor.new(
+          min_threads: @options[:worker_num],
           max_threads: @options[:worker_num]
         )
 
@@ -27,13 +28,14 @@ module Tumugi
           task = dequeue_task
           break if task.nil?
 
-          info "start: #{task.id}"
           if !task.runnable?(Time.now)
+            info "not_runnable: #{task.id}"
             sleep(task_wait_sec)
             enqueue_task(task)
           else
-            pool.post do
+            Concurrent::Future.execute(executor: pool) do
               begin
+                info "start: #{task.id}"
                 task.trigger!(:start)
                 MuchTimeout.optional_timeout(task_timeout(task), Tumugi::TimeoutError) do
                   task.run
@@ -74,7 +76,7 @@ module Tumugi
       def dequeue_task
         loop do
           task = @mutex.synchronize {
-            debug "queue: #{@queue.map(&:id)}"
+            debug { "queue: #{@queue.map(&:id)}" }
             @queue.shift
           }
 
@@ -85,7 +87,7 @@ module Tumugi
               sleep(task_wait_sec)
             end
           else
-            debug "dequeue: #{task.id}"
+            debug { "dequeue: #{task.id}" }
 
             if task.requires_failed?
               task.trigger!(:requires_fail)
@@ -101,7 +103,7 @@ module Tumugi
       end
 
       def enqueue_task(task)
-        debug "enqueue: #{task.id}"
+        debug { "enqueue: #{task.id}" }
         @mutex.synchronize { @queue.push(task) }
       end
 
@@ -115,16 +117,16 @@ module Tumugi
           @logger.error "#{err.class}: '#{err.message}' - #{task.tries} tries and reached max retry count, so task #{task.id} failed."
           info "#{task.state}: #{task.id}"
           @logger.error "#{err.message}"
-          @logger.debug err.backtrace.join("\n")
+          @logger.debug { err.backtrace.join("\n") }
         end
       end
 
       def info(message)
-        @logger.info("#{message}, thread: #{Thread.current.object_id}")
+        @logger.info "#{message}, thread: #{Thread.current.object_id}"
       end
 
-      def debug(message)
-        @logger.info("#{message}, thread: #{Thread.current.object_id}")
+      def debug(&block)
+        @logger.debug { "#{block.call}, thread: #{Thread.current.object_id}" }
       end
     end
   end
