@@ -28,12 +28,12 @@ module Tumugi
           task = dequeue_task
           break if task.nil?
 
-          if !task.runnable?(Time.now)
-            info "not_runnable: #{task.id}"
-            sleep(task_wait_sec)
-            enqueue_task(task)
-          else
-            Concurrent::Future.execute(executor: pool) do
+          Concurrent::Future.execute(executor: pool) do
+            if !task.runnable?(Time.now)
+              info "not_runnable: #{task.id}"
+              sleep(1)
+              enqueue_task(task)
+            else
               begin
                 info "start: #{task.id}"
                 task.trigger!(:start)
@@ -63,10 +63,6 @@ module Tumugi
         timeout
       end
 
-      def task_wait_sec
-        1 # TODO: Make this configurable
-      end
-
       def setup_task_queue(dag)
         @queue = []
         dag.tsort.each { |t| enqueue_task(t) }
@@ -84,7 +80,7 @@ module Tumugi
             if @main_task.finished?
               break nil
             else
-              sleep(task_wait_sec)
+              sleep(0.1)
             end
           else
             debug { "dequeue: #{task.id}" }
