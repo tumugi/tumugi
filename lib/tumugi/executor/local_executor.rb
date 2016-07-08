@@ -31,7 +31,6 @@ module Tumugi
           Concurrent::Future.execute(executor: pool) do
             if !task.runnable?(Time.now)
               info "not_runnable: #{task.id}"
-              sleep(1)
               enqueue_task(task)
             else
               begin
