@@ -27,7 +27,7 @@ class Tumugi::Command::ShowTest < Test::Unit::TestCase
     )
     test 'output specified formated file' do |output|
       @cmd.execute(@dag, out: output)
-      assert_true(File.exists?(output))
+      assert_true(File.exist?(output))
     end
 
     data(
