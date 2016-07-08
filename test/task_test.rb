@@ -264,9 +264,73 @@ class Tumugi::TaskTest < Test::Unit::TestCase
     end
   end
 
-  sub_test_case 'state' do
-    test 'initial state is pending' do
-      assert_equal(:pending, @task.state)
+  test 'initial state is pending' do
+    assert_equal(:pending, @task.state)
+    assert_false(@task.success?)
+    assert_false(@task.finished?)
+  end
+
+  sub_test_case '#trigger!' do
+    data({
+      "skip" => [:skip, :skipped],
+      "start" => [:start, :running],
+      "pend" => [:pend, :pending],
+      "complete" => [:complete, :completed],
+      "fail" => [:fail, :failed],
+      "requires_fail" => [:requires_fail, :requires_failed],
+    })
+    test 'transition success' do |(event, expected)|
+      @task.trigger!(event)
+      assert_equal(expected, @task.state)
     end
+
+    test 'transition fail when call with not supported event' do
+      assert_raise(Tumugi::TumugiError) do
+        @task.trigger!(:invalid_event)
+      end
+    end
+  end
+
+  test '#retry' do
+    assert_equal(0, @task.tries)
+    (1..@task.max_retry).each do |index|
+      assert_true(@task.retry)
+      assert_equal(index, @task.tries)
+    end
+    #assert_equal(3, @task.tries)
+    assert_false(@task.retry)
+  end
+
+  test '#runnable?' do
+    now = Time.now
+    assert_true(@task.runnable?(now))
+    @task.retry
+    assert_false(@task.runnable?(now))
+  end
+
+  data({
+    "pend" => [:pend, false],
+    "start" => [:start, false],
+    "complete" => [:complete, true],
+    "skip" => [:skip, true],
+    "fail" => [:fail, false],
+    "requires_fail" => [:requires_fail, false],
+  })
+  test 'success?' do |(event, expected)|
+    @task.trigger!(event)
+    assert_equal(expected, @task.success?)
+  end
+
+  data({
+    "pend" => [:pend, false],
+    "start" => [:start, false],
+    "complete" => [:complete, true],
+    "skip" => [:skip, true],
+    "fail" => [:fail, true],
+    "requires_fail" => [:requires_fail, true],
+  })
+  test 'finished?' do |(event, expected)|
+    @task.trigger!(event)
+    assert_equal(expected, @task.finished?)
   end
 end

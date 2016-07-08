@@ -14,6 +14,7 @@ include Tumugi::Test::Helpers
 Dir.mkdir('tmp') unless Dir.exist?('tmp')
 
 Tumugi::Logger.instance.init
+Tumugi::Logger.instance.quiet! unless ENV['DEBUG']
 
 module Tumugi
   class Config
