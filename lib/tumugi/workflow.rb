@@ -84,7 +84,7 @@ module Tumugi
 
     def load_config(options)
       config_file = options[:config]
-      if config_file && File.exists?(config_file) && File.extname(config_file) == '.rb'
+      if config_file && File.exist?(config_file) && File.extname(config_file) == '.rb'
         logger.info "Load config from #{config_file}"
         load(config_file)
       end
