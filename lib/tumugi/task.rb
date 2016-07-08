@@ -10,6 +10,15 @@ module Tumugi
 
     attr_reader :visible_at, :tries, :max_retry, :retry_interval
 
+    AVAILABLE_STATES = [
+      :pending,
+      :running,
+      :completed,
+      :skipped,
+      :failed,
+      :requires_failed,
+    ]
+
     def initialize
       super()
       @visible_at = Time.now
@@ -110,7 +119,7 @@ module Tumugi
       nil # meaning use default timeout
     end
 
-    def retry(err)
+    def retry
       @tries += 1
       @visible_at += @retry_interval
       retriable?
@@ -122,20 +131,28 @@ module Tumugi
 
     def trigger!(event)
       @lock.synchronize do
-        @state =  case event
-                  when :skip
-                    :skipped
-                  when :start
-                    :running
-                  when :pend
-                    :pending
-                  when :complete
-                    :completed
-                  when :fail
-                    :failed
-                  when :requires_fail
-                    :requires_failed
-                  end
+        s = case event
+            when :skip
+              :skipped
+            when :start
+              :running
+            when :pend
+              :pending
+            when :complete
+              :completed
+            when :fail
+              :failed
+            when :requires_fail
+              :requires_failed
+            else
+              raise Tumugi::TumugiError.new("Invalid event: #{event}")
+            end
+
+        if not AVAILABLE_STATES.include?(s)
+          raise Tumugi::TumugiError.new("Invalid state: #{s}")
+        end
+
+        @state = s
       end
     end
 

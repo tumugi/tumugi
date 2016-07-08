@@ -104,7 +104,7 @@ module Tumugi
       end
 
       def handle_error(task, err)
-        if task.retry(err)
+        if task.retry
           task.trigger!(:pend)
           @logger.error "#{err.class}: '#{err.message}' - #{task.tries} tries and wait #{task.retry_interval} seconds until the next try."
           enqueue_task(task)
