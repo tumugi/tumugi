@@ -12,7 +12,7 @@ module Tumugi
     def self.define(id, opts={}, &block)
       td = Tumugi::TaskDefinition.new(id, opts)
       td.instance_eval(&block) if block_given?
-      Tumugi.application.add_task(id, td)
+      Tumugi.workflow.add_task(id, td)
       td
     end
 
@@ -110,11 +110,11 @@ module Tumugi
           if reqs.nil?
             []
           elsif reqs.is_a?(Array)
-            reqs.map { |t| Tumugi.application.find_task(t) }
+            reqs.map { |t| Tumugi.workflow.find_task(t) }
           elsif reqs.is_a?(Hash)
-            Hash[reqs.map { |k, t| [k, Tumugi.application.find_task(t)] }]
+            Hash[reqs.map { |k, t| [k, Tumugi.workflow.find_task(t)] }]
           else
-            Tumugi.application.find_task(reqs)
+            Tumugi.workflow.find_task(reqs)
           end
         end
       end

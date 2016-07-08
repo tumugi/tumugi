@@ -8,11 +8,25 @@ module Tumugi
     include Tumugi::Mixin::Listable
     include Tumugi::Mixin::TaskHelper
 
-    attr_accessor :state # :pending, :running, :completed, :skipped
+    attr_reader :visible_at, :tries, :max_retry, :retry_interval
+
+    AVAILABLE_STATES = [
+      :pending,
+      :running,
+      :completed,
+      :skipped,
+      :failed,
+      :requires_failed,
+    ]
 
     def initialize
       super()
+      @visible_at = Time.now
+      @tries = 0
+      @max_retry = Tumugi.config.max_retry
+      @retry_interval = Tumugi.config.retry_interval
       @state = :pending
+      @lock = Mutex.new
     end
 
     def id
@@ -69,18 +83,77 @@ module Tumugi
     def completed?
       outputs = list(output)
       if outputs.empty?
-        @state == :completed || @state == :skipped
+        success?
       else
         outputs.all?(&:exist?)
       end
     end
 
     def requires_failed?
-      list(_requires).any? { |t| t.instance.state == :failed || t.instance.state == :requires_failed }
+      list(_requires).any? { |t| t.instance.finished? && !t.instance.success? }
+    end
+
+    def runnable?(now)
+      ready? && visible?(now)
+    end
+
+    def success?
+      case state
+      when :completed, :skipped
+        true
+      else
+        false
+      end
+    end
+
+    def finished?
+      case state
+      when :completed, :skipped, :failed, :requires_failed
+        true
+      else
+        false
+      end
     end
 
     def timeout
       nil # meaning use default timeout
+    end
+
+    def retry
+      @tries += 1
+      @visible_at += @retry_interval
+      retriable?
+    end
+
+    def state
+      @lock.synchronize { @state }
+    end
+
+    def trigger!(event)
+      @lock.synchronize do
+        s = case event
+            when :skip
+              :skipped
+            when :start
+              :running
+            when :pend
+              :pending
+            when :complete
+              :completed
+            when :fail
+              :failed
+            when :requires_fail
+              :requires_failed
+            else
+              raise Tumugi::TumugiError.new("Invalid event: #{event}")
+            end
+
+        if not AVAILABLE_STATES.include?(s)
+          raise Tumugi::TumugiError.new("Invalid state: #{s}")
+        end
+
+        @state = s
+      end
     end
 
     # Following methods are internal use only
@@ -105,6 +178,14 @@ module Tumugi
       else
         _requires.instance._output
       end
+    end
+
+    def visible?(now)
+      now >= @visible_at
+    end
+
+    def retriable?
+      @tries <= @max_retry
     end
   end
 end

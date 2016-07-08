@@ -1,9 +1,9 @@
 require_relative '../test_helper'
 require 'tumugi/dag'
 require 'tumugi/task'
-require 'tumugi/command/run'
+require 'tumugi/executor/local_executor'
 
-class Tumugi::Command::RunTest < Test::Unit::TestCase
+class Tumugi::Executor::LocalExecutorTest < Test::Unit::TestCase
   class TestTask < Tumugi::Task
     def run
       sleep 2
@@ -11,7 +11,6 @@ class Tumugi::Command::RunTest < Test::Unit::TestCase
   end
 
   setup do
-    @cmd = Tumugi::Command::Run.new
     @dag = Tumugi::DAG.new
     @task = TestTask.new
     @dag.add_task(@task)
@@ -25,7 +24,8 @@ class Tumugi::Command::RunTest < Test::Unit::TestCase
 
   sub_test_case '#execute' do
     test 'completed' do
-      @cmd.execute(@dag)
+      executor = Tumugi::Executor::LocalExecutor.new(@dag)
+      assert_true(executor.execute)
       assert_equal(:completed, @task.state)
     end
 
@@ -34,7 +34,8 @@ class Tumugi::Command::RunTest < Test::Unit::TestCase
         true
       end
 
-      @cmd.execute(@dag)
+      executor = Tumugi::Executor::LocalExecutor.new(@dag)
+      assert_true(executor.execute)
       assert_equal(:skipped, @task.state)
     end
 
@@ -51,8 +52,8 @@ class Tumugi::Command::RunTest < Test::Unit::TestCase
         raise 'always failed'
       end
 
-      success = @cmd.execute(@dag)
-      assert_false(success)
+      executor = Tumugi::Executor::LocalExecutor.new(@dag)
+      assert_false(executor.execute)
       assert_equal(:failed, @task.state)
     end
 
@@ -64,8 +65,8 @@ class Tumugi::Command::RunTest < Test::Unit::TestCase
       @task = TestTask.new
       @dag.add_task(@task)
 
-      success = @cmd.execute(@dag)
-      assert_false(success)
+      executor = Tumugi::Executor::LocalExecutor.new(@dag)
+      assert_false(executor.execute)
       assert_equal(:failed, @task.state)
     end
   end

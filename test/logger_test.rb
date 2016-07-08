@@ -4,7 +4,7 @@ require 'tumugi/logger'
 class Tumugi::LoggerTest < Test::Unit::TestCase
   setup do
     @logger = Tumugi::Logger.instance
-    @logger.job = @job = Tumugi::Job.new
+    @logger.workflow_id = "test"
     @logger.init
     @log_file = 'tmp/test.log'
   end
@@ -40,8 +40,8 @@ class Tumugi::LoggerTest < Test::Unit::TestCase
   end
 
   data({
-    "text" => [:text, proc{ |logger| /\d{4}\-\d{2}\-\d{2} \d{2}:\d{2}:\d{2} \+\d{4} INFO \[#{logger.job.id}\] test\n$/ }],
-    "json" => [:json, proc{ |logger| /\{"time":"\d{4}\-\d{2}\-\d{2} \d{2}:\d{2}:\d{2} \+\d{4}","severity":"INFO","message":"test","job":"#{logger.job.id}"\}\n$/ }]
+    "text" => [:text, proc{ |logger| /\d{4}\-\d{2}\-\d{2} \d{2}:\d{2}:\d{2} \+\d{4} INFO \[test\] test\n$/ }],
+    "json" => [:json, proc{ |logger| /\{"time":"\d{4}\-\d{2}\-\d{2} \d{2}:\d{2}:\d{2} \+\d{4}","severity":"INFO","message":"test","workflow":"test"\}\n$/ }]
   })
   test 'log format' do |(format, expected)|
     output = StringIO.new
