@@ -1,11 +1,53 @@
 # Change Log
 
-## [0.5.3](https://github.com/tumugi/tumugi/tree/0.5.3) (2016-06-14)
-[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.5.2...0.5.3)
+## [0.6.0](https://github.com/tumugi/tumugi/tree/0.6.0) (2016-07-09)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.5.3...0.6.0)
+
+**Implemented enhancements:**
+
+- Refactoring executor [\#95](https://github.com/tumugi/tumugi/issues/95)
+- Improve log [\#87](https://github.com/tumugi/tumugi/issues/87)
+- DSL improvement [\#81](https://github.com/tumugi/tumugi/issues/81)
+- Support dryrun option [\#55](https://github.com/tumugi/tumugi/issues/55)
+- param\_set accept block [\#53](https://github.com/tumugi/tumugi/issues/53)
+- Plugin test helper [\#29](https://github.com/tumugi/tumugi/issues/29)
+- Plugin template generator [\#28](https://github.com/tumugi/tumugi/issues/28)
+- Add Tumugi.app which is alias of Tumugi.application [\#92](https://github.com/tumugi/tumugi/pull/92) ([hakobera](https://github.com/hakobera))
+- Add short cut method to set parmeter in DSL [\#84](https://github.com/tumugi/tumugi/pull/84) ([hakobera](https://github.com/hakobera))
+- Improve result table [\#83](https://github.com/tumugi/tumugi/pull/83) ([hakobera](https://github.com/hakobera))
+- Introduce new DSL syntax: set [\#82](https://github.com/tumugi/tumugi/pull/82) ([hakobera](https://github.com/hakobera))
+
+**Fixed bugs:**
+
+- Fix result reporting failed if parameter type is not :string [\#96](https://github.com/tumugi/tumugi/pull/96) ([hakobera](https://github.com/hakobera))
+- Fix task timeout logic [\#93](https://github.com/tumugi/tumugi/pull/93) ([hakobera](https://github.com/hakobera))
+
+**Closed issues:**
+
+- \[Breaking Change\] Remove auto\_bind feature and make accessible CLI param from task [\#88](https://github.com/tumugi/tumugi/issues/88)
+
+**Merged pull requests:**
+
+- Remove File.exists? [\#100](https://github.com/tumugi/tumugi/pull/100) ([hakobera](https://github.com/hakobera))
+- Remove development dependency: github\_changelog\_generator [\#98](https://github.com/tumugi/tumugi/pull/98) ([hakobera](https://github.com/hakobera))
+- Refactoring executor [\#97](https://github.com/tumugi/tumugi/pull/97) ([hakobera](https://github.com/hakobera))
+- Update README [\#94](https://github.com/tumugi/tumugi/pull/94) ([hakobera](https://github.com/hakobera))
+- Test with jruby 9.1.2.0 on travis [\#91](https://github.com/tumugi/tumugi/pull/91) ([hakobera](https://github.com/hakobera))
+- Add command to create plugin template project [\#90](https://github.com/tumugi/tumugi/pull/90) ([hakobera](https://github.com/hakobera))
+- Improve log [\#89](https://github.com/tumugi/tumugi/pull/89) ([hakobera](https://github.com/hakobera))
+- Add plugin test helper [\#86](https://github.com/tumugi/tumugi/pull/86) ([hakobera](https://github.com/hakobera))
+- Parameter can be set by block [\#85](https://github.com/tumugi/tumugi/pull/85) ([hakobera](https://github.com/hakobera))
+
+## [v0.5.3](https://github.com/tumugi/tumugi/tree/v0.5.3) (2016-06-14)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.5.2...v0.5.3)
 
 **Fixed bugs:**
 
 - Fix logger not defiend in Tumugi::Config [\#79](https://github.com/tumugi/tumugi/pull/79) ([hakobera](https://github.com/hakobera))
+
+**Merged pull requests:**
+
+- Preapre release for 0.5.3 [\#80](https://github.com/tumugi/tumugi/pull/80) ([hakobera](https://github.com/hakobera))
 
 ## [v0.5.2](https://github.com/tumugi/tumugi/tree/v0.5.2) (2016-06-13)
 [Full Changelog](https://github.com/tumugi/tumugi/compare/v0.5.1...v0.5.2)
