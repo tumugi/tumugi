@@ -1,14 +1,20 @@
 # Change Log
 
-## [0.6.0](https://github.com/tumugi/tumugi/tree/0.6.0) (2016-07-09)
-[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.5.3...0.6.0)
+## [0.6.1](https://github.com/tumugi/tumugi/tree/0.6.1) (2016-07-11)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.6.0...0.6.1)
+
+**Merged pull requests:**
+
+- Suppress unusable info log [\#102](https://github.com/tumugi/tumugi/pull/102) ([hakobera](https://github.com/hakobera))
+
+## [v0.6.0](https://github.com/tumugi/tumugi/tree/v0.6.0) (2016-07-09)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.5.3...v0.6.0)
 
 **Implemented enhancements:**
 
 - Refactoring executor [\#95](https://github.com/tumugi/tumugi/issues/95)
 - Improve log [\#87](https://github.com/tumugi/tumugi/issues/87)
 - DSL improvement [\#81](https://github.com/tumugi/tumugi/issues/81)
-- Support dryrun option [\#55](https://github.com/tumugi/tumugi/issues/55)
 - param\_set accept block [\#53](https://github.com/tumugi/tumugi/issues/53)
 - Plugin test helper [\#29](https://github.com/tumugi/tumugi/issues/29)
 - Plugin template generator [\#28](https://github.com/tumugi/tumugi/issues/28)
@@ -28,6 +34,7 @@
 
 **Merged pull requests:**
 
+- Prepare release for 0.6.0 [\#101](https://github.com/tumugi/tumugi/pull/101) ([hakobera](https://github.com/hakobera))
 - Remove File.exists? [\#100](https://github.com/tumugi/tumugi/pull/100) ([hakobera](https://github.com/hakobera))
 - Remove development dependency: github\_changelog\_generator [\#98](https://github.com/tumugi/tumugi/pull/98) ([hakobera](https://github.com/hakobera))
 - Refactoring executor [\#97](https://github.com/tumugi/tumugi/pull/97) ([hakobera](https://github.com/hakobera))
