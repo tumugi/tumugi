@@ -4,8 +4,6 @@ require 'concurrent'
 require 'tumugi'
 require 'tumugi/error'
 
-Concurrent.use_stdlib_logger(Logger::DEBUG)
-
 module Tumugi
   module Executor
     class LocalExecutor
@@ -30,7 +28,7 @@ module Tumugi
 
           Concurrent::Future.execute(executor: pool) do
             if !task.runnable?(Time.now)
-              info "not_runnable: #{task.id}"
+              debug { "not_runnable: #{task.id}" }
               enqueue_task(task)
             else
               begin
