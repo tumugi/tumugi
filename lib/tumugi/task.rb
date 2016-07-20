@@ -1,3 +1,4 @@
+require 'tumugi/logger/scoped_logger'
 require 'tumugi/mixin/listable'
 require 'tumugi/mixin/task_helper'
 require 'tumugi/mixin/parameterizable'
@@ -50,7 +51,7 @@ module Tumugi
     end
 
     def logger
-      @logger ||= Tumugi::Logger.instance
+      @logger ||= Tumugi::ScopedLogger.new(id)
     end
 
     def log(msg)

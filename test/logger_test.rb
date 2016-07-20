@@ -1,5 +1,5 @@
 require_relative './test_helper'
-require 'tumugi/logger'
+require 'tumugi/logger/logger'
 
 class Tumugi::LoggerTest < Test::Unit::TestCase
   setup do
@@ -40,8 +40,8 @@ class Tumugi::LoggerTest < Test::Unit::TestCase
   end
 
   data({
-    "text" => [:text, proc{ |logger| /\d{4}\-\d{2}\-\d{2} \d{2}:\d{2}:\d{2} \+\d{4} INFO \[test\] test\n$/ }],
-    "json" => [:json, proc{ |logger| /\{"time":"\d{4}\-\d{2}\-\d{2} \d{2}:\d{2}:\d{2} \+\d{4}","severity":"INFO","message":"test","workflow":"test"\}\n$/ }]
+    "text" => [:text, proc{ |logger| /\d{4}\-\d{2}\-\d{2} \d{2}:\d{2}:\d{2} \+\d{4} \[INFO\] test\n$/ }],
+    "json" => [:json, proc{ |logger| /\{"time":"\d{4}\-\d{2}\-\d{2} \d{2}:\d{2}:\d{2} \+\d{4}","level":"INFO","message":"test","workflow":"test"\}\n$/ }]
   })
   test 'log format' do |(format, expected)|
     output = StringIO.new

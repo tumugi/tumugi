@@ -7,7 +7,9 @@ module Tumugi
   class Logger
     include Singleton
     extend Forwardable
-    def_delegators :@logger, :debug, :error, :fatal, :info, :warn, :level
+    def_delegators :@logger,  :debug, :debug?, :error, :error?,
+                              :fatal, :fatal?, :info, :info?,
+                              :warn, :warn?, :level
     attr_accessor :workflow_id
 
     def initialize
@@ -35,17 +37,16 @@ module Tumugi
     private
 
     def text_formatter
-      Proc.new { |severity, datetime, progname, msg|
-        "#{datetime} [#{severity}] #{msg}\n"
+      Proc.new { |level, datetime, program_name, msg|
+        "#{datetime} [#{level}]#{' (' + program_name + ')' unless program_name.nil?} #{msg}\n"
       }
     end
 
     def json_formatter
-      Proc.new { |severity, datetime, progname, msg|
-        hash = { time: datetime, severity: severity, message: msg }
-        if !workflow_id.nil?
-          hash[:workflow] = workflow_id
-        end
+      Proc.new { |level, datetime, program_name, msg|
+        hash = { time: datetime, level: level, message: msg }
+        hash[:program_name] = program_name unless program_name.nil?
+        hash[:workflow] = workflow_id unless workflow_id.nil?
         "#{JSON.generate(hash)}\n"
       }
     end
