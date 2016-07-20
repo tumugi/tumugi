@@ -36,11 +36,7 @@ module Tumugi
 
     def text_formatter
       Proc.new { |severity, datetime, progname, msg|
-        if !workflow_id.nil?
-          "#{datetime} #{severity} [#{workflow_id}] #{msg}\n"
-        else
-          "#{datetime} #{severity} #{msg}\n"
-        end
+        "#{datetime} [#{severity}] #{msg}\n"
       }
     end
 
