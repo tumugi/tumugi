@@ -11,7 +11,7 @@ module Tumugi
 
     def self.register_section(name, *args)
       @@sections[name] = Struct.new(camelize(name), *args)
-      logger.debug { "registered config section '#{name}' with '#{args}'" }
+      logger.info { "registered config section '#{name}' with '#{args}'" }
     end
 
     def self.camelize(term)
@@ -22,7 +22,7 @@ module Tumugi
     end
 
     def self.logger
-      Tumugi::Logger.instance
+      @logger ||= Tumugi::ScopedLogger.new("tumugi-config")
     end
 
     def initialize

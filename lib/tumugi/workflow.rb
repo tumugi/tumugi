@@ -67,7 +67,7 @@ module Tumugi
     end
 
     def logger
-      @logger ||= Tumugi::Logger.instance
+      @logger ||= Tumugi::ScopedLogger.new("tumugi-workflow")
     end
 
     def setup_logger(command, options)

@@ -11,7 +11,7 @@ module Tumugi
     end
 
     def logger
-      @logger ||= Tumugi::Logger.instance
+      @logger ||= Tumugi::ScopedLogger.new(self.class.name)
     end
 
     def log(msg)
