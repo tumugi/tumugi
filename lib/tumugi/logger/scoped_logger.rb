@@ -26,9 +26,17 @@ module Tumugi
 
     def log(level, msg=nil, &block)
       if block_given?
-        @logger.send(level, "#{@scope}", &block)
+        @logger.send(level, progname, &block)
       else
-        @logger.send(level, "#{@scope}") { msg }
+        @logger.send(level, progname) { msg }
+      end
+    end
+
+    def progname
+      if @scope.is_a?(Proc)
+        @scope.call
+      else
+        @scope.to_s
       end
     end
   end

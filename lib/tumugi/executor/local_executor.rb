@@ -27,17 +27,17 @@ module Tumugi
 
           Concurrent::Future.execute(executor: pool) do
             if !task.runnable?(Time.now)
-              trace { "task_cannot_run: #{task.id}" }
+              logger.trace { "task_cannot_run: #{task.id}" }
               enqueue_task(task)
             else
               begin
-                info { "task_start: #{task.id}" }
+                logger.info { "task_start: #{task.id}" }
                 task.trigger!(:start)
                 MuchTimeout.optional_timeout(task_timeout(task), Tumugi::TimeoutError) do
                   task.run
                 end
                 task.trigger!(:complete)
-                info { "task_#{task.state}: #{task.id}" }
+                logger.info { "task_#{task.state}: #{task.id}" }
               rescue => e
                 handle_error(task, e)
               end
@@ -68,7 +68,7 @@ module Tumugi
       def dequeue_task
         loop do
           task = @mutex.synchronize {
-            trace { "task_queue_dump: #{@queue.map(&:id)}" } unless @queue.empty?
+            logger.trace { "task_queue_dump: #{@queue.map(&:id)}" } unless @queue.empty?
             @queue.shift
           }
 
@@ -79,14 +79,14 @@ module Tumugi
               sleep(0.1)
             end
           else
-            trace { "task_queue_dequeue: #{task.id}" }
+            logger.trace { "task_queue_dequeue: #{task.id}" }
 
             if task.requires_failed?
               task.trigger!(:requires_fail)
-              info { "task_#{task.state}: #{task.id} has failed requires task" }
+              logger.info { "task_#{task.state}: #{task.id} has failed requires task" }
             elsif task.completed?
               task.trigger!(:skip)
-              info { "task_#{task.state}: #{task.id} is already completed" }
+              logger.info { "task_#{task.state}: #{task.id} is already completed" }
             else
               break task
             end
@@ -95,42 +95,26 @@ module Tumugi
       end
 
       def enqueue_task(task)
-        trace { "task_queue_enqueue: #{task.id}" }
+        logger.trace { "task_queue_enqueue: #{task.id}" }
         @mutex.synchronize { @queue.push(task) }
       end
 
       def handle_error(task, err)
         if task.retry
           task.trigger!(:pend)
-          error "#{err.class}: '#{err.message}' - #{task.tries} tries and wait #{task.retry_interval} seconds until the next try."
+          logger.error { "#{err.class}: '#{err.message}' - #{task.tries} tries and wait #{task.retry_interval} seconds until the next try." }
           enqueue_task(task)
         else
           task.trigger!(:fail)
-          error "#{err.class}: '#{err.message}' - #{task.tries} tries and reached max retry count, so task #{task.id} failed."
-          error "#{err.message}"
-          error err.backtrace.join("\n")
+          logger.error { "#{err.class}: '#{err.message}' - #{task.tries} tries and reached max retry count, so task #{task.id} failed." }
+          logger.error { "#{err.message}" }
+          logger.error { err.backtrace.join("\n") }
         end
-        info { "task_#{task.state}: error handeling done for #{task.id}" }
+        logger.info { "task_#{task.state}: error handeling done for #{task.id}" }
       end
 
       def logger
         @logger ||= Tumugi::ScopedLogger.new("tumugi-executor")
-      end
-
-      def info(&block)
-        logger.info { "[thread-#{Thread.current.object_id}] #{block.call}" }
-      end
-
-      def error(&block)
-        logger.error { "[thread-#{Thread.current.object_id}] #{block.call}" }
-      end
-
-      def debug(&block)
-        logger.debug { "[thread-#{Thread.current.object_id}] #{block.call}" }
-      end
-
-      def trace(&block)
-        logger.trace { "[thread-#{Thread.current.object_id}] #{block.call}" }
       end
     end
   end

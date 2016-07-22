@@ -51,7 +51,7 @@ module Tumugi
     end
 
     def logger
-      @logger ||= Tumugi::ScopedLogger.new(id)
+      @logger ||= Tumugi::ScopedLogger.new(->{"Thread-#{Thread.list.index {|t| t == Thread.current}}: #{id}"})
     end
 
     def log(msg)
