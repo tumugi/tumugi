@@ -15,6 +15,12 @@ module Tumugi
       class_eval "def #{level}(msg=nil, &block); log(:#{level}, msg, &block) end", __FILE__, __LINE__
     end
 
+    def trace(msg=nil, &block)
+      if ENV.key?("TUMUGI_DEBUG")
+        log(:debug, msg, &block)
+      end
+    end
+
     private
 
     def log(level, msg=nil, &block)
