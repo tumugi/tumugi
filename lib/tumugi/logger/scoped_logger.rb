@@ -12,7 +12,7 @@ module Tumugi
       @logger = Tumugi::Logger.instance
     end
 
-    [:debug, :errror, :fatal, :info, :warn].each do |level|
+    [:debug, :error, :fatal, :info, :warn].each do |level|
       class_eval "def #{level}(msg=nil, &block); log(:#{level}, msg, &block) end", __FILE__, __LINE__
     end
 
