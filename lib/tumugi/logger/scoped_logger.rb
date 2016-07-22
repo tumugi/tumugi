@@ -4,7 +4,8 @@ require 'forwardable'
 module Tumugi
   class ScopedLogger
     extend Forwardable
-    def_delegators :@logger, :debug?, :error?, :fatal?, :info?, :warn?, :level
+    def_delegators :@logger, :init, :verbose!, :quiet!, :workflow_id, :workflow_id=,
+                             :debug?, :error?, :fatal?, :info?, :warn?, :level
 
     def initialize(scope)
       @scope = scope
