@@ -58,8 +58,16 @@ class Tumugi::CLITest < Tumugi::Test::TumugiTestCase
     end
 
     test 'logfile' do
-      assert_run_success('examples/simple.rb', 'task1', out: 'tmp/tumugi.log', config: "examples/tumugi_config.rb", verbose: ENV['DEBUG'], quiet: !ENV['DEBUG'])
+      assert_run_success("examples/simple.rb", "task1", out: "tmp/tumugi.log", config: "examples/tumugi_config.rb", verbose: ENV['DEBUG'], quiet: !ENV['DEBUG'])
       assert_true(File.exist?('tmp/tumugi.log'))
+    end
+
+    test 'workflow has syntax error' do
+      assert_run_fail("test/data/invalid_workflow.rb", "task1", verbose: ENV['DEBUG'], quiet: !ENV['DEBUG'])
+    end
+
+    test 'config has syntax error' do
+      assert_run_fail("examples/simple.rb", "task1", config: "test/data/invalid_config.rb", verbose: ENV['DEBUG'], quiet: !ENV['DEBUG'])
     end
   end
 
