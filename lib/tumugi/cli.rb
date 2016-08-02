@@ -9,7 +9,7 @@ module Tumugi
     class << self
       def common_options
         option :file, aliases: '-f', desc: 'Workflow file name', required: true
-        option :config, aliases: '-c', desc: 'Configuration file name', default: 'tumugi_config.rb'
+        option :config, aliases: '-c', desc: 'Configuration file name'
         option :params, aliases: '-p', type: :hash, desc: 'Task parameters'
         option :quiet, type: :boolean, desc: 'Suppress log', default: false
         option :verbose, type: :boolean, desc: 'Show verbose log', default: false
@@ -53,39 +53,45 @@ module Tumugi
     private
 
     def execute(command, task, options)
+      args = { task: task, options: options }
       success = Tumugi.workflow.execute(command, task, options)
       unless success
-        raise Thor::Error, "execute finished, but return it's failed"
+        raise Thor::Error, "execute finished, but failed"
       end
-      logger.info "status: success, command: #{command}, task: #{task}, options: #{options}"
+      logger.info "status: success, command: #{command}, args: #{args}"
     rescue => e
-      logger.error "#{command} command failed"
-      logger.error e.message
-      if options[:verbose]
-        e.backtrace.each { |line| logger.debug line }
-      else
-        logger.error "If you want to know more detail, run with '--verbose' option"
-      end
-      logger.error "status: failed, command: #{command}, task: #{task}, options: #{options}"
-      raise Thor::Error.new("tumugi #{command} failed, please check log")
+      handle_error(command, e, args)
     end
 
     def generate_plugin(name, options)
+      args = { name: name, options: options }
       Tumugi::Command::New.new.execute(name, options)
-      logger.info "status: success, command: new, name: #{name}, options: #{options}"
+      logger.info "status: success, command: new, args: #{args}"
     rescue => e
+      handle_error("new", e, args)
+    end
+
+    private
+
+    def handle_error(command, e, args)
+      logger.error "#{command} command failed"
       logger.error e.message
+      reason = e
+      if e.is_a?(Tumugi::TumugiError) && !e.reason.nil?
+        reason = e.reason
+        logger.error reason.message
+      end
       if options[:verbose]
-        e.backtrace.each { |line| logger.debug line }
+        logger.error { reason.backtrace.join("\n") }
       else
         logger.error "If you want to know more detail, run with '--verbose' option"
       end
-      logger.error "status: failed, command: new, name: #{name}, options: #{options}"
+      logger.error "status: failed, command: #{command}, args: #{args}"
       raise Thor::Error.new("tumugi new failed, please check log")
     end
 
     def logger
-      Tumugi::Logger.instance
+      @logger ||= Tumugi::ScopedLogger.new("tumugi-main")
     end
   end
 end

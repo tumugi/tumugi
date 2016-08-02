@@ -47,7 +47,7 @@ module Tumugi
       end
 
       def logger
-        Tumugi::Logger.instance
+        @logger ||= Tumugi::ScopedLogger.new("tumugi-new")
       end
 
       private

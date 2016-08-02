@@ -1,8 +1,8 @@
 require 'tumugi/workflow'
 require 'tumugi/config'
 require 'tumugi/error'
-require 'tumugi/logger'
 require 'tumugi/version'
+require 'tumugi/logger/logger'
 
 module Tumugi
   class << self

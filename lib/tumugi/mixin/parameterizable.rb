@@ -1,5 +1,5 @@
 require 'tumugi/error'
-require 'tumugi/logger'
+require 'tumugi/logger/logger'
 require 'tumugi/parameter/parameter_proxy'
 
 module Tumugi

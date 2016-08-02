@@ -6,7 +6,7 @@ module Tumugi
     class Run
       def execute(dag, options={})
         worker_num = options[:workers] || Tumugi.config.workers
-        executor = Tumugi::Executor::LocalExecutor.new(dag, logger, worker_num: worker_num)
+        executor = Tumugi::Executor::LocalExecutor.new(dag, worker_num: worker_num)
         result = start(executor)
         show_result_report(dag)
         result
@@ -15,9 +15,9 @@ module Tumugi
       private
 
       def start(executor)
-        logger.info "start workflow: #{Tumugi.workflow.id}"
+        logger.info "workflow_start: #{Tumugi.workflow.id}"
         result = executor.execute
-        logger.info "end workflow: #{Tumugi.workflow.id}"
+        logger.info "workflow_end: #{Tumugi.workflow.id}"
         result
       end
 
@@ -28,7 +28,7 @@ module Tumugi
       end
 
       def logger
-        Tumugi::Logger.instance
+        @logger ||= Tumugi::ScopedLogger.new("tumugi-run")
       end
     end
   end

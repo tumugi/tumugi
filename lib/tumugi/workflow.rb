@@ -13,6 +13,8 @@ module Tumugi
     attr_reader :id
     attr_accessor :params
 
+    DEFAULT_CONFIG_FILE = "tumugi_config.rb"
+
     def initialize
       @id = SecureRandom.uuid
       @tasks = {}
@@ -42,13 +44,13 @@ module Tumugi
 
     def load_workflow_file(file)
       unless File.exist?(file)
-        raise Tumugi::TumugiError, "Workflow file '#{file}' not exist."
+        raise Tumugi::TumugiError, "Workflow file '#{file}' does not exist"
       end
 
       begin
         logger.info "Load workflow from #{file}"
         load(file, true)
-      rescue LoadError => e
+      rescue Exception => e
         raise Tumugi::TumugiError.new("Workflow file load error: #{file}", e)
       end
     end
@@ -67,7 +69,7 @@ module Tumugi
     end
 
     def logger
-      @logger ||= Tumugi::Logger.instance
+      @logger ||= Tumugi::ScopedLogger.new("tumugi-workflow")
     end
 
     def setup_logger(command, options)
@@ -84,12 +86,23 @@ module Tumugi
 
     def load_config(options)
       config_file = options[:config]
-      if config_file && File.exist?(config_file) && File.extname(config_file) == '.rb'
-        logger.info "Load config from #{config_file}"
-        load(config_file)
+
+      if config_file && !File.exist?(config_file)
+        raise Tumugi::TumugiError, "Config file '#{config_file}' does not exist"
       end
-    rescue LoadError => e
-      raise Tumugi::TumugiError.new("Config file load error: #{config_file}", e)
+
+      if !config_file && File.exist?(DEFAULT_CONFIG_FILE)
+        config_file = DEFAULT_CONFIG_FILE
+      end
+
+      if config_file && File.exist?(config_file)
+        logger.info "Load config from #{config_file}"
+        begin
+          load(config_file)
+        rescue Exception => e
+          raise Tumugi::TumugiError.new("Config file load error: #{config_file}", e)
+        end
+      end
     end
 
     def set_params(options)

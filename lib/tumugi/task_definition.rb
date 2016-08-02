@@ -1,6 +1,6 @@
-require 'tumugi/logger'
 require 'tumugi/plugin'
 require 'tumugi/task'
+require 'tumugi/logger/logger'
 require 'tumugi/mixin/listable'
 require 'tumugi/mixin/task_helper'
 
