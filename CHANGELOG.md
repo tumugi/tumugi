@@ -1,10 +1,26 @@
 # Change Log
 
-## [0.6.1](https://github.com/tumugi/tumugi/tree/0.6.1) (2016-07-11)
-[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.6.0...0.6.1)
+## [v0.6.2](https://github.com/tumugi/tumugi/tree/v0.6.2) (2016-08-02)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.6.1...v0.6.2)
+
+**Implemented enhancements:**
+
+- Improve Log output [\#105](https://github.com/tumugi/tumugi/issues/105)
+
+**Fixed bugs:**
+
+- tumugi should abort when config file not found [\#108](https://github.com/tumugi/tumugi/issues/108)
 
 **Merged pull requests:**
 
+- Improve and change logging [\#107](https://github.com/tumugi/tumugi/pull/107) ([hakobera](https://github.com/hakobera))
+
+## [v0.6.1](https://github.com/tumugi/tumugi/tree/v0.6.1) (2016-07-10)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.6.0...v0.6.1)
+
+**Merged pull requests:**
+
+- Prepare release for 0.6.1 [\#103](https://github.com/tumugi/tumugi/pull/103) ([hakobera](https://github.com/hakobera))
 - Suppress unusable info log [\#102](https://github.com/tumugi/tumugi/pull/102) ([hakobera](https://github.com/hakobera))
 
 ## [v0.6.0](https://github.com/tumugi/tumugi/tree/v0.6.0) (2016-07-09)
