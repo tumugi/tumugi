@@ -53,6 +53,7 @@ module Tumugi
     private
 
     def execute(command, task, options)
+      logger.info "tumugi v#{Tumugi::VERSION}"
       args = { task: task, options: options }
       success = Tumugi.workflow.execute(command, task, options)
       unless success
@@ -64,6 +65,7 @@ module Tumugi
     end
 
     def generate_plugin(name, options)
+      logger.info "tumugi v#{Tumugi::VERSION}"
       args = { name: name, options: options }
       Tumugi::Command::New.new.execute(name, options)
       logger.info "status: success, command: new, args: #{args}"
