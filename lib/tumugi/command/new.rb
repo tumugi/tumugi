@@ -28,6 +28,7 @@ module Tumugi
           return false
         end
 
+        puts "Create #{@dest_dir}"
         FileUtils.mkdir_p(@dest_dir)
 
         templates.each do |value|
@@ -39,10 +40,21 @@ module Tumugi
             name: name,
             tumugi_version: Tumugi::VERSION,
           }
-          puts "Create #{dest_path(dest_file)}"
+          puts "  Create #{dest_path(dest_file)}"
           FileUtils.mkdir_p(File.dirname(dest_path(dest_file)))
           File.write(dest_path(dest_file), eruby.result(context))
         end
+
+        puts ""
+        puts "Plugin template is successfully generated."
+        puts "Next steps:"
+        puts ""
+        puts "  $ cd #{full_project_name}"
+        puts "  $ git init"
+        puts "  $ bundle install"
+        puts "  $ bundle exec rake"
+        puts ""
+
         return true
       end
 
