@@ -1,6 +1,6 @@
 require_relative './test_helper'
 
-class Tumugi::<%= name.capitalize %>Test < Test::Unit::TestCase
+class Tumugi::<%= name.capitalize %>Test < Tumugi::Test::TumugiTestCase
   test 'run success' do
     assert_run_success("examples/example.rb", "main")
   end

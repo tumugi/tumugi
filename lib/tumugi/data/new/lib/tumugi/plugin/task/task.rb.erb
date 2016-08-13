@@ -6,7 +6,8 @@ module Tumugi
     class <%= name.capitalize %>Task < Tumugi::Task
       Tumugi::Plugin.register_task('<%= name %>', self)
 
-      param :param1, type: :string, default: ""
+      param :param1, type: :string, required: true
+      param :param2, type: :integer, default: 1
 
       def output
         @output ||= Tumugi::Plugin::<%= name.capitalize %>Target.new(param1)
