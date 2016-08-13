@@ -87,7 +87,7 @@ module Tumugi
         logger.error "If you want to know more detail, run with '--verbose' option"
       end
       logger.error "status: failed, command: #{command}, args: #{args}"
-      raise Thor::Error.new("tumugi new failed, please check log")
+      raise Thor::Error.new("tumugi #{command} failed, please check log")
     end
 
     def logger
