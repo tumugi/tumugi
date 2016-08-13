@@ -24,7 +24,7 @@ module Tumugi
         @data_dir = "#{File.expand_path(File.dirname(__FILE__))}/../data/new"
         @dest_dir = "#{(options[:path] || '.')}/#{full_project_name}"
         if File.exist?(@dest_dir)
-          logger.error("#{@dest_dir} is already exists. Please delete it first")
+          puts "#{@dest_dir} is already exists. Please delete it first"
           return false
         end
 
@@ -39,15 +39,11 @@ module Tumugi
             name: name,
             tumugi_version: Tumugi::VERSION,
           }
-          logger.info("Create #{dest_path(dest_file)}")
+          puts "Create #{dest_path(dest_file)}"
           FileUtils.mkdir_p(File.dirname(dest_path(dest_file)))
           File.write(dest_path(dest_file), eruby.result(context))
         end
         return true
-      end
-
-      def logger
-        @logger ||= Tumugi::ScopedLogger.new("tumugi-new")
       end
 
       private
