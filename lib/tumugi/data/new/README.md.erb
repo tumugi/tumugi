@@ -17,13 +17,14 @@ TODO: Write description about `Tumugi::Plugin::<%= name.capitalize %>Task`.
 #### Parameters
 
 - **param1** description (string, required)
-- **param2** description (integer, default: 1)
+- **param2** description (integer, optional, default: 1)
 
 #### Example
 
 ```rb
-task :task1, type: :bigquery_dataset do
-  param_set :dataset_id, 'test'
+task :main, type: :<%= name %> do
+  param1 'value1'
+  output { target(:<%= name %>, param1) }
 end
 ```
 
