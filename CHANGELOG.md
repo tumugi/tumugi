@@ -1,5 +1,17 @@
 # Change Log
 
+## [v0.6.3](https://github.com/tumugi/tumugi/tree/v0.6.3) (2016-08-14)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.6.2...v0.6.3)
+
+**Implemented enhancements:**
+
+- Log tumugi version [\#113](https://github.com/tumugi/tumugi/pull/113) ([hakobera](https://github.com/hakobera))
+
+**Fixed bugs:**
+
+- Fix plugin template [\#112](https://github.com/tumugi/tumugi/pull/112) ([hakobera](https://github.com/hakobera))
+- Fix commad failed error message [\#110](https://github.com/tumugi/tumugi/pull/110) ([hakobera](https://github.com/hakobera))
+
 ## [v0.6.2](https://github.com/tumugi/tumugi/tree/v0.6.2) (2016-08-02)
 [Full Changelog](https://github.com/tumugi/tumugi/compare/v0.6.1...v0.6.2)
 
@@ -13,6 +25,7 @@
 
 **Merged pull requests:**
 
+- Prepare release for 0.6.2 [\#109](https://github.com/tumugi/tumugi/pull/109) ([hakobera](https://github.com/hakobera))
 - Improve and change logging [\#107](https://github.com/tumugi/tumugi/pull/107) ([hakobera](https://github.com/hakobera))
 
 ## [v0.6.1](https://github.com/tumugi/tumugi/tree/v0.6.1) (2016-07-10)
