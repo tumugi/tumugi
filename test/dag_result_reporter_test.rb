@@ -13,6 +13,7 @@ class Tumugi::DAGResultReporterTest < Test::Unit::TestCase
 
   class TestTask2 < Tumugi::Task
     param :long_param, type: :string, default: "a"*26
+    param :secure_param, type: :string, default: "secure", secure: true
   end
 
   setup do
@@ -37,7 +38,7 @@ class Tumugi::DAGResultReporterTest < Test::Unit::TestCase
     assert_equal(2, rows.size)
     assert_equal("Tumugi::DAGResultReporterTest::TestTask2", rows[0].cells[0].value)
     assert_equal("", rows[0].cells[1].value)
-    assert_equal("long_param=aaaaaaaaaaaaaaaaaaaaaaaaa...", rows[0].cells[2].value)
+    assert_equal("long_param=aaaaaaaaaaaaaaaaaaaaaaaaa...\nsecure_param=***", rows[0].cells[2].value)
     assert_equal(:pending, rows[0].cells[3].value)
 
     assert_equal("Tumugi::DAGResultReporterTest::TestTask", rows[1].cells[0].value)
