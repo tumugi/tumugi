@@ -9,6 +9,7 @@ class Tumugi::Parameter::ParameterTest < Test::Unit::TestCase
       assert_equal(false, param.required?)
       assert_equal(:string, param.type)
       assert_equal(nil, param.default_value)
+      assert_equal(false, param.secure?)
     end
 
     test 'with options, return specified value' do
@@ -17,12 +18,14 @@ class Tumugi::Parameter::ParameterTest < Test::Unit::TestCase
         required: false,
         type: :integer,
         default: 1,
+        secure: true,
       }
       param = Tumugi::Parameter::Parameter.new(:name, opts)
       assert_equal(true, param.auto_bind?)
       assert_equal(false, param.required?)
       assert_equal(:integer, param.type)
       assert_equal(1, param.default_value)
+      assert_equal(true, param.secure?)
     end
 
     test 'raise ParameterError when both required and default is set' do
