@@ -15,7 +15,7 @@ module Tumugi
             r.id
           end
           params = proxy.params.map do |name, param|
-            val = param.secure? ? '***' : truncate(task.send(name.to_sym).to_s, 25)
+            val = param.secret? ? '***' : truncate(task.send(name.to_sym).to_s, 25)
             "#{name}=#{val}"
           end
           t << :separator if index != 0

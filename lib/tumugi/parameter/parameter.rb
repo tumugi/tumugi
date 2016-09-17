@@ -39,8 +39,8 @@ module Tumugi
         self.class.new(@name, @opts.merge(required: false, default: value))
       end
 
-      def secure?
-        option_as_bool(:secure)
+      def secret?
+        option_as_bool(:secret)
       end
 
       private
