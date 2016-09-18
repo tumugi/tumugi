@@ -20,15 +20,11 @@ module Tumugi
       end
 
       def auto_bind?
-        if @opts[:auto_bind].nil?
-          false
-        else
-          @opts[:auto_bind]
-        end
+        option_as_bool(:auto_bind)
       end
 
       def required?
-        @opts[:required].nil? ? false : @opts[:required]
+        option_as_bool(:required)
       end
 
       def type
@@ -43,6 +39,10 @@ module Tumugi
         self.class.new(@name, @opts.merge(required: false, default: value))
       end
 
+      def secret?
+        option_as_bool(:secret)
+      end
+
       private
 
       def search_from_workflow_parameters
@@ -51,12 +51,14 @@ module Tumugi
         value ? Converter.convert(type, value) : nil
       end
 
-      private
-
       def validate
         if required? && !default_value.nil?
           raise Tumugi::ParameterError.new("When you set required: true, you cannot set default value")
         end
+      end
+
+      def option_as_bool(key)
+        @opts[key].nil? ? false : @opts[key]
       end
     end
   end

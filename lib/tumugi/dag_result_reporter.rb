@@ -14,8 +14,9 @@ module Tumugi
           requires = list(task.requires).map do |r|
             r.id
           end
-          params = proxy.params.map do |name, _|
-            "#{name}=#{truncate(task.send(name.to_sym).to_s, 25)}"
+          params = proxy.params.map do |name, param|
+            val = param.secret? ? '***' : truncate(task.send(name.to_sym).to_s, 25)
+            "#{name}=#{val}"
           end
           t << :separator if index != 0
           t << [ task.id, requires.join("\n"), params.join("\n"), task.state ]
