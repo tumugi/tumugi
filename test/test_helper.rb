@@ -1,5 +1,11 @@
+require 'simplecov'
 require 'coveralls'
-Coveralls.wear!
+
+SimpleCov.formatter = Coveralls::SimpleCov::Formatter
+SimpleCov.start do
+  add_filter '/test/'
+  add_filter '/lib/tumugi/data/'
+end
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
