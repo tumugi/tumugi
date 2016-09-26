@@ -4,7 +4,9 @@ require 'coveralls'
 SimpleCov.formatter = Coveralls::SimpleCov::Formatter
 SimpleCov.start do
   add_filter '/test/'
-  add_filter '/lib/tumugi/data/'
+  add_filter do |src|
+    src.filename =~ /.*\.erb$/
+  end
 end
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
