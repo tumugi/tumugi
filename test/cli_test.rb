@@ -108,6 +108,16 @@ class Tumugi::CLITest < Tumugi::Test::TumugiTestCase
       end
     end
 
+    test 'project' do
+      output_path = './tmp/test_cli_new_project'
+      Tumugi::CLI.new.invoke(:new, ['project', 'test'], path: output_path)
+
+      generator = Tumugi::Command::New::ProjectGenerator.new('test', path: output_path)
+      generator.templates.each do |template|
+        assert_true(File.exist?("#{output_path}/test/#{template[1]}"))
+      end
+    end
+
     test 'unsupported' do
       assert_raise(Thor::Error) do
         Tumugi::CLI.new.invoke(:new, ['unsupported', 'test'])

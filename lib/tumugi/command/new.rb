@@ -1,4 +1,5 @@
 require_relative './new/plugin_generator'
+require_relative './new/project_generator'
 
 module Tumugi
   module Command
@@ -16,6 +17,8 @@ module Tumugi
         case type
         when "plugin"
           PluginGenerator.new(name, options)
+        when "project"
+          ProjectGenerator.new(name, options)
         else
           raise Tumugi::TumugiError.new("Unsupported type of new sub command: #{type}")
         end
