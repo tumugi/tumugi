@@ -1,0 +1,33 @@
+Tumugi.configure do |config|
+  ##############################################################################
+  # Number of worker threads for parallel execution, default value is 1.
+  # You can override this value by CLI '-w' option like:
+  #
+  # $ tumugi run -f workflow.rb main -w 2
+  ##############################################################################
+  # config.workers = 1
+
+  ##############################################################################
+  # Max retry count for each task, default value is 3.
+  ##############################################################################
+  # config.max_retry = 3
+
+  ##############################################################################
+  # Retry interval seconds for each task, default value is 300 seconds.
+  ##############################################################################
+  # config.retry_interval = 300
+
+  ##############################################################################
+  # Timeout seconds for each task, default value is nil, it means no timeout.
+  ##############################################################################
+  # config.timeout = nil
+
+  ##############################################################################
+  # If you use plugins and plugins support config section,
+  # define it like following.
+  ##############################################################################
+
+  # config.section("section_name") do |section|
+  #   section.key = "value"
+  # end
+end

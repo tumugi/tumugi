@@ -96,4 +96,37 @@ class Tumugi::CLITest < Tumugi::Test::TumugiTestCase
       assert_true(File.exist?(output_file))
     end
   end
+
+  sub_test_case 'new' do
+    test 'plugin' do
+      output_path = './tmp/test_cli_new_plugin'
+      Tumugi::CLI.new.invoke(:new, ['plugin', 'test'], path: output_path)
+
+      generator = Tumugi::Command::New::PluginGenerator.new('test', path: output_path)
+      generator.templates.each do |template|
+        assert_true(File.exist?("#{output_path}/tumugi-plugin-test/#{template[1]}"))
+      end
+    end
+
+    test 'project' do
+      output_path = './tmp/test_cli_new_project'
+      Tumugi::CLI.new.invoke(:new, ['project', 'test'], path: output_path)
+
+      generator = Tumugi::Command::New::ProjectGenerator.new('test', path: output_path)
+      generator.templates.each do |template|
+        assert_true(File.exist?("#{output_path}/test/#{template[1]}"))
+      end
+    end
+
+    test 'unsupported' do
+      assert_raise(Thor::Error) do
+        Tumugi::CLI.new.invoke(:new, ['unsupported', 'test'])
+      end
+    end
+  end
+
+  test 'init' do
+    output_path = './tmp/test_cli_init'
+    Tumugi::CLI.new.invoke(:init, [output_path])
+  end
 end

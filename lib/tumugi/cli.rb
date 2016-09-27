@@ -45,9 +45,14 @@ module Tumugi
       execute(:show, task, opts.freeze)
     end
 
-    desc "new PLUGIN_NAME", "Create new plugin project"
-    def new(name)
-      generate_plugin(name, options)
+    desc "new type NAME", "Create a new template of type. type is 'plugin' or 'project'"
+    def new(type, name)
+      generate_project(type, name, options)
+    end
+
+    desc "init", "Create an tumugi project template"
+    def init(path='')
+      generate_project('project', path, force: true)
     end
 
     private
@@ -55,6 +60,7 @@ module Tumugi
     def execute(command, task, options)
       logger.info "tumugi v#{Tumugi::VERSION}"
       args = { task: task, options: options }
+      logger.info "status: running, command: #{command}, args: #{args}"
       success = Tumugi.workflow.execute(command, task, options)
       unless success
         raise Thor::Error, "execute finished, but failed"
@@ -64,10 +70,11 @@ module Tumugi
       handle_error(command, e, args)
     end
 
-    def generate_plugin(name, options)
+    def generate_project(type, name, options)
       logger.info "tumugi v#{Tumugi::VERSION}"
-      args = { name: name, options: options }
-      Tumugi::Command::New.new.execute(name, options)
+      args = { type: type, name: name, options: options }
+      logger.info "status: running, command: new, args: #{args}"
+      Tumugi::Command::New.new.execute(type, name, options)
       logger.info "status: success, command: new, args: #{args}"
     rescue => e
       handle_error("new", e, args)
