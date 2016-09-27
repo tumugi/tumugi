@@ -45,9 +45,14 @@ module Tumugi
       execute(:show, task, opts.freeze)
     end
 
-    desc "new type NAME", "Create new project"
+    desc "new type NAME", "Create a new template of type. type is 'plugin' or 'project'"
     def new(type, name)
       generate_project(type, name, options)
+    end
+
+    desc "init", "Create an tumugi project template"
+    def init(path='')
+      generate_project('project', path, force: true)
     end
 
     private

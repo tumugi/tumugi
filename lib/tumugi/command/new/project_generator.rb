@@ -9,7 +9,7 @@ module Tumugi
         end
 
         def dest_dir
-          "#{(options[:path] || '.')}/#{full_project_name}"
+          File.join(options[:path] || '.', name)
         end
 
         def templates
@@ -20,13 +20,8 @@ module Tumugi
           ]
         end
 
-        def full_project_name
-          name
-        end
-
         def context
           {
-            full_project_name: full_project_name,
             name: name,
             tumugi_version: Tumugi::VERSION,
           }
@@ -38,8 +33,7 @@ module Tumugi
             "Project template is successfully generated.",
             "Next steps:",
             "",
-            "  $ cd #{full_project_name}",
-            "  $ git init",
+            name.empty? ? "" : "  $ cd #{name}",
             "  $ bundle install",
             "  $ bundle exec tumugi -f workflow.rb main",
             "",

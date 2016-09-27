@@ -13,7 +13,7 @@ module Tumugi
         end
 
         def generate
-          if File.exist?(dest_dir)
+          if File.exist?(dest_dir) && !options[:force]
             logger.error "#{dest_dir} is already exists. Please delete it first"
             return false
           end
@@ -64,11 +64,11 @@ module Tumugi
         private
 
         def src_path(file)
-          "#{data_dir}/#{file}"
+          File.join(data_dir, file)
         end
 
         def dest_path(file)
-          "#{dest_dir}/#{file}"
+          File.join(dest_dir, file)
         end
       end
     end

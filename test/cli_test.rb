@@ -124,4 +124,9 @@ class Tumugi::CLITest < Tumugi::Test::TumugiTestCase
       end
     end
   end
+
+  test 'init' do
+    output_path = './tmp/test_cli_init'
+    Tumugi::CLI.new.invoke(:init, [output_path])
+  end
 end

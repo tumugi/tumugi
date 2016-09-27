@@ -9,7 +9,7 @@ module Tumugi
         end
 
         def dest_dir
-          "#{(options[:path] || '.')}/#{full_project_name}"
+          File.join(options[:path] || '.', full_project_name)
         end
 
         def templates
