@@ -5,6 +5,7 @@ class Tumugi::Mixin::HumanReadableTest < Test::Unit::TestCase
   include Tumugi::Mixin::HumanReadable
 
   data(
+    '0'     => ['0 second', 0],
     '1'     => ['1 second', 1],
     '2'     => ['2 seconds', 2],
     '59'    => ['59 seconds', 59],
