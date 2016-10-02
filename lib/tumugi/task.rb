@@ -31,6 +31,7 @@ module Tumugi
       @state = :pending
       @lock = Mutex.new
       @_elapsed_times = []
+      @elapsed_time = '00:00:00'
     end
 
     def id
