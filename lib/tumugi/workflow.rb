@@ -5,11 +5,14 @@ require 'tumugi/plugin'
 require 'tumugi/target'
 require 'tumugi/command/run'
 require 'tumugi/command/show'
+require 'tumugi/mixin/human_readable'
 
 require 'securerandom'
 
 module Tumugi
   class Workflow
+    include Tumugi::Mixin::HumanReadable
+
     attr_reader :id
     attr_accessor :params
 
@@ -22,12 +25,17 @@ module Tumugi
     end
 
     def execute(command, root_task_id, options)
+      @start_time = Time.now
+      logger.info "start id: #{id}"
       process_common_options(command, options)
       load_workflow_file(options[:file])
       dag = create_dag(root_task_id)
       command_module = Kernel.const_get("Tumugi").const_get("Command")
       cmd = command_module.const_get("#{command.to_s.capitalize}").new
-      cmd.execute(dag, options)
+      result = cmd.execute(dag, options)
+      @end_time = Time.now
+      logger.info "end id: #{id}, elapsed_time: #{elapsed_time}"
+      result
     end
 
     def add_task(id, task)
@@ -110,6 +118,12 @@ module Tumugi
         @params = options[:params]
         logger.info "Parameters: #{@params}"
       end
+    end
+
+    private
+
+    def elapsed_time
+      human_readable_time((@end_time - @start_time).to_i)
     end
   end
 end

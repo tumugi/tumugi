@@ -28,11 +28,12 @@ class Tumugi::DAGResultReporterTest < Test::Unit::TestCase
     report = @reporter.show(@dag)
     assert_equal("Workflow Result", report.title)
     head = report.headings.first
-    assert_equal(4, head.cells.size)
+    assert_equal(5, head.cells.size)
     assert_equal("Task", head.cells[0].value)
     assert_equal("Requires", head.cells[1].value)
     assert_equal("Parameters", head.cells[2].value)
     assert_equal("State", head.cells[3].value)
+    assert_equal("Elapsed", head.cells[4].value)
 
     rows = report.rows
     assert_equal(2, rows.size)
@@ -40,10 +41,12 @@ class Tumugi::DAGResultReporterTest < Test::Unit::TestCase
     assert_equal("", rows[0].cells[1].value)
     assert_equal("long_param=aaaaaaaaaaaaaaaaaaaaaaaaa...\nsecret_param=***", rows[0].cells[2].value)
     assert_equal(:pending, rows[0].cells[3].value)
+    assert_equal('00:00:00', rows[0].cells[4].value)
 
     assert_equal("Tumugi::DAGResultReporterTest::TestTask", rows[1].cells[0].value)
     assert_equal("Tumugi::DAGResultReporterTest::TestTask2", rows[1].cells[1].value)
     assert_equal("param1=value1\nparam2=2016-06-01 09:00:00 UTC", rows[1].cells[2].value)
     assert_equal(:skipped, rows[1].cells[3].value)
+    assert_equal('00:00:00', rows[1].cells[4].value)
   end
 end

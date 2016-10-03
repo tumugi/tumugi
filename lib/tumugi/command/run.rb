@@ -7,19 +7,12 @@ module Tumugi
       def execute(dag, options={})
         worker_num = options[:workers] || Tumugi.config.workers
         executor = Tumugi::Executor::LocalExecutor.new(dag, worker_num: worker_num)
-        result = start(executor)
+        result = executor.execute
         show_result_report(dag)
         result
       end
 
       private
-
-      def start(executor)
-        logger.info "workflow_start: #{Tumugi.workflow.id}"
-        result = executor.execute
-        logger.info "workflow_end: #{Tumugi.workflow.id}"
-        result
-      end
 
       def show_result_report(dag)
         reporter = Tumugi::DAGResultReporter.new

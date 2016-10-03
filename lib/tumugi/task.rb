@@ -2,14 +2,16 @@ require 'tumugi/logger/scoped_logger'
 require 'tumugi/mixin/listable'
 require 'tumugi/mixin/task_helper'
 require 'tumugi/mixin/parameterizable'
+require 'tumugi/mixin/human_readable'
 
 module Tumugi
   class Task
     include Tumugi::Mixin::Parameterizable
     include Tumugi::Mixin::Listable
     include Tumugi::Mixin::TaskHelper
+    include Tumugi::Mixin::HumanReadable
 
-    attr_reader :visible_at, :tries, :max_retry, :retry_interval
+    attr_reader :visible_at, :tries, :max_retry, :retry_interval, :elapsed_time
 
     AVAILABLE_STATES = [
       :pending,
@@ -28,6 +30,8 @@ module Tumugi
       @retry_interval = Tumugi.config.retry_interval
       @state = :pending
       @lock = Mutex.new
+      @_elapsed_times = []
+      @elapsed_time = '00:00:00'
     end
 
     def id
@@ -132,6 +136,9 @@ module Tumugi
 
     def trigger!(event)
       @lock.synchronize do
+        now = Time.now
+        @_elapsed_times[tries] ||= { start: now }
+
         s = case event
             when :skip
               :skipped
@@ -153,6 +160,8 @@ module Tumugi
           raise Tumugi::TumugiError.new("Invalid state: #{s}")
         end
 
+        @_elapsed_times[tries][:end] = now
+        @elapsed_time = human_readable_time((@_elapsed_times[tries][:end] - @_elapsed_times[tries][:start]).to_i)
         @state = s
       end
     end

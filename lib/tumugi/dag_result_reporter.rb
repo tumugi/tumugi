@@ -1,5 +1,4 @@
 require 'terminal-table'
-
 require 'tumugi/mixin/listable'
 
 module Tumugi
@@ -7,7 +6,7 @@ module Tumugi
     include Tumugi::Mixin::Listable
 
     def show(dag)
-      headings = ['Task', 'Requires', 'Parameters', 'State']
+      headings = ['Task', 'Requires', 'Parameters', 'State', 'Elapsed']
       Terminal::Table.new title: "Workflow Result", headings: headings do |t|
         dag.tsort.map.with_index do |task, index|
           proxy = task.class.merged_parameter_proxy
@@ -19,7 +18,7 @@ module Tumugi
             "#{name}=#{val}"
           end
           t << :separator if index != 0
-          t << [ task.id, requires.join("\n"), params.join("\n"), task.state ]
+          t << [ task.id, requires.join("\n"), params.join("\n"), task.state, task.elapsed_time ]
         end
       end
     end
