@@ -29,10 +29,7 @@ module Tumugi
       logger.info "start id: #{id}"
       process_common_options(command, options)
       load_workflow_file(options[:file])
-      dag = create_dag(root_task_id)
-      command_module = Kernel.const_get("Tumugi").const_get("Command")
-      cmd = command_module.const_get("#{command.to_s.capitalize}").new
-      result = cmd.execute(dag, options)
+      result = execute_command(command, root_task_id, options)
       @end_time = Time.now
       logger.info "end id: #{id}, elapsed_time: #{elapsed_time}"
       result
@@ -61,13 +58,6 @@ module Tumugi
       rescue Exception => e
         raise Tumugi::TumugiError.new("Workflow file load error: #{file}", e)
       end
-    end
-
-    def create_dag(id)
-      dag = Tumugi::DAG.new
-      task = find_task(id)
-      dag.add_task(task)
-      dag
     end
 
     def process_common_options(command, options)
@@ -120,10 +110,22 @@ module Tumugi
       end
     end
 
-    private
-
     def elapsed_time
       human_readable_time((@end_time - @start_time).to_i)
+    end
+
+    def execute_command(command, root_task_id, options)
+      dag = create_dag(root_task_id)
+      command_module = Kernel.const_get("Tumugi").const_get("Command")
+      cmd = command_module.const_get("#{command.to_s.capitalize}").new
+      cmd.execute(dag, options)
+    end
+
+    def create_dag(id)
+      dag = Tumugi::DAG.new
+      task = find_task(id)
+      dag.add_task(task)
+      dag
     end
   end
 end
