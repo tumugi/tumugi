@@ -39,6 +39,16 @@ class Tumugi::Executor::LocalExecutorTest < Test::Unit::TestCase
       assert_equal(:skipped, @task.state)
     end
 
+    test 'completed when task completed but run_all: true' do
+      def @task.completed?
+        true
+      end
+
+      executor = Tumugi::Executor::LocalExecutor.new(@dag, run_all: true)
+      assert_true(executor.execute)
+      assert_equal(:completed, @task.state)
+    end
+
     test 'faild' do
       Tumugi.configure do |config|
         config.max_retry = 2
