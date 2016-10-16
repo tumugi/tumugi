@@ -7,17 +7,18 @@ require 'tumugi/error'
 module Tumugi
   module Executor
     class LocalExecutor
-      def initialize(dag, worker_num: 1)
+      def initialize(dag, worker_num: 1, run_all: false)
         @dag = dag
         @main_task = dag.tsort.last
-        @options = { worker_num: worker_num }
+        @worker_num = worker_num
+        @run_all = run_all
         @mutex = Mutex.new
       end
 
       def execute
         pool = Concurrent::ThreadPoolExecutor.new(
-          min_threads: @options[:worker_num],
-          max_threads: @options[:worker_num]
+          min_threads: @worker_num,
+          max_threads: @worker_num
         )
 
         setup_task_queue(@dag)
@@ -27,7 +28,7 @@ module Tumugi
 
           Concurrent::Future.execute(executor: pool) do
             if !task.runnable?(Time.now)
-              logger.trace { "task_cannot_run: #{task.id}" }
+              logger.trace { "task_not_runnable: #{task.id}" }
               enqueue_task(task)
             else
               begin
@@ -84,7 +85,7 @@ module Tumugi
             if task.requires_failed?
               task.trigger!(:requires_fail)
               logger.info { "task_#{task.state}: #{task.id} has failed requires task, elapsed_time: #{task.elapsed_time}" }
-            elsif task.completed?
+            elsif task.completed? && !@run_all
               task.trigger!(:skip)
               logger.info { "task_#{task.state}: #{task.id} is already completed, elapsed_time: #{task.elapsed_time}" }
             else

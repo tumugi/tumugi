@@ -30,6 +30,7 @@ module Tumugi
     map "run" => "run_" # run is thor's reserved word, so this trick is needed
     option :workers, aliases: '-w', type: :numeric, desc: 'Number of workers to run task concurrently'
     option :out, aliases: '-o', desc: 'Output log filename. If not specified, log is write to STDOUT'
+    option :all, aliases: '-a', type: :boolean, desc: 'Run all tasks even if target exists', default: false
     common_options
     def run_(task)
       execute(:run, task, options)
