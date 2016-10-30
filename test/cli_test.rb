@@ -15,6 +15,7 @@ class Tumugi::CLITest < Tumugi::Test::TumugiTestCase
     'fail_first_task' => ['fail_first_task.rb', 'task1'],
     'fail_intermediate_task' => ['fail_intermediate_task.rb', 'task1'],
     'fail_last_task' => ['fail_last_task.rb', 'task1'],
+    'event_callbacks' => ['event_callbacks.rb', 'task1'],
   }
 
   config_section_examples = {

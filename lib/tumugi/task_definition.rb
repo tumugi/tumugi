@@ -1,3 +1,4 @@
+require 'tumugi/event'
 require 'tumugi/plugin'
 require 'tumugi/task'
 require 'tumugi/logger/logger'
@@ -64,6 +65,14 @@ module Tumugi
       @run = block
     end
 
+    Event.all.each do |event|
+      class_eval <<-EOS
+        def on_#{event}(&block)
+          @on_#{event} ||= block
+        end
+      EOS
+    end
+
     def output_eval(task)
       @out ||= @outputs.is_a?(Proc) ? task.instance_eval(&@outputs) : @outputs
     end
@@ -72,16 +81,20 @@ module Tumugi
       @required_tasks
     end
 
-    def run_block(task)
-      task.instance_eval(&@run)
-    end
-
     def parent_task_class
       if @opts[:type].is_a?(Class)
         @opts[:type]
       else
         Tumugi::Plugin.lookup_task(@opts[:type])
       end
+    end
+
+    def run_block(task)
+      task.instance_eval(&@run)
+    end
+
+    def event_block(task, callback)
+      task.instance_eval(&callback)
     end
 
     private
@@ -98,6 +111,7 @@ module Tumugi
       define_requires_method(task_class)
       define_output_method(task_class)
       define_run_method(task_class)
+      define_event_callback_methods(task_class)
       setup_params(task_class)
       task_class
     end
@@ -136,6 +150,20 @@ module Tumugi
           td.run_block(self)
         end
       end unless @run.nil?
+    end
+
+    def define_event_callback_methods(task_class)
+      td = self
+      Event.all.each do |event|
+        callback = instance_variable_get("@on_#{event}")
+        if callback
+          task_class.class_eval do
+            define_method(:"on_#{event}") do
+              td.event_block(self, callback)
+            end
+          end
+        end
+      end
     end
 
     def setup_params(task_class)
