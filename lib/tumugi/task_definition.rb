@@ -93,7 +93,8 @@ module Tumugi
       task.instance_eval(&@run)
     end
 
-    def event_block(task, callback)
+    def event_block(task, event)
+      callback = instance_variable_get("@on_#{event}")
       task.instance_eval(&callback)
     end
 
@@ -155,11 +156,10 @@ module Tumugi
     def define_event_callback_methods(task_class)
       td = self
       Event.all.each do |event|
-        callback = instance_variable_get("@on_#{event}")
-        if callback
+        if instance_variable_get("@on_#{event}")
           task_class.class_eval do
             define_method(:"on_#{event}") do
-              td.event_block(self, callback)
+              td.event_block(self, event)
             end
           end
         end
