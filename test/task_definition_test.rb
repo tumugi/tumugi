@@ -212,4 +212,21 @@ class Tumugi::TaskDefinitionTest < Test::Unit::TestCase
       assert_received(@task) {|t| t.id}
     end
   end
+
+  sub_test_case 'event callbacks' do
+    test 'is defined' do
+      Tumugi::Event.all.each do |event|
+        assert_true(@task_def.respond_to?(:"on_#{event}"))
+      end
+    end
+
+    test 'returns result of block' do
+      stub(@task).id { :id }
+      @task_def.on_success do |task|
+        task.id
+      end
+      @task_def.event_block(@task, :success)
+      assert_received(@task) {|t| t.id}
+    end
+  end
 end

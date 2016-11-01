@@ -24,15 +24,24 @@ class Tumugi::Executor::LocalExecutorTest < Test::Unit::TestCase
 
   sub_test_case '#execute' do
     test 'completed' do
+      stub(@task).on_success
+      dont_allow(@task).on_retry
+      dont_allow(@task).on_failure
+
       executor = Tumugi::Executor::LocalExecutor.new(@dag)
       assert_true(executor.execute)
       assert_equal(:completed, @task.state)
+      assert_received(@task) {|t| t.on_success }
     end
 
     test 'skipped' do
       def @task.completed?
         true
       end
+
+      dont_allow(@task).on_success
+      dont_allow(@task).on_retry
+      dont_allow(@task).on_failure
 
       executor = Tumugi::Executor::LocalExecutor.new(@dag)
       assert_true(executor.execute)
@@ -44,9 +53,14 @@ class Tumugi::Executor::LocalExecutorTest < Test::Unit::TestCase
         true
       end
 
+      stub(@task).on_success
+      dont_allow(@task).on_retry
+      dont_allow(@task).on_failure
+
       executor = Tumugi::Executor::LocalExecutor.new(@dag, run_all: true)
       assert_true(executor.execute)
       assert_equal(:completed, @task.state)
+      assert_received(@task) {|t| t.on_success }
     end
 
     test 'faild' do
@@ -58,6 +72,10 @@ class Tumugi::Executor::LocalExecutorTest < Test::Unit::TestCase
       @task = TestTask.new
       @dag.add_task(@task)
 
+      dont_allow(@task).on_success
+      stub(@task).on_retry
+      stub(@task).on_failure
+
       def @task.run
         raise 'always failed'
       end
@@ -65,6 +83,8 @@ class Tumugi::Executor::LocalExecutorTest < Test::Unit::TestCase
       executor = Tumugi::Executor::LocalExecutor.new(@dag)
       assert_false(executor.execute)
       assert_equal(:failed, @task.state)
+      assert_received(@task) {|t| t.on_retry.times(2) }
+      assert_received(@task) {|t| t.on_failure }
     end
 
     test 'failed when task got timeout' do
@@ -75,9 +95,15 @@ class Tumugi::Executor::LocalExecutorTest < Test::Unit::TestCase
       @task = TestTask.new
       @dag.add_task(@task)
 
+      dont_allow(@task).on_success
+      stub(@task).on_retry
+      stub(@task).on_failure
+
       executor = Tumugi::Executor::LocalExecutor.new(@dag)
       assert_false(executor.execute)
       assert_equal(:failed, @task.state)
+      assert_received(@task) {|t| t.on_retry.times(2) }
+      assert_received(@task) {|t| t.on_failure }
     end
   end
 end

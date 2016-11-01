@@ -1,3 +1,4 @@
+require 'tumugi/event'
 require 'tumugi/logger/scoped_logger'
 require 'tumugi/mixin/listable'
 require 'tumugi/mixin/task_helper'
@@ -102,6 +103,27 @@ module Tumugi
       ready? && visible?(now)
     end
 
+    def ready?
+      list(_requires).all? { |t| t.instance.completed? }
+    end
+
+    def completed?
+      outputs = list(output)
+      if outputs.empty?
+        success?
+      else
+        outputs.all?(&:exist?)
+      end
+    end
+
+    def requires_failed?
+      list(_requires).any? { |t| t.instance.finished? && !t.instance.success? }
+    end
+
+    def runnable?(now)
+      ready? && visible?(now)
+    end
+
     def success?
       case state
       when :completed, :skipped
@@ -111,13 +133,17 @@ module Tumugi
       end
     end
 
-    def finished?
+    def failure?
       case state
-      when :completed, :skipped, :failed, :requires_failed
+      when :failed, :requires_failed
         true
       else
         false
       end
+    end
+
+    def finished?
+      success? or failure?
     end
 
     def timeout
@@ -164,6 +190,14 @@ module Tumugi
         @elapsed_time = human_readable_time((@_elapsed_times[tries][:end] - @_elapsed_times[tries][:start]).to_i)
         @state = s
       end
+    end
+
+    # Event callbacks
+    Event.all.each do |event|
+      class_eval <<-EOS
+        def on_#{event}
+        end
+      EOS
     end
 
     # Following methods are internal use only

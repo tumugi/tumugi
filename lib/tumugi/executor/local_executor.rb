@@ -39,6 +39,7 @@ module Tumugi
                 end
                 task.trigger!(:complete)
                 logger.info { "task_#{task.state}: #{task.id}, elapsed_time: #{task.elapsed_time}" }
+                task.on_success
               rescue => e
                 handle_error(task, e)
               end
@@ -106,10 +107,12 @@ module Tumugi
           logger.info { "task_#{task.state}: #{task.id} failed, elapsed_time: #{task.elapsed_time}" }
           logger.error { "#{err.class}: '#{err.message}' - #{task.tries} tries and wait #{task.retry_interval} seconds until the next try." }
           enqueue_task(task)
+          task.on_retry
         else
           task.trigger!(:fail)
           logger.info { "task_#{task.state}: #{task.id} failed, elapsed_time: #{task.elapsed_time}" }
           logger.error { "#{err.class}: '#{err.message}' - #{task.tries} tries and reached max retry count, so task #{task.id} failed." }
+          task.on_failure
         end
         logger.error { err.backtrace.join("\n") }
       end

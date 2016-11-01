@@ -297,7 +297,6 @@ class Tumugi::TaskTest < Test::Unit::TestCase
       assert_true(@task.retry)
       assert_equal(index, @task.tries)
     end
-    #assert_equal(3, @task.tries)
     assert_false(@task.retry)
   end
 
@@ -332,5 +331,13 @@ class Tumugi::TaskTest < Test::Unit::TestCase
   test 'finished?' do |(event, expected)|
     @task.trigger!(event)
     assert_equal(expected, @task.finished?)
+  end
+
+  sub_test_case 'event callbacks' do
+    test 'is defined' do
+      Tumugi::Event.all.each do |event|
+        assert_true(@task.respond_to?(:"on_#{event}"))
+      end
+    end
   end
 end
