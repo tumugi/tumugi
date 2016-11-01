@@ -1,6 +1,28 @@
 # Change Log
 
-## [v0.6.3](https://github.com/tumugi/tumugi/tree/v0.6.3) (2016-08-14)
+## [v0.7.0](https://github.com/tumugi/tumugi/tree/v0.7.0) (2016-11-01)
+[Full Changelog](https://github.com/tumugi/tumugi/compare/v0.6.3...v0.7.0)
+
+**Implemented enhancements:**
+
+- Force run all tasks in a workflow [\#125](https://github.com/tumugi/tumugi/issues/125)
+- Custom callback on success/retry/failure for each task [\#122](https://github.com/tumugi/tumugi/issues/122)
+- Add secret option for parameter [\#117](https://github.com/tumugi/tumugi/issues/117)
+- Add log about elapsed time for each tasks and workflow [\#116](https://github.com/tumugi/tumugi/issues/116)
+- \[Breaking Change\] Introduce subcommand of `tumugi new` [\#111](https://github.com/tumugi/tumugi/issues/111)
+
+**Merged pull requests:**
+
+- Introduce success/failure event callback [\#128](https://github.com/tumugi/tumugi/pull/128) ([hakobera](https://github.com/hakobera))
+- Support force run all tasks [\#127](https://github.com/tumugi/tumugi/pull/127) ([hakobera](https://github.com/hakobera))
+- Write workflow and task elapsed time to log [\#124](https://github.com/tumugi/tumugi/pull/124) ([hakobera](https://github.com/hakobera))
+- Filter coverage target files [\#121](https://github.com/tumugi/tumugi/pull/121) ([hakobera](https://github.com/hakobera))
+- Test with jruby-9.1.5.0 on travis [\#120](https://github.com/tumugi/tumugi/pull/120) ([hakobera](https://github.com/hakobera))
+- Introduce new sub commands [\#119](https://github.com/tumugi/tumugi/pull/119) ([hakobera](https://github.com/hakobera))
+- Add param secret option [\#118](https://github.com/tumugi/tumugi/pull/118) ([hakobera](https://github.com/hakobera))
+- Bumpup version to 0.7.0.dev [\#115](https://github.com/tumugi/tumugi/pull/115) ([hakobera](https://github.com/hakobera))
+
+## [v0.6.3](https://github.com/tumugi/tumugi/tree/v0.6.3) (2016-08-13)
 [Full Changelog](https://github.com/tumugi/tumugi/compare/v0.6.2...v0.6.3)
 
 **Implemented enhancements:**
@@ -11,6 +33,10 @@
 
 - Fix plugin template [\#112](https://github.com/tumugi/tumugi/pull/112) ([hakobera](https://github.com/hakobera))
 - Fix commad failed error message [\#110](https://github.com/tumugi/tumugi/pull/110) ([hakobera](https://github.com/hakobera))
+
+**Merged pull requests:**
+
+- Prepare release for 0.6.3 [\#114](https://github.com/tumugi/tumugi/pull/114) ([hakobera](https://github.com/hakobera))
 
 ## [v0.6.2](https://github.com/tumugi/tumugi/tree/v0.6.2) (2016-08-02)
 [Full Changelog](https://github.com/tumugi/tumugi/compare/v0.6.1...v0.6.2)
