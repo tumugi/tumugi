@@ -1,7 +1,7 @@
-require_relative './test_helper'
-require 'tumugi/dag_result_reporter'
+require_relative '../test_helper'
+require 'tumugi/reporter/stdout_reporter'
 
-class Tumugi::DAGResultReporterTest < Test::Unit::TestCase
+class Tumugi::Reporter::StdoutReporterTest < Test::Unit::TestCase
   class TestTask < Tumugi::Task
     param :param1, type: :string, default: "value1"
     param :param2, type: :time, default: Time.parse("2016-06-01 09:00:00 UTC")
@@ -17,7 +17,7 @@ class Tumugi::DAGResultReporterTest < Test::Unit::TestCase
   end
 
   setup do
-    @reporter = Tumugi::DAGResultReporter.new
+    @reporter = Tumugi::Reporter::StdoutReporter.new
     @dag = Tumugi::DAG.new
     @task = TestTask.new
     @task.trigger!(:skip)
@@ -37,14 +37,14 @@ class Tumugi::DAGResultReporterTest < Test::Unit::TestCase
 
     rows = report.rows
     assert_equal(2, rows.size)
-    assert_equal("Tumugi::DAGResultReporterTest::TestTask2", rows[0].cells[0].value)
+    assert_equal("Tumugi::Reporter::StdoutReporterTest::TestTask2", rows[0].cells[0].value)
     assert_equal("", rows[0].cells[1].value)
     assert_equal("long_param=aaaaaaaaaaaaaaaaaaaaaaaaa...\nsecret_param=***", rows[0].cells[2].value)
     assert_equal(:pending, rows[0].cells[3].value)
     assert_equal('00:00:00', rows[0].cells[4].value)
 
-    assert_equal("Tumugi::DAGResultReporterTest::TestTask", rows[1].cells[0].value)
-    assert_equal("Tumugi::DAGResultReporterTest::TestTask2", rows[1].cells[1].value)
+    assert_equal("Tumugi::Reporter::StdoutReporterTest::TestTask", rows[1].cells[0].value)
+    assert_equal("Tumugi::Reporter::StdoutReporterTest::TestTask2", rows[1].cells[1].value)
     assert_equal("param1=value1\nparam2=2016-06-01 09:00:00 UTC", rows[1].cells[2].value)
     assert_equal(:skipped, rows[1].cells[3].value)
     assert_equal('00:00:00', rows[1].cells[4].value)

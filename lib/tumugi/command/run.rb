@@ -1,4 +1,4 @@
-require 'tumugi/dag_result_reporter'
+require 'tumugi/reporter/stdout_reporter'
 require 'tumugi/executor/local_executor'
 
 module Tumugi
@@ -15,7 +15,7 @@ module Tumugi
       private
 
       def show_result_report(dag)
-        reporter = Tumugi::DAGResultReporter.new
+        reporter = Tumugi::Reporter::StdoutReporter.new
         report = reporter.show(dag)
         logger.info "Result report:\n#{report.to_s}"
       end
