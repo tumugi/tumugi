@@ -6,7 +6,7 @@
 
 Tumugi is a ruby library to build, run and manage complex workflows. Tumugi enables you to define workflows as a ruby code.
 
-**Tumugi only support Ruby >= 2.1 and JRuby >= 9.0.0.0**
+**Tumugi only support Ruby >= 2.2 and JRuby >= 9.0.0.0**
 
 ## [Documentation](https://tumugi.github.io)
 
