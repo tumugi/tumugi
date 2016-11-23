@@ -5,6 +5,7 @@ require 'tumugi/command/new'
 module Tumugi
   class CLI < Thor
     package_name "tumugi"
+    default_command "run_"
 
     class << self
       def common_options
