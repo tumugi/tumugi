@@ -70,6 +70,10 @@ class Tumugi::CLITest < Tumugi::Test::TumugiTestCase
     test 'config has syntax error' do
       assert_run_fail("examples/simple.rb", "task1", config: "test/data/invalid_config.rb", verbose: ENV['DEBUG'], quiet: !ENV['DEBUG'])
     end
+
+    test 'run as as a default command' do
+      assert_true(system("exe/tumugi -f examples/simple.rb task1"))
+    end
   end
 
   sub_test_case 'show' do
