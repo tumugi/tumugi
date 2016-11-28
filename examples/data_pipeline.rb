@@ -24,6 +24,6 @@ task :sum do
     input.open do |line|
       sum += line.to_i
     end
-    output { |f| f.puts(sum) }
+    output.open('w') { |f| f.puts(sum) }
   end
 end
