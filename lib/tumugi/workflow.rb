@@ -6,17 +6,38 @@ require 'tumugi/target'
 require 'tumugi/command/run'
 require 'tumugi/command/show'
 require 'tumugi/mixin/human_readable'
+require 'tumugi/reporter/workflow_reporter'
 
+require 'aasm'
 require 'securerandom'
 
 module Tumugi
   class Workflow
+    include AASM
     include Tumugi::Mixin::HumanReadable
 
-    attr_reader :id
+    attr_reader :id, :start_time, :end_time
     attr_accessor :params
 
     DEFAULT_CONFIG_FILE = "tumugi_config.rb"
+    REPORT_DIR = ".tumugi"
+
+    aasm do
+      state :pending, initial: true
+      state :running, :success, :failure
+
+      event :run do
+        transitions from: :pending, to: :running
+      end
+
+      event :finish do
+        transitions from: :running, to: :success
+      end
+
+      event :fail do
+        transitions from: :running, to: :failure
+      end
+    end
 
     def initialize
       @id = SecureRandom.uuid
@@ -29,9 +50,13 @@ module Tumugi
       logger.info "start id: #{id}"
       process_common_options(command, options)
       load_workflow_file(options[:file])
-      result = execute_command(command, root_task_id, options)
+      dag = create_dag(root_task_id)
+      run
+      result = execute_command(command, dag, options)
       @end_time = Time.now
       logger.info "end id: #{id}, elapsed_time: #{elapsed_time}"
+      result ? finish : fail
+      Tumugi::Reporter::WorkflowReporter.new(self, dag).save(REPORT_DIR) if command == :run
       result
     end
 
@@ -114,8 +139,7 @@ module Tumugi
       human_readable_time((@end_time - @start_time).to_i)
     end
 
-    def execute_command(command, root_task_id, options)
-      dag = create_dag(root_task_id)
+    def execute_command(command, dag, options)
       command_module = Kernel.const_get("Tumugi").const_get("Command")
       cmd = command_module.const_get("#{command.to_s.capitalize}").new
       cmd.execute(dag, options)
