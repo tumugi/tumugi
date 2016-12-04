@@ -31,7 +31,3 @@ task :task4 do
     log 'task4#on_success'
   end
 end
-
-on_failure do
-  log 'task1#on_failure'
-end
