@@ -47,15 +47,18 @@ class Tumugi::Plugin::LocalFileTargetTest < Test::Unit::TestCase
     sub_test_case 'write' do
       test 'with block' do
         @target.open('w') do |f|
-          f.print 'done'
+          10000.times.each do
+            f.puts 'done'
+          end
         end
         assert_true(@target.exist?)
-        assert_equal('done', File.read(@target.path))
+        assert_equal("done\n"*10000, File.read(@target.path))
       end
 
       test 'without block' do
         f = @target.open('w')
         f.print 'done'
+        f.flush
         f.close
         assert_equal('done', File.read(@target.path))
       end
