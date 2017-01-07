@@ -7,7 +7,7 @@ module Tumugi
     def_delegators :@temp_file,
       :bin_mode?, :print, :printf, :putc, :puts, :write,
       :seek, :set_encoding, :sync, :sync=, :sysseek,
-      :syswrite, :write, :write_nonblock
+      :syswrite, :write, :write_nonblock, :flush
 
     def initialize(path)
       @path = path
@@ -30,6 +30,7 @@ module Tumugi
 
     def close
       if @temp_file
+        @temp_file.flush
         move_to_final_destination(@temp_file)
         @temp_file.close
         @temp_file = nil
